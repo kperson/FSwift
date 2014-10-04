@@ -1,2 +1,2 @@
 language: objective-c
-script: xcodebuild -project FSwift.xcodeproj -scheme FSwiftTests test -sdk iphonesimulator8.0
+script: xcodebuild -project FSwift.xcodeproj -scheme FSwift test -sdk iphonesimulator8.0
