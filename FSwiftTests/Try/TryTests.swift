@@ -12,7 +12,8 @@ import Foundation
 
 class TryTests: XCTestCase {
     
-    class func divide(_ a: Double, _ b: Double) -> Try<Double>  {
+    
+    class func divide(a: Double, _ b: Double) -> Try<Double>  {
         if(b != 0) {
             return Try(a / b)
         }

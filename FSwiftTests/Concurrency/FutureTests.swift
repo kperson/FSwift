@@ -33,5 +33,23 @@ class FutureTests: XCTestCase {
         }
         NSThread.sleepForTimeInterval(100.milliseconds)
     }
+    
+    /*
+    func testTimeout() {
+        let hello = "Hello World"
+        let numberOfCharacters = countElements(hello)
+        futureOnBackground {
+            hello
+        }.map { (x: String) -> Int in
+            println("Starting")
+            NSThread.sleepForTimeInterval(1.second)
+            println("Returning")
+            return countElements(x)
+        }.addTimeout(100.milliseconds,  {
+            println("Timeout")
+        })
+        NSThread.sleepForTimeInterval(2.second)
+
+    }*/
 
 }

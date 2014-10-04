@@ -10,22 +10,25 @@ import Foundation
 
 let defaultFutureQueue = NSOperationQueue()
 
-class Future<T> {
+public class Future<T> {
     
     var f: (() -> T)? = nil
     var value: T?
     var completionF: ((T) -> Void)?
+    var timeoutF: (() -> Void)?
     let operationQueue: NSOperationQueue
     let callbackQueue: NSOperationQueue
+    var timeout: NSTimeInterval = -1
+    var timeoutTimer: Timer? = nil
     
-    init(_ f: () -> T, operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
+    public init(_ f: () -> T, operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
         self.operationQueue = operationQueue
         self.callbackQueue = callbackQueue
         self.bridgeExecution(f)
         
     }
     
-    init(operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
+    public init(operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
         self.operationQueue = operationQueue
         self.callbackQueue = callbackQueue
     }
@@ -35,7 +38,7 @@ class Future<T> {
      *
      * Call this method to add your own custom exeuction for the future.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
-    func bridgeExecution(f: () -> T) {
+    public func bridgeExecution(f: () -> T) {
         self.f = f
         self.generateCallback()
     }
@@ -45,7 +48,7 @@ class Future<T> {
     *
     * Call this method to add your own custom value.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
-    func bridgeValue(val: T) {
+    public func bridgeValue(val: T) {
         self.bridgeExecution({ val })
     }
     
@@ -54,7 +57,7 @@ class Future<T> {
     *
     * Registers a completion callback
     */
-    func onComplete(f: (T) -> Void) {
+    public func onComplete(f: (T) -> Void) {
         self.completionF = f
     }
     
@@ -66,7 +69,7 @@ class Future<T> {
     * handles all execution and scheduling.  The function takes the results current future as its single argument.
     * That is, it maps the results of current future to a new future
     */
-    func map<D>(f: (T) -> D) -> Future<D> {
+    public func map<D>(f: (T) -> D) -> Future<D> {
         let newFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.onComplete { x in
             newFuture.bridgeExecution {
@@ -76,7 +79,29 @@ class Future<T> {
         return newFuture
     }
     
+    /*
+    public func addTimeout(interval: NSTimeInterval,  f: () -> Void) -> Future<T>  {
+        self.timeoutF = f
+        self.timeout = interval
+        return self
+    }
+    
+    private func timeoutOccurred() {
+        self.timeoutTimer?.stop()
+        self.timeoutTimer = nil
+        let timeoutOperation = NSBlockOperation {
+            self.timeoutF!()
+        }
+        self.callbackQueue.addOperation(timeoutOperation)
+    }*/
+    
     private func generateCallback() {
+       // if self.timeoutF != nil {
+          //  self.timeoutTimer = Timer(interval: self.timeout, repeats: false, f:  {
+            //    self.timeoutOccurred()
+           // })
+        //    self.timeoutTimer?.start()
+       // }
         let callback = NSBlockOperation {
             self.value = self.f!()
             self.success()
@@ -85,23 +110,25 @@ class Future<T> {
     }
     
     private func success() {
-        let successOperation = NSBlockOperation {
-            if let completion = self.completionF {
-                completion(self.value!)
+        if(self.timeoutTimer == nil) {
+            let successOperation = NSBlockOperation {
+                if let completion = self.completionF {
+                    completion(self.value!)
+                }
             }
-        }
-        self.callbackQueue.addOperation(successOperation)
+            self.callbackQueue.addOperation(successOperation)
+       }
     }
     
 }
 
 
-func future<T>(f: () -> T) -> Future<T> {
+public func future<T>(f: () -> T) -> Future<T> {
     let x = Future(f)
     return x
 }
 
-func futureOnBackground<T>(f: () -> T) -> Future<T> {
+public func futureOnBackground<T>(f: () -> T) -> Future<T> {
     let x = Future(f, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
     return x
 }

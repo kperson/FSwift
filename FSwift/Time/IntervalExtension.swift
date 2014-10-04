@@ -8,24 +8,24 @@
 
 import Foundation
 
-extension Int {
+public extension Int {
 
-    var milliseconds: NSTimeInterval { return NSTimeInterval(self) * 0.001 }
-    var millisecond: NSTimeInterval { return NSTimeInterval(self) * 0.001 }
+    public var milliseconds: NSTimeInterval { return NSTimeInterval(self) * 0.001 }
+    public var millisecond: NSTimeInterval { return NSTimeInterval(self) * 0.001 }
     
-    var seconds: NSTimeInterval { return NSTimeInterval(self) * 1.milliseconds * 1000 }
-    var second: NSTimeInterval { return NSTimeInterval(self) * 1.milliseconds * 1000 }
+    public var seconds: NSTimeInterval { return NSTimeInterval(self) * 1.milliseconds * 1000 }
+    public var second: NSTimeInterval { return NSTimeInterval(self) * 1.milliseconds * 1000 }
     
-    var minutes: NSTimeInterval { return NSTimeInterval(self) * 60.seconds }
-    var minute: NSTimeInterval { return NSTimeInterval(self) * 60.seconds }
+    public var minutes: NSTimeInterval { return NSTimeInterval(self) * 60.seconds }
+    public var minute: NSTimeInterval { return NSTimeInterval(self) * 60.seconds }
 
-    var hours: NSTimeInterval { return NSTimeInterval(self) * 60.minutes }
-    var hour: NSTimeInterval { return NSTimeInterval(self) * 60.minutes }
+    public var hours: NSTimeInterval { return NSTimeInterval(self) * 60.minutes }
+    public var hour: NSTimeInterval { return NSTimeInterval(self) * 60.minutes }
 
-    var days: NSTimeInterval { return NSTimeInterval(self) * 24.hours }
-    var day: NSTimeInterval { return NSTimeInterval(self) * 24.hours }
+    public var days: NSTimeInterval { return NSTimeInterval(self) * 24.hours }
+    public var day: NSTimeInterval { return NSTimeInterval(self) * 24.hours }
     
-    var years: NSTimeInterval { return NSTimeInterval(self) * 365.days }
-    var year: NSTimeInterval { return NSTimeInterval(self) * 365.days }
+    public var years: NSTimeInterval { return NSTimeInterval(self) * 365.days }
+    public var year: NSTimeInterval { return NSTimeInterval(self) * 365.days }
     
 }

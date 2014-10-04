@@ -12,12 +12,12 @@ public enum Try<T> {
     case Success(@autoclosure() -> T)
     case Failure(NSError)
     
-    init(_ value: T) {
+    public init(_ value: T) {
         self = .Success(value)
     }
     
     
-    init(_ error: NSError) {
+    public init(_ error: NSError) {
         self = .Failure(error)
     }
     
