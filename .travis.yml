@@ -1,2 +1,2 @@
 language: objective-c
-script: xcodebuild -project FSwift.xcodeproj -scheme FSwiftTests test -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+script: xcodebuild test -project FSwift.xcodeproj -scheme FSwiftTests -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
