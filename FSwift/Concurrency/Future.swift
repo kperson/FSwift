@@ -12,16 +12,18 @@ let defaultFutureQueue = NSOperationQueue()
 
 public class Future<T> {
     
-    var f: (() -> T)? = nil
-    var value: T?
-    var completionF: ((T) -> Void)?
-    var timeoutF: (() -> Void)?
+    private var f: (() -> Try<T>)? = nil
+    private var value: Try<T>?
+    private var completionF: ((Try<T>) -> Void)?
+    private var successF: ((T) -> Void)?
+    private var mapSuccessF: ((T) -> Void)?
+    private var mapFailureF: ((NSError) -> Void)?
+    
+    private var failureF: ((NSError) -> Void)?
     let operationQueue: NSOperationQueue
     let callbackQueue: NSOperationQueue
-    var timeout: NSTimeInterval = -1
-    var timeoutTimer: Timer? = nil
     
-    public init(_ f: () -> T, operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
+    public init(_ f: () -> Try<T>, operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
         self.operationQueue = operationQueue
         self.callbackQueue = callbackQueue
         self.bridgeExecution(f)
@@ -38,7 +40,7 @@ public class Future<T> {
      *
      * Call this method to add your own custom exeuction for the future.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
-    public func bridgeExecution(f: () -> T) {
+    public func bridgeExecution(f: () -> Try<T>) {
         self.f = f
         self.generateCallback()
     }
@@ -49,7 +51,7 @@ public class Future<T> {
     * Call this method to add your own custom value.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
     public func bridgeValue(val: T) {
-        self.bridgeExecution({ val })
+        self.bridgeExecution({ Try.Success(val) })
     }
     
     /**
@@ -57,8 +59,29 @@ public class Future<T> {
     *
     * Registers a completion callback
     */
-    public func onComplete(f: (T) -> Void) {
+    public func onComplete(f: (Try<T>) -> Void) -> Future<T> {
         self.completionF = f
+        return self
+    }
+    
+    /**
+    * @param f - A function that a T as its only argument
+    *
+    * Registers a success callback
+    */
+    public func onSuccess(f: (T) -> Void) -> Future<T> {
+        self.successF = f
+        return self
+    }
+    
+    /**
+    * @param f - A function that a T as its only argument
+    *
+    * Registers a failure callback
+    */
+    public func onFailure(f: (NSError) -> Void) -> Future<T> {
+        self.failureF = f
+        return self
     }
     
     /**
@@ -69,9 +92,9 @@ public class Future<T> {
     * handles all execution and scheduling.  The function takes the results current future as its single argument.
     * That is, it maps the results of current future to a new future
     */
-    public func map<D>(f: (T) -> D) -> Future<D> {
+    public func mapSuccess<D>(f: (T) -> Try<D>) -> Future<D> {
         let newFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
-        self.onComplete { x in
+        self.mapSuccessF =  { x in
             newFuture.bridgeExecution {
                 f(x)
             }
@@ -79,56 +102,48 @@ public class Future<T> {
         return newFuture
     }
     
-    /*
-    public func addTimeout(interval: NSTimeInterval,  f: () -> Void) -> Future<T>  {
-        self.timeoutF = f
-        self.timeout = interval
-        return self
+    
+    public func mapFailure<D>(f: (NSError) -> Try<D>) -> Future<D> {
+        let newFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
+        self.mapFailureF =  { x in
+            newFuture.bridgeExecution {
+                f(x)
+            }
+        }
+        return newFuture
     }
     
-    private func timeoutOccurred() {
-        self.timeoutTimer?.stop()
-        self.timeoutTimer = nil
-        let timeoutOperation = NSBlockOperation {
-            self.timeoutF!()
-        }
-        self.callbackQueue.addOperation(timeoutOperation)
-    }*/
-    
     private func generateCallback() {
-       // if self.timeoutF != nil {
-          //  self.timeoutTimer = Timer(interval: self.timeout, repeats: false, f:  {
-            //    self.timeoutOccurred()
-           // })
-        //    self.timeoutTimer?.start()
-       // }
         let callback = NSBlockOperation {
             self.value = self.f!()
-            self.success()
+            self.futureExecutionComplete()
         }
         self.operationQueue.addOperation(callback)
     }
     
-    private func success() {
-        if(self.timeoutTimer == nil) {
-            let successOperation = NSBlockOperation {
-                if let completion = self.completionF {
-                    completion(self.value!)
-                }
+    private func futureExecutionComplete() {
+        let successOperation = NSBlockOperation {
+            self.completionF?(self.value!)
+            switch self.value! {
+            case Try.Success(let val):
+                self.successF?(val())
+                self.mapSuccessF?(val())
+            case Try.Failure(let error):
+                self.failureF?(error)
+                self.mapFailureF?(error)
             }
-            self.callbackQueue.addOperation(successOperation)
-       }
+        }
+        self.callbackQueue.addOperation(successOperation)
     }
-    
 }
 
 
-public func future<T>(f: () -> T) -> Future<T> {
+public func future<T>(f: () -> Try<T>) -> Future<T> {
     let x = Future(f)
     return x
 }
 
-public func futureOnBackground<T>(f: () -> T) -> Future<T> {
+public func futureOnBackground<T>(f: () -> Try<T>) -> Future<T> {
     let x = Future(f, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
     return x
 }

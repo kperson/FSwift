@@ -14,42 +14,55 @@ class FutureTests: XCTestCase {
     func testFutureOnComplete() {
         let hello = "Hello World"
         futureOnBackground {
-            hello
+            Try.Success(hello)
         }.onComplete { x in
-            XCTAssertEqual(x, hello, "x must equal 'Hello World'")
+            switch x {
+                case Try.Success(let val):  XCTAssertEqual(val(), hello, "x must equal 'Hello World'")
+                case Try.Failure(let error): XCTAssert(false, "This line should never be executed in the this test")
+            }
         }
         NSThread.sleepForTimeInterval(100.milliseconds)
     }
     
-    func testFutureMap() {
+    func testFutureMapSuccess() {
         let hello = "Hello World"
         let numberOfCharacters = countElements(hello)
         futureOnBackground {
-            hello
-        }.map { x in
-            countElements(x)
-        }.onComplete { ct in
+           Try.Success(hello)
+        }.mapSuccess { x in
+            Try.Success(countElements(x))
+        }.onSuccess { ct in
             XCTAssertEqual(ct, 11, "ct must equal the number of characters in 'Hello World'")
         }
         NSThread.sleepForTimeInterval(100.milliseconds)
     }
     
-    /*
-    func testTimeout() {
+    func testFailure() {
         let hello = "Hello World"
         let numberOfCharacters = countElements(hello)
-        futureOnBackground {
-            hello
-        }.map { (x: String) -> Int in
-            println("Starting")
-            NSThread.sleepForTimeInterval(1.second)
-            println("Returning")
-            return countElements(x)
-        }.addTimeout(100.milliseconds,  {
-            println("Timeout")
-        })
-        NSThread.sleepForTimeInterval(2.second)
-
-    }*/
-
+        let z = futureOnBackground {
+            Try<Int>.Failure(NSError(domain: "com.error", code: 200, userInfo: nil))
+        }
+        .onComplete { x in
+            switch x {
+                case Try.Failure(let error):  XCTAssertEqual(error.domain, "com.error", "error domain must equal 'com.error'")
+                case Try.Success(let val): XCTAssert(false, "This line should never be executed in the this test")
+            }
+        }
+        .onFailure { error in
+            XCTAssertEqual(error.domain, "com.error", "error domain must equal 'com.error'")
+        }
+        .onSuccess { x in
+            XCTAssert(false, "This line should never be executed in the this test")
+        }
+        
+        z.mapFailure { (error: NSError)  in
+            Try.Success(error.code)
+        }
+        .onSuccess { errorCode in
+            XCTAssertEqual(errorCode, 200, "error code must equal 200")
+        }
+        
+        NSThread.sleepForTimeInterval(100.milliseconds)
+    }
 }

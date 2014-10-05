@@ -15,10 +15,10 @@ class TryTests: XCTestCase {
     
     class func divide(a: Double, _ b: Double) -> Try<Double>  {
         if(b != 0) {
-            return Try(a / b)
+            return Try.Success(a / b)
         }
         else {
-            return Try(NSError(domain: "com.math.dividebyzero", code: 200, userInfo: nil))
+            return Try.Failure(NSError(domain: "com.math.dividebyzero", code: 200, userInfo: nil))
         }
     }
     

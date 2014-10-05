@@ -11,16 +11,7 @@ import Foundation
 public enum Try<T> {
     case Success(@autoclosure() -> T)
     case Failure(NSError)
-    
-    public init(_ value: T) {
-        self = .Success(value)
-    }
-    
-    
-    public init(_ error: NSError) {
-        self = .Failure(error)
-    }
-    
+        
     public var error: NSError? {
         switch self {
             case .Failure(let err): return err
