@@ -21,7 +21,7 @@
 *.swp
 *.lock
 profile
-
+target/
 
 ####
 # Xcode temporary files that should never be committed
