@@ -29,7 +29,7 @@ class FutureTests: XCTestCase {
         let numberOfCharacters = countElements(hello)
         futureOnBackground {
            Try.Success(hello)
-        }.mapSuccess { x in
+        }.map { x in
             Try.Success(countElements(x))
         }.onSuccess { ct in
             XCTAssertEqual(ct, 11, "ct must equal the number of characters in 'Hello World'")
@@ -46,21 +46,14 @@ class FutureTests: XCTestCase {
         .onComplete { x in
             switch x {
                 case Try.Failure(let error):  XCTAssertEqual(error.domain, "com.error", "error domain must equal 'com.error'")
-                case Try.Success(let val): XCTAssert(false, "This line should never be executed in the this test")
+                case Try.Success(let val): XCTAssert(false, "This line should never be executed in this test")
             }
         }
         .onFailure { error in
             XCTAssertEqual(error.domain, "com.error", "error domain must equal 'com.error'")
         }
         .onSuccess { x in
-            XCTAssert(false, "This line should never be executed in the this test")
-        }
-        
-        z.mapFailure { (error: NSError)  in
-            Try.Success(error.code)
-        }
-        .onSuccess { errorCode in
-            XCTAssertEqual(errorCode, 200, "error code must equal 200")
+            XCTAssert(false, "This line should never be executed in this test")
         }
         
         NSThread.sleepForTimeInterval(100.milliseconds)

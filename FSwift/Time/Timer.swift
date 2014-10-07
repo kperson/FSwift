@@ -12,29 +12,29 @@ public class Timer {
 
     let interval: NSTimeInterval
     let repeats: Bool
-    let f: () -> Void
+    let f: (Timer) -> Void
     var isRunning: Bool = false
     private var timer: NSTimer?
     
-    public init(interval: NSTimeInterval, repeats: Bool, f: () -> Void) {
+    public init(interval: NSTimeInterval, repeats: Bool, f: (Timer) -> Void) {
         self.interval = interval
         self.repeats = repeats
         self.f = f
     }
     
     @objc func tick() {
+        if(self.timer != nil) {
+            self.f(self)
+        }
         if(!self.repeats) {
             self.stop()
         }
-        self.f()
     }
     
     public func start() {
         if (self.timer == nil) {
-            self.timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: Selector("tick"), userInfo: nil, repeats: self.repeats)
-            
-            //self.timer = NSTimer(timeInterval: interval, target:self, selector: Selector("tick"), userInfo: nil, repeats: repeats)
-            //NSRunLoop.currentRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
+            self.timer = NSTimer(timeInterval: interval, target:self, selector: Selector("tick"), userInfo: nil, repeats: repeats)
+            NSRunLoop.currentRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
             self.isRunning = true
         }
     }

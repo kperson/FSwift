@@ -14,12 +14,12 @@ public class Future<T> {
     
     private var f: (() -> Try<T>)? = nil
     private var value: Try<T>?
-    private var completionF: ((Try<T>) -> Void)?
-    private var successF: ((T) -> Void)?
-    private var mapSuccessF: ((T) -> Void)?
-    private var mapFailureF: ((NSError) -> Void)?
+    private var completionF: ((Try<T>) -> ())?
+    private var successF: ((T) -> ())?
+    private var failureF: ((NSError) -> ())?
     
-    private var failureF: ((NSError) -> Void)?
+    private var mapSuccessF: ((T) -> ())?
+    
     let operationQueue: NSOperationQueue
     let callbackQueue: NSOperationQueue
     
@@ -46,12 +46,21 @@ public class Future<T> {
     }
 
     /**
-    * @param val - a T.  This allows for custom execution.  If you are just using futures.  This is not required.
+    * @param val - a T.  This allows for custom execution.  If you are just using futures, then this is not required.
     *
     * Call this method to add your own custom value.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
-    public func bridgeValue(val: T) {
+    public func bridgeSuccess(val: T) {
         self.bridgeExecution({ Try.Success(val) })
+    }
+    
+    /**
+    * @param error - a NSError.  This allows for custom execution error.  If you are just using futures, then this is not required.
+    *
+    * Call this method to add your own error value value.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
+    */
+    public func bridgeFailure(error: NSError) {
+        self.bridgeExecution({ Try.Failure(error) })
     }
     
     /**
@@ -59,7 +68,7 @@ public class Future<T> {
     *
     * Registers a completion callback
     */
-    public func onComplete(f: (Try<T>) -> Void) -> Future<T> {
+    public func onComplete(f: (Try<T>) -> ()) -> Future<T> {
         self.completionF = f
         return self
     }
@@ -69,7 +78,7 @@ public class Future<T> {
     *
     * Registers a success callback
     */
-    public func onSuccess(f: (T) -> Void) -> Future<T> {
+    public func onSuccess(f: (T) -> ()) -> Future<T> {
         self.successF = f
         return self
     }
@@ -79,7 +88,7 @@ public class Future<T> {
     *
     * Registers a failure callback
     */
-    public func onFailure(f: (NSError) -> Void) -> Future<T> {
+    public func onFailure(f: (NSError) -> ()) -> Future<T> {
         self.failureF = f
         return self
     }
@@ -92,7 +101,7 @@ public class Future<T> {
     * handles all execution and scheduling.  The function takes the results current future as its single argument.
     * That is, it maps the results of current future to a new future
     */
-    public func mapSuccess<D>(f: (T) -> Try<D>) -> Future<D> {
+    public func map<D>(f: (T) -> Try<D>) -> Future<D> {
         let newFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.mapSuccessF =  { x in
             newFuture.bridgeExecution {
@@ -102,16 +111,6 @@ public class Future<T> {
         return newFuture
     }
     
-    
-    public func mapFailure<D>(f: (NSError) -> Try<D>) -> Future<D> {
-        let newFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
-        self.mapFailureF =  { x in
-            newFuture.bridgeExecution {
-                f(x)
-            }
-        }
-        return newFuture
-    }
     
     private func generateCallback() {
         let callback = NSBlockOperation {
@@ -130,7 +129,6 @@ public class Future<T> {
                 self.mapSuccessF?(val())
             case Try.Failure(let error):
                 self.failureF?(error)
-                self.mapFailureF?(error)
             }
         }
         self.callbackQueue.addOperation(successOperation)

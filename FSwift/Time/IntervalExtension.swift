@@ -11,21 +11,21 @@ import Foundation
 public extension Int {
 
     public var milliseconds: NSTimeInterval { return NSTimeInterval(self) * 0.001 }
-    public var millisecond: NSTimeInterval { return NSTimeInterval(self) * 0.001 }
+    public var millisecond: NSTimeInterval { return self.milliseconds }
     
     public var seconds: NSTimeInterval { return NSTimeInterval(self) * 1.milliseconds * 1000 }
-    public var second: NSTimeInterval { return NSTimeInterval(self) * 1.milliseconds * 1000 }
+    public var second: NSTimeInterval { return self.seconds }
     
     public var minutes: NSTimeInterval { return NSTimeInterval(self) * 60.seconds }
-    public var minute: NSTimeInterval { return NSTimeInterval(self) * 60.seconds }
+    public var minute: NSTimeInterval { return self.minutes }
 
     public var hours: NSTimeInterval { return NSTimeInterval(self) * 60.minutes }
-    public var hour: NSTimeInterval { return NSTimeInterval(self) * 60.minutes }
+    public var hour: NSTimeInterval { return self.hours }
 
     public var days: NSTimeInterval { return NSTimeInterval(self) * 24.hours }
-    public var day: NSTimeInterval { return NSTimeInterval(self) * 24.hours }
+    public var day: NSTimeInterval { return self.days }
     
     public var years: NSTimeInterval { return NSTimeInterval(self) * 365.days }
-    public var year: NSTimeInterval { return NSTimeInterval(self) * 365.days }
+    public var year: NSTimeInterval { return self.years }
     
 }
