@@ -133,7 +133,6 @@
 				DB241D3819E2DF26006217BA /* List */,
 				DB241D4119E317A7006217BA /* Optional */,
 				DBA75A9B19DDECAF009EA696 /* Supporting Files */,
-				DBB1B23C19DE3EC800272EE3 /* Time */,
 				DBA75AB319DDECF4009EA696 /* Try */,
 			);
 			path = FSwift;
@@ -143,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				DBA75A9C19DDECAF009EA696 /* Info.plist */,
+				DBB1B23C19DE3EC800272EE3 /* Time */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

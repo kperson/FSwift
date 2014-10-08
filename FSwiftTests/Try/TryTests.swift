@@ -18,7 +18,7 @@ class TryTests: XCTestCase {
             return Try.Success(a / b)
         }
         else {
-            return Try.Failure(NSError(domain: "com.math.dividebyzero", code: 200, userInfo: nil))
+            return Try<Double>.Failure(NSError(domain: "com.math.dividebyzero", code: 200, userInfo: nil))
         }
     }
     
@@ -30,8 +30,8 @@ class TryTests: XCTestCase {
     
     func testFailure() {
         let fail = TryTests.divide(3, 0)
-        fail.error!.domain
         XCTAssertEqual(fail.error!.domain, "com.math.dividebyzero", "Error must exists when dividing by zero")
         XCTAssertNil(fail.value, "Value must be nil if an error exists")
     }
+    
 }

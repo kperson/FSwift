@@ -2,6 +2,9 @@
 //  Future.swift
 //  FSwift
 //
+// This is an implementation of Futures and Proimises
+// For more information see http://en.wikipedia.org/wiki/Futures_and_promises
+//
 //  Created by Kelton Person on 10/3/14.
 //  Copyright (c) 2014 Kelton. All rights reserved.
 //
@@ -13,12 +16,14 @@ let defaultFutureQueue = NSOperationQueue()
 public class Future<T> {
     
     private var f: (() -> Try<T>)? = nil
-    private var value: Try<T>?
+    private var futureValue: Try<T>?
     private var completionF: ((Try<T>) -> ())?
+    private var mappedCompletionF:(() -> ())?
+
+    private var interalCompletionHandler:(() -> ())?
+
     private var successF: ((T) -> ())?
     private var failureF: ((NSError) -> ())?
-    
-    private var mapSuccessF: ((T) -> ())?
     
     let operationQueue: NSOperationQueue
     let callbackQueue: NSOperationQueue
@@ -36,28 +41,33 @@ public class Future<T> {
     }
     
     /**
-     * @param f - A zero argument function that returns a T.  This allows for custom execution.  If you are just using futures.  This is not required.
+     * @param f - A zero argument function that returns a T.  
      *
-     * Call this method to add your own custom exeuction for the future.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
+     * This allows for execution to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
+     * You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
     public func bridgeExecution(f: () -> Try<T>) {
-        self.f = f
-        self.generateCallback()
+        if self.f == nil {
+            self.f = f
+            self.generateCallback()
+        }
     }
 
     /**
-    * @param val - a T.  This allows for custom execution.  If you are just using futures, then this is not required.
+    * @param val - a T.  
     *
-    * Call this method to add your own custom value.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
+    * This allows for a value to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
+    * You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
     public func bridgeSuccess(val: T) {
         self.bridgeExecution({ Try.Success(val) })
     }
     
     /**
-    * @param error - a NSError.  This allows for custom execution error.  If you are just using futures, then this is not required.
+    * @param val - error NSerror.
     *
-    * Call this method to add your own error value value.  You can use this to bridge the Future api with other concurrency frameworks and async methods.
+    * This allows for an error to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
+    * You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
     public func bridgeFailure(error: NSError) {
         self.bridgeExecution({ Try.Failure(error) })
@@ -102,46 +112,70 @@ public class Future<T> {
     * That is, it maps the results of current future to a new future
     */
     public func map<D>(f: (T) -> Try<D>) -> Future<D> {
-        let newFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
-        self.mapSuccessF =  { x in
-            newFuture.bridgeExecution {
-                f(x)
+        let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
+        self.mappedCompletionF = {
+            mappedFuture.bridgeExecution {
+                if let successfulValue = self.futureValue!.value {
+                    return f(successfulValue)
+                }
+                else {
+                    return Try.Failure(self.futureValue!.error!)
+                }
             }
         }
-        return newFuture
+        return mappedFuture
     }
     
     
     private func generateCallback() {
-        let callback = NSBlockOperation {
-            self.value = self.f!()
+        let operation = NSBlockOperation {
+            self.futureValue = self.f!()
             self.futureExecutionComplete()
         }
-        self.operationQueue.addOperation(callback)
+        self.operationQueue.addOperation(operation)
     }
     
     private func futureExecutionComplete() {
-        let successOperation = NSBlockOperation {
-            self.completionF?(self.value!)
-            switch self.value! {
-            case Try.Success(let val):
-                self.successF?(val())
-                self.mapSuccessF?(val())
-            case Try.Failure(let error):
-                self.failureF?(error)
+        let operationCallback = NSBlockOperation {
+            self.completionF?(self.futureValue!)
+            switch self.futureValue! {
+                case Try.Success(let val):
+                    self.successF?(val())
+                case Try.Failure(let error):
+                    self.failureF?(error)
+            }
+            self.mappedCompletionF?()
+            self.interalCompletionHandler?()
+        }
+        self.callbackQueue.addOperation(operationCallback)
+    }
+    
+    public class func await(futureList: [Future], completionHandler: () -> ()) {
+        var ct = 0
+        for f in futureList {
+            if f.futureValue == nil {
+                f.interalCompletionHandler = {
+                    ct = ct + 1
+                    if ct == countElements(futureList) {
+                        completionHandler()
+                    }
+                }
+            }
+            else {
+                ct = ct + 1
+                if ct == countElements(futureList) {
+                    completionHandler()
+                }
             }
         }
-        self.callbackQueue.addOperation(successOperation)
     }
 }
 
 
 public func future<T>(f: () -> Try<T>) -> Future<T> {
-    let x = Future(f)
-    return x
+    return Future(f)
 }
 
 public func futureOnBackground<T>(f: () -> Try<T>) -> Future<T> {
-    let x = Future(f, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
-    return x
+    return Future(f, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
 }

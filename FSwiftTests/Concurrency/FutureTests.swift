@@ -25,6 +25,7 @@ class FutureTests: XCTestCase {
     }
     
     func testFutureMapSuccess() {
+        var complete = false
         let hello = "Hello World"
         let numberOfCharacters = countElements(hello)
         futureOnBackground {
@@ -32,9 +33,11 @@ class FutureTests: XCTestCase {
         }.map { x in
             Try.Success(countElements(x))
         }.onSuccess { ct in
-            XCTAssertEqual(ct, 11, "ct must equal the number of characters in 'Hello World'")
+            complete = true
+            XCTAssertEqual(ct, numberOfCharacters, "ct must equal the number of characters in 'Hello World'")
         }
         NSThread.sleepForTimeInterval(100.milliseconds)
+        XCTAssert(complete, "OnSuccess should have occured")
     }
     
     func testFailure() {
@@ -57,5 +60,41 @@ class FutureTests: XCTestCase {
         }
         
         NSThread.sleepForTimeInterval(100.milliseconds)
+    }
+    
+    func testFutureMapFailure() {
+        futureOnBackground {
+            Try<Int>.Failure(NSError(domain: "com.error", code: 200, userInfo: nil))
+        }.map { t in
+            Try.Success("Hello")
+        }.onFailure { error in
+            XCTAssertEqual(error.domain, "com.error", "Error domains should be equal")
+        }
+        .onSuccess{ x in
+            XCTAssert(false, "This line should never be executed in this test")
+        }
+        NSThread.sleepForTimeInterval(100.milliseconds)
+    }
+    
+    func testAwait() {
+        let x = futureOnBackground {
+            Try.Success("Hello World")
+        }
+        
+        let start = NSDate().timeIntervalSince1970
+        let y = futureOnBackground { () -> Try<String> in
+            NSThread.sleepForTimeInterval(100.milliseconds)
+            return Try<String>.Failure(NSError(domain: "com.error", code: 200, userInfo: nil))
+        }
+        
+        var complete = false
+        Future.await([x, y], {
+            complete = true
+            let end = NSDate().timeIntervalSince1970
+            XCTAssert(end - start >= 100.millisecond, "The future needs to have been completed in about 100 milliseconds")
+        })
+        
+        NSThread.sleepForTimeInterval(200.millisecond)
+        XCTAssertTrue(complete, "The await method must have triggered")
     }
 }
