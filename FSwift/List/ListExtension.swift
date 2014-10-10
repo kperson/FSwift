@@ -25,7 +25,7 @@ public extension Array {
     }
     
     public var everythingButFirst: [T]  {
-        if(self.count <= 1) {
+        if self.count <= 1 {
             return []
         }
         else {
@@ -33,22 +33,22 @@ public extension Array {
         }
     }
     
-    public func foldRight<B>(initialValue: B, _ f: (T, B) -> B) -> B {
-        if(self.isEmpty) {
+    public func foldRight<B>(initialValue: B, _ f: (B, T) -> B) -> B {
+        if self.isEmpty  {
             return initialValue
         }
         else {
-            return f(self.first!, self.everythingButFirst.foldRight(initialValue, f))
+            return f(self.everythingButFirst.foldRight(initialValue, f), self.first!)
         }
     }
     
-    public func foldLeft<B>(initialValue: B, _ f: (T, B) -> B) -> B {
+    public func foldLeft<B>(initialValue: B, _ f: (B, T) -> B) -> B {
         return self.reverse().foldRight(initialValue, f)
     }
     
     
     public func reduceRight(f: (T, T) -> T) -> T {
-        if(self.count == 1) {
+        if self.count == 1 {
             return self.first!
         }
         else {
@@ -59,6 +59,19 @@ public extension Array {
     public func reduceLeft(f: (T, T) -> T) -> T {
         return self.reverse().reduceRight(f)
     }
-
     
+    public func findFirst(f: (T) -> Bool) -> T? {
+        if self.isEmpty {
+            return nil
+        }
+        if(f(self.first!)) {
+            return self.first!
+        }
+        else {
+            return self.everythingButFirst.findFirst(f)
+        }
+    }
+
+
+
 }

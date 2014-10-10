@@ -10,8 +10,8 @@ import Foundation
 
 public extension Optional {
     
-    func getOrElse(defaultValue: T) -> T {
-        if(self == nil) {
+    public func getOrElse(defaultValue: T) -> T {
+        if self == nil {
             return defaultValue
         }
         else {

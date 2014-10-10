@@ -23,16 +23,16 @@ public class Timer {
     }
     
     @objc func tick() {
-        if(self.timer != nil) {
+        if self.timer != nil  {
             self.f(self)
         }
-        if(!self.repeats) {
+        if !self.repeats {
             self.stop()
         }
     }
     
     public func start() {
-        if (self.timer == nil) {
+        if self.timer == nil {
             self.timer = NSTimer(timeInterval: interval, target:self, selector: Selector("tick"), userInfo: nil, repeats: repeats)
             NSRunLoop.currentRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
             self.isRunning = true

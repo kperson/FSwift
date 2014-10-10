@@ -9,6 +9,8 @@
 import UIKit
 import XCTest
 
+
+
 class ListExtensionTests: XCTestCase {
     
     func testForeach() {
@@ -35,18 +37,30 @@ class ListExtensionTests: XCTestCase {
     func testFoldRight() {
         let list = [4, 5, 6, 7, 8, 9, 10]
         let sumPlusOne = 50
-        let calcSum = list.foldRight(1, { (accum, curr) -> Int in
-            return accum + curr
+        let calcSum = list.foldRight(1, { accum, curr in
+            accum + curr
         })
         
-        XCTAssertEqual(sumPlusOne, calcSum, "Fold must calculate sum")
+        let append = "10987654"
+        let appendedNumbers = list.foldRight("", { (accum, curr) in
+            accum + String(curr)
+        })
+        
+        XCTAssertEqual(appendedNumbers, append, "Fold must append strings in append function")
+        XCTAssertEqual(sumPlusOne, calcSum, "Fold must calculate sum in sum function")
     }
     
     func testReduceRight() {
         let list = [2, 3, 4, 5]
         let mult = 120
-        let multCalc = list.reduceRight { x, y in x * y }
-        XCTAssertEqual(mult, multCalc, "Fold must calculate sum")
+        let productCalc = list.reduceRight { x, y in x * y }
+        XCTAssertEqual(mult, productCalc, "Reduce must calculate product")
     }
-
+    
+    func testFindFirst() {
+        let list = [2, 3, 4, 5, 6, 7]
+        XCTAssertEqual(list.findFirst { x in x > 4 }!, 5, "The first item greater than 4 is 5, findFirst should match this")
+        XCTAssert(list.findFirst { x in  x > 100 } == nil, "There are no items greater than 100, findFirst should not match this")
+    }
+    
 }

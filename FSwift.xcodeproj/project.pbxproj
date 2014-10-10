@@ -16,6 +16,7 @@
 		DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59FF4819E07CC500B13D0E /* Timer.swift */; };
 		DB59FF4A19E07FBB00B13D0E /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59FF4819E07CC500B13D0E /* Timer.swift */; };
 		DB95CF7A19E33EFD00448C7C /* TimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB95CF7919E33EFD00448C7C /* TimerTests.swift */; };
+		DB97EED019E6D4F100FF9F98 /* RaceStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97EECF19E6D4F100FF9F98 /* RaceStat.swift */; };
 		DBA75AB519DDED09009EA696 /* Try.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA75AB419DDED09009EA696 /* Try.swift */; };
 		DBA75AB619DDED09009EA696 /* Try.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA75AB419DDED09009EA696 /* Try.swift */; };
 		DBA75AB919DDED3C009EA696 /* TryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA75AB819DDED3C009EA696 /* TryTests.swift */; };
@@ -46,6 +47,7 @@
 		DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExtensionTests.swift; sourceTree = "<group>"; };
 		DB59FF4819E07CC500B13D0E /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		DB95CF7919E33EFD00448C7C /* TimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
+		DB97EECF19E6D4F100FF9F98 /* RaceStat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RaceStat.swift; sourceTree = "<group>"; };
 		DBA75A9819DDECAF009EA696 /* FSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBA75A9C19DDECAF009EA696 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DBA75AA319DDECAF009EA696 /* FSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				DB241D3619E2D637006217BA /* ListExtensionTests.swift */,
+				DB97EECF19E6D4F100FF9F98 /* RaceStat.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -133,6 +136,7 @@
 				DB241D3819E2DF26006217BA /* List */,
 				DB241D4119E317A7006217BA /* Optional */,
 				DBA75A9B19DDECAF009EA696 /* Supporting Files */,
+				DBB1B23C19DE3EC800272EE3 /* Time */,
 				DBA75AB319DDECF4009EA696 /* Try */,
 			);
 			path = FSwift;
@@ -142,7 +146,6 @@
 			isa = PBXGroup;
 			children = (
 				DBA75A9C19DDECAF009EA696 /* Info.plist */,
-				DBB1B23C19DE3EC800272EE3 /* Time */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				DBBFA1DD19DF48590090B60F /* FutureTests.swift in Sources */,
 				DB59FF4A19E07FBB00B13D0E /* Timer.swift in Sources */,
 				DBA75AB619DDED09009EA696 /* Try.swift in Sources */,
+				DB97EED019E6D4F100FF9F98 /* RaceStat.swift in Sources */,
 				DBBFA1DA19DF48140090B60F /* Future.swift in Sources */,
 				DBA75AB919DDED3C009EA696 /* TryTests.swift in Sources */,
 				DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */,
