@@ -71,6 +71,23 @@ public extension Array {
             return self.everythingButFirst.findFirst(f)
         }
     }
+    
+    /**
+    * @param m A mapping a function
+    * @param r a reduce function
+    *
+    * The mapping function is required to take a T (the type of object in the Array) a map it a value of type B (i.e. the key)
+    * The reduction function takes the key(type B) and a list of Ts and reduces to a single C
+    * See test case in ListExtensionsTests.swift for an example
+    * See http://en.wikipedia.org/wiki/MapReduce for more explanation of map reduce
+    *
+    * @return a list of C
+    *
+    */
+    public func mapReduce<B, C>(m: (T) -> B, _ r: (B, [T]) -> C) -> [C]  {
+        //TODO
+        return []
+    }
 
 
 

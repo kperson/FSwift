@@ -63,4 +63,25 @@ class ListExtensionTests: XCTestCase {
         XCTAssert(list.findFirst { x in  x > 100 } == nil, "There are no items greater than 100, findFirst should not match this")
     }
     
+    func testMapReduce() {
+        let times = [10.3, 94.8, 30.3, 10.9, 30.2, 10.67]
+        
+        // times is a list of finish times for a 100 meters dash
+        //I would like to know how many people finished between 10 - 11 seconds, 11 - 12, etc
+        //The first function in the map reduce maps an Double (the finish time) to an integer so  10.3 maps to 10
+        //The seconds functions maps a key and list of values to a final results (10, [10.3, 10.9]) -> RaceStat)
+        
+        let raceStats = times.mapReduce (
+            { x in Int(x) },
+            { (key, list) in RaceStat (timeSlot: key, numInSlot: countElements(list)) }
+        )
+        
+        let desireRaceStats = [
+            RaceStat (timeSlot: 10, numInSlot: 3),
+            RaceStat (timeSlot: 94, numInSlot: 1),
+            RaceStat (timeSlot: 30, numInSlot: 2)
+        ]
+        XCTAssertEqual(desireRaceStats, raceStats, "Race Stats must manaul computation using map reduce")
+    }
+    
 }
