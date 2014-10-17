@@ -169,6 +169,11 @@ public class Future<T> {
             }
         }
     }
+    
+    public var value: Try<T>? {
+        return self.futureValue
+    }
+    
 }
 
 
