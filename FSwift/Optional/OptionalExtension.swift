@@ -8,9 +8,9 @@
 
 import Foundation
 
-public extension Optional {
+extension Optional {
     
-    public func getOrElse(defaultValue: T) -> T {
+    func getOrElse(defaultValue: T) -> T {
         if self == nil {
             return defaultValue
         }

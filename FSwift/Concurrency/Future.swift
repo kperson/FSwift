@@ -150,7 +150,7 @@ public class Future<T> {
         self.callbackQueue.addOperation(operationCallback)
     }
     
-    public class func await(futureList: [Future], completionHandler: () -> ()) {
+    public class func await(futureList: [Future<T>], completionHandler: () -> ()) {
         var ct = 0
         for f in futureList {
             if f.futureValue == nil {
@@ -176,6 +176,25 @@ public class Future<T> {
     
 }
 
+func whenComplete<T>(futureList: [Future<T>], completionHandler: () -> ()) {
+    var ct = 0
+    for f in futureList {
+        if f.futureValue == nil {
+            f.interalCompletionHandler = {
+                ct = ct + 1
+                if ct == countElements(futureList) {
+                    completionHandler()
+                }
+            }
+        }
+        else {
+            ct = ct + 1
+            if ct == countElements(futureList) {
+                completionHandler()
+            }
+        }
+    }
+}
 
 public func future<T>(f: () -> Try<T>) -> Future<T> {
     return Future(f)

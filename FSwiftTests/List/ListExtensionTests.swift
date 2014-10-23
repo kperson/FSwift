@@ -63,4 +63,9 @@ class ListExtensionTests: XCTestCase {
         XCTAssert(list.findFirst { x in  x > 100 } == nil, "There are no items greater than 100, findFirst should not match this")
     }
     
+    func testRemoveDuplicates() {
+        let list = [2, 2, 3, 2, 4, 4]
+        XCTAssertEqual(removeDuplicates(list), [2, 3, 4], "Remove duplicates must remove duplicates")
+    }
+    
 }
