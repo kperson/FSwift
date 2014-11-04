@@ -9,7 +9,7 @@
 import UIKit
 import XCTest
 
-class OptionalExtensionTests: XCTestCase {
+public class OptionalExtensionTests: XCTestCase {
 
     func testGetOrElse() {
         let nilString: String? = nil

@@ -6,12 +6,20 @@
 //  Copyright (c) 2014 Kelton. All rights reserved.
 //
 
-import UIKit
 import XCTest
-
-
-
 class ListExtensionTests: XCTestCase {
+    
+    func testFlatMap() {
+        let list = [4, 5, 6, 7]
+        let evenOnly = list.flatMap { x in x % 2 == 0 ? x : nil }
+        XCTAssertEqual(evenOnly,[4, 6], "Flat map function selects only event numbers")
+    }
+    
+    func testFlatMapWithExplicityOptionals() {
+        let list:[Int?] = [4, 5, 6, 7, nil, 8]
+        let evenOnly = list.flatMap { x in x.getOrElse(1) % 2 == 0 ? x : nil }
+        XCTAssertEqual(evenOnly,[4, 6, 8], "Flat map function selects only event numbers")
+    }
     
     func testForeach() {
         var i = 0
@@ -22,7 +30,7 @@ class ListExtensionTests: XCTestCase {
             i += 1
         }
     }
-
+    
     func testForeachIndexWithIndex() {
         var i = 0
         let list = [4, 5, 6, 7, 8]

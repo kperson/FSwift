@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
+		DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
 		DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3619E2D637006217BA /* ListExtensionTests.swift */; };
 		DB241D3A19E2DF31006217BA /* ListExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* ListExtension.swift */; };
 		DB241D3B19E2E380006217BA /* ListExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* ListExtension.swift */; };
@@ -41,6 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlExtension.swift; sourceTree = "<group>"; };
 		DB241D3619E2D637006217BA /* ListExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListExtensionTests.swift; sourceTree = "<group>"; };
 		DB241D3919E2DF31006217BA /* ListExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListExtension.swift; sourceTree = "<group>"; };
 		DB241D4219E317C2006217BA /* OptionalExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExtension.swift; sourceTree = "<group>"; };
@@ -78,6 +81,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB1FB6A819FB2B4000775267 /* UIView */ = {
+			isa = PBXGroup;
+			children = (
+				DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */,
+			);
+			path = UIView;
+			sourceTree = "<group>";
+		};
 		DB241D3519E2D616006217BA /* List */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +149,7 @@
 				DBA75A9B19DDECAF009EA696 /* Supporting Files */,
 				DBB1B23C19DE3EC800272EE3 /* Time */,
 				DBA75AB319DDECF4009EA696 /* Try */,
+				DB1FB6A819FB2B4000775267 /* UIView */,
 			);
 			path = FSwift;
 			sourceTree = "<group>";
@@ -328,6 +340,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */,
+				DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */,
 				DBBFA1D919DF48140090B60F /* Future.swift in Sources */,
 				DBB1B23E19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,
 				DB241D4319E317C2006217BA /* OptionalExtension.swift in Sources */,
@@ -341,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB241D4419E3183A006217BA /* OptionalExtension.swift in Sources */,
+				DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */,
 				DB241D3B19E2E380006217BA /* ListExtension.swift in Sources */,
 				DB241D4719E3196B006217BA /* OptionalExtensionTests.swift in Sources */,
 				DBB1B24119DE414B00272EE3 /* IntervalExtensionTests.swift in Sources */,

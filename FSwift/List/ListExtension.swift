@@ -10,7 +10,7 @@ import Foundation
 
 extension Array {
     
-    func foreach( f: (T) -> Void) {
+    func foreach(f: (T) -> Void) {
         for x in self {
             f(x)
         }
@@ -71,10 +71,21 @@ extension Array {
             return self.everythingButFirst.findFirst(f)
         }
     }
+    
+    func flatMap<S>(f: T -> S?) -> [S] {
+        var list = [S]()
+        for x in self {
+            if let val = f(x) {
+                list.append(val)
+            }
+        }
+        return list
+    }
+
 
 }
 
-func removeDuplicates<S : Equatable>(seq: [S]) -> [S] {
+public func removeDuplicates<S : Equatable>(seq: [S]) -> [S] {
     var uniqueList = [S]()
     for x in seq {
         if !contains(uniqueList, x) {
