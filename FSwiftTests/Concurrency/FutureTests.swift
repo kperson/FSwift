@@ -88,7 +88,7 @@ class FutureTests: XCTestCase {
             return Try.Success(2)
         }
         
-        combineFutureOnBackground(x.signal, y.signal)
+        combineFuturesOnBackground(x.signal, y.signal)
         .onSuccess { a in
             for val in 0...y.finalVal - 1 {
               println(x.finalVal)

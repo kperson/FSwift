@@ -233,24 +233,24 @@ public class Future<T> {
     
 }
 
-public func combineFuture(signals: Signal...) -> Future<Void> {
-    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
+public func combineFutures(signals: Signal...) -> Future<Void> {
+    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
 }
 
-public func combineFutureOnBackground(signals: Signal...) -> Future<Void> {
-    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
+public func combineFuturesOnBackground(signals: Signal...) -> Future<Void> {
+    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
 }
 
-public func combineFuture(signals: [Signal]) -> Future<Void> {
-    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
+public func combineFutures(signals: [Signal]) -> Future<Void> {
+    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
 }
 
-public func combineFutureOnBackground(signals: [Signal]) -> Future<Void> {
-    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
+public func combineFuturesOnBackground(signals: [Signal]) -> Future<Void> {
+    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
 }
 
 
-public func combineFutureWithOptions(signals: [Signal], operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) -> Future<Void> {
+public func combineFuturesWithOptions(signals: [Signal], operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) -> Future<Void> {
     let f = Future<Void>(operationQueue: operationQueue, callbackQueue: callbackQueue)
     var ct = 0
     for x in signals {
