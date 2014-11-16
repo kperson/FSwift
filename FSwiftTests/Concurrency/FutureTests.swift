@@ -76,27 +76,28 @@ class FutureTests: XCTestCase {
         NSThread.sleepForTimeInterval(100.milliseconds)
     }
     
-    func testWhenReady() {
-        let x = futureOnBackground {
-            Try.Success("Hello World")
+    func testCombine() {
+        
+        let x = futureOnBackground { () -> Try<String> in
+            NSThread.sleepForTimeInterval(500.milliseconds)
+            return Try.Success("hello")
         }
         
-        let start = NSDate().timeIntervalSince1970
-        let y = futureOnBackground { () -> Try<String> in
+        let y = futureOnBackground { () -> Try<Int> in
             NSThread.sleepForTimeInterval(100.milliseconds)
-            return Try<String>.Failure(NSError(domain: "com.error", code: 200, userInfo: nil))
+            return Try.Success(2)
         }
         
-        var complete = false
-        let list:[Future<String>] = [x, y]
-        whenComplete(list, {
-            complete = true
-            let end = NSDate().timeIntervalSince1970
-            XCTAssert(end - start >= 100.millisecond, "The future needs to have been completed in about 100 milliseconds")
-        })
+        combineFutureOnBackground(x.signal, y.signal)
+        .onSuccess { a in
+            for val in 0...y.finalVal - 1 {
+              println(x.finalVal)
+            }
+        }
+    
         
-        NSThread.sleepForTimeInterval(200.millisecond)
-        XCTAssertTrue(complete, "The await method must have triggered")
+         NSThread.sleepForTimeInterval(2.seconds)
+
     }
     
     func testAwait() {

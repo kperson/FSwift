@@ -227,9 +227,30 @@ public class Future<T> {
         return self.futureValue
     }
     
+    public var finalVal: T {
+        return self.value!.value!
+    }
+    
 }
 
-func combine(signals: [Signal], operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) -> Future<Void> {
+public func combineFuture(signals: Signal...) -> Future<Void> {
+    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
+}
+
+public func combineFutureOnBackground(signals: Signal...) -> Future<Void> {
+    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
+}
+
+public func combineFuture(signals: [Signal]) -> Future<Void> {
+    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
+}
+
+public func combineFutureOnBackground(signals: [Signal]) -> Future<Void> {
+    return combineFutureWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
+}
+
+
+public func combineFutureWithOptions(signals: [Signal], operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) -> Future<Void> {
     let f = Future<Void>(operationQueue: operationQueue, callbackQueue: callbackQueue)
     var ct = 0
     for x in signals {
@@ -248,25 +269,6 @@ func combine(signals: [Signal], operationQueue: NSOperationQueue = defaultFuture
     return f
 }
 
-func whenComplete<T>(futureList: [Future<T>], completionHandler: () -> ()) {
-    var ct = 0
-    for f in futureList {
-        if f.futureValue == nil {
-            f.interalCompletionHandler = {
-                ct = ct + 1
-                if ct == countElements(futureList) {
-                    completionHandler()
-                }
-            }
-        }
-        else {
-            ct = ct + 1
-            if ct == countElements(futureList) {
-                completionHandler()
-            }
-        }
-    }
-}
 
 public func future<T>(f: () -> Try<T>) -> Future<T> {
     return Future(f)
