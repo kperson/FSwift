@@ -19,4 +19,13 @@ extension Optional {
         }
     }
     
+    func flatMap<S>(f: (T) -> S) -> S? {
+        if self == nil {
+            return nil
+        }
+        else {
+            return f(self!)
+        }
+    }
+    
 }

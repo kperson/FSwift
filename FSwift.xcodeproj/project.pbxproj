@@ -28,6 +28,8 @@
 		DBBFA1D919DF48140090B60F /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBFA1D819DF48140090B60F /* Future.swift */; };
 		DBBFA1DA19DF48140090B60F /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBFA1D819DF48140090B60F /* Future.swift */; };
 		DBBFA1DD19DF48590090B60F /* FutureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBFA1DC19DF48590090B60F /* FutureTests.swift */; };
+		DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD241A01A15B091004D97A8 /* Signal.swift */; };
+		DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD241A01A15B091004D97A8 /* Signal.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +63,7 @@
 		DBB1B24019DE414B00272EE3 /* IntervalExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntervalExtensionTests.swift; sourceTree = "<group>"; };
 		DBBFA1D819DF48140090B60F /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		DBBFA1DC19DF48590090B60F /* FutureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FutureTests.swift; path = FSwiftTests/Concurrency/FutureTests.swift; sourceTree = SOURCE_ROOT; };
+		DBD241A01A15B091004D97A8 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				DBBFA1D819DF48140090B60F /* Future.swift */,
+				DBD241A01A15B091004D97A8 /* Signal.swift */,
 			);
 			path = Concurrency;
 			sourceTree = "<group>";
@@ -339,6 +343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */,
 				DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */,
 				DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */,
 				DBBFA1D919DF48140090B60F /* Future.swift in Sources */,
@@ -353,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */,
 				DB241D4419E3183A006217BA /* OptionalExtension.swift in Sources */,
 				DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */,
 				DB241D3B19E2E380006217BA /* ListExtension.swift in Sources */,

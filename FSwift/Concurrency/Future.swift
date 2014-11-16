@@ -24,6 +24,7 @@ public class Future<T> {
 
     private var successF: ((T) -> ())?
     private var failureF: ((NSError) -> ())?
+    private var signals: [Signal] = []
     
     let operationQueue: NSOperationQueue
     let callbackQueue: NSOperationQueue
@@ -38,6 +39,23 @@ public class Future<T> {
     public init(operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
         self.operationQueue = operationQueue
         self.callbackQueue = callbackQueue
+    }
+    
+    public var signal: Signal {
+        let signal = Signal()
+        if futureValue == nil {
+            signals.append(signal)
+        }
+        else {
+            switch self.futureValue! {
+            case Try.Success(let val):
+                signal.complete(TryStatus.Success, self.callbackQueue)
+                
+            case Try.Failure(let error):
+                signal.complete(TryStatus.Failure(error), self.callbackQueue)
+            }
+        }
+        return signal
     }
     
     /**
@@ -126,6 +144,28 @@ public class Future<T> {
         return mappedFuture
     }
     
+    public func mapToFuture<D>(f: (T) -> Future<D>) -> Future<D> {
+        let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
+        self.mappedCompletionF = {
+            if self.futureValue!.value != nil {
+                f(self.futureValue!.value!)
+                    .onSuccess { x in
+                        mappedFuture.bridgeSuccess(x)
+                        return Void()
+                        
+                    }.onFailure { err in
+                        mappedFuture.bridgeFailure(err)
+                        return Void()
+                }
+            }
+            else {
+                mappedFuture.bridgeFailure(self.futureValue!.error!)
+            }
+            
+        }
+        return mappedFuture
+    }
+    
     
     private func generateCallback() {
         let operation = NSBlockOperation {
@@ -146,6 +186,19 @@ public class Future<T> {
             }
             self.mappedCompletionF?()
             self.interalCompletionHandler?()
+            
+            switch self.futureValue! {
+            case Try.Success(let val):
+                for x in self.signals {
+                    x.complete(TryStatus.Success)
+                }
+            case Try.Failure(let error):
+                for x in self.signals {
+                    x.complete(TryStatus.Failure(error))
+                }
+                
+            }
+            
         }
         self.callbackQueue.addOperation(operationCallback)
     }
@@ -174,6 +227,25 @@ public class Future<T> {
         return self.futureValue
     }
     
+}
+
+func combine(signals: [Signal], operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) -> Future<Void> {
+    let f = Future<Void>(operationQueue: operationQueue, callbackQueue: callbackQueue)
+    var ct = 0
+    for x in signals {
+        x.register { status in
+            switch status {
+            case TryStatus.Success:
+                ct = ct + 1
+                if ct == signals.count {
+                    f.bridgeSuccess(Void())
+                }
+            case TryStatus.Failure(let error):
+                f.bridgeFailure(error)
+            }
+        }
+    }
+    return f
 }
 
 func whenComplete<T>(futureList: [Future<T>], completionHandler: () -> ()) {

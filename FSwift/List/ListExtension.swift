@@ -81,6 +81,16 @@ extension Array {
         }
         return list
     }
+    
+    func take(amount: Int) -> [T] {
+        var i = 0
+        var list:[T] = []
+        while i < countElements(self) && i < amount {
+            list.append(self[i])
+            i++
+        }
+        return list
+    }
 
 
 }
