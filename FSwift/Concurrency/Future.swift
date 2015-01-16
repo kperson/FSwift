@@ -13,6 +13,8 @@ import Foundation
 
 let defaultFutureQueue = NSOperationQueue()
 
+
+
 public class Future<T> {
     
     private var f: (() -> Try<T>)? = nil
@@ -268,6 +270,8 @@ public func combineFuturesWithOptions(signals: [Signal], operationQueue: NSOpera
     }
     return f
 }
+
+
 
 
 public func future<T>(f: () -> Try<T>) -> Future<T> {

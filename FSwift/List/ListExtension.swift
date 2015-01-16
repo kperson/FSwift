@@ -24,6 +24,19 @@ extension Array {
         }
     }
     
+    
+    func indexOf( f: (T) -> Bool) -> Int? {
+        var i = 0
+        var final: Int?
+        for x in self {
+            if f(x)  {
+                final = i
+            }
+            i++
+        }
+        return final
+    }
+    
     var everythingButFirst: [T]  {
         if self.count <= 1 {
             return []
@@ -90,6 +103,56 @@ extension Array {
             i++
         }
         return list
+    }
+    
+    func shuffled() -> [T] {
+        var list = self
+        for i in 0..<(list.count - 1) {
+            let j = Int(arc4random_uniform(UInt32(list.count - i))) + i
+            swap(&list[i], &list[j])
+        }
+        return list
+    }
+    
+    func skip(amount: Int) -> [T] {
+        var i = amount
+        var list: [T] = []
+        while i < countElements(self) {
+            list.append(self[i])
+            i++
+        }
+        return list
+    }
+    
+    /**
+    * @param m A mapping a function
+    * @param r a reduce function
+    *
+    * The mapping function is required to take a T (the type of object in the Array) a map it a value of type B (i.e. the key)
+    * The reduction function takes the key(type B) and a list of Ts and reduces to a single C
+    * See test case in ListExtensionsTests.swift for an example
+    * See http://en.wikipedia.org/wiki/MapReduce for more explanation of map reduce
+    *
+    * @return a list of C
+    *
+    */
+    func mapReduce<B:Hashable, C>(m: (T) -> B, _ r: (B, [T]) -> C) -> [C]  {
+        var dict:Dictionary<B, [T]> = [:]
+        for x in self {
+            let key = m(x)
+            if var l = dict[key] {
+                l.append(x)
+                dict[key] = l
+            }
+            else {
+                dict[key] = [x]
+            }
+        }
+        var rs:[C] = []
+        for (k, v) in dict {
+            rs.append(r(k, v))
+        }
+        return rs
     }
 
 
