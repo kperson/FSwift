@@ -29,6 +29,7 @@ class IntervalExtensionTests: XCTestCase {
     func testHours() {
         XCTAssertEqual(5.hours, 18000, "5 hours must be 18000.0 (NSTimeInterval)")
         XCTAssertEqual(5.hour, 18000, "5 hours must be 18000.0 (NSTimeInterval)")
+
     }
     
     func testDays() {

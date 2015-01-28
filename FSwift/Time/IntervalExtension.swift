@@ -29,3 +29,42 @@ public extension Int {
     public var year: NSTimeInterval { return self.years }
     
 }
+
+public func + (date:NSDate, time: NSTimeInterval) -> NSDate {
+    return date.dateByAddingTimeInterval(time)
+}
+
+public func + (time: NSTimeInterval, date:NSDate) -> NSDate {
+    return date.dateByAddingTimeInterval(time)
+}
+
+
+public func - (date:NSDate, time: NSTimeInterval) -> NSDate {
+    return date.dateByAddingTimeInterval(-time)
+}
+
+public func - (time: NSTimeInterval, date:NSDate) -> NSDate {
+    return date.dateByAddingTimeInterval(-time)
+}
+
+public func > (left: NSDate, right: NSDate) -> Bool {
+    let compare = left.compare(right)
+    
+    if compare == NSComparisonResult.OrderedDescending {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+public func < (left: NSDate, right: NSDate) -> Bool {
+    let compare = right.compare(left)
+    
+    if compare == NSComparisonResult.OrderedDescending {
+        return true
+    }
+    else {
+        return false
+    }
+}

@@ -13,9 +13,10 @@ let emptyBody:NSData =  "".dataUsingEncoding(NSUTF8StringEncoding, allowLossyCon
 
 public class RequestResponse {
     
-    let statusCode: Int
-    let body: NSData
-    let headers: Dictionary<String, AnyObject>
+    public let statusCode: Int
+    public let body: NSData
+    public let headers: Dictionary<String, AnyObject>
+    
     private var bodyText: String?
 
     init(statusCode: Int, body: NSData, headers: Dictionary<String, AnyObject>) {
@@ -24,7 +25,7 @@ public class RequestResponse {
         self.headers = headers
     }
     
-    var bodyAsText: String {
+    public var bodyAsText: String {
         if let bodyT = self.bodyText {
             return bodyT
         }
@@ -36,23 +37,14 @@ public class RequestResponse {
     
 }
 
-public enum RequestMethod {
+public enum RequestMethod : String {
     
-    case POST
-    case GET
-    case DELETE
-    case PUT
-    case OPTION
+    case POST = "POST"
+    case GET = "GET"
+    case DELETE = "DELETE"
+    case PUT = "PUT"
+    case OPTION = "OPTION"
     
-    func toStr() -> String {
-        switch self {
-            case .POST: return "POST"
-            case .GET: return "GET"
-            case .DELETE: return "DELETE"
-            case .PUT: return "PUT"
-            case .OPTION: return "OPTION"
-        }
-    }
 }
 
 public extension String {
@@ -121,7 +113,7 @@ public class ServiceUtil {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
         //let session = NSURLSession.sharedSession()
         let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        request.HTTPMethod = requestMethod.toStr()
+        request.HTTPMethod = requestMethod.rawValue
         request.HTTPBody = body
         
         for (headerKey, headerValue) in headers {
