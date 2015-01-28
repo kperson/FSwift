@@ -63,8 +63,8 @@ public class ServiceUtil {
         var error: NSError?
         return NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions.PrettyPrinted, error: &error)
     }
-    
-    public class func asParams(params: Dictionary<String, AnyObject>) -> NSData {
+
+    public class func asParamsStr(params: Dictionary<String, AnyObject>) -> String {
         var pairs:[String] = []
         for (key, value) in params {
             if let v = value as? Dictionary<String, AnyObject> {
@@ -81,12 +81,16 @@ public class ServiceUtil {
             }
             else {
                 let escapedFormat = CFURLCreateStringByAddingPercentEscapes(nil, value.description, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue)
-               
+                
                 pairs.append( "\(key)=\(escapedFormat)")
             }
         }
         let str = "&".join(pairs)
-        return str.dataUsingEncoding(NSUTF8StringEncoding)!
+        return str
+    }
+    
+    public class func asParams(params: Dictionary<String, AnyObject>) -> NSData {
+        return asParamsStr(params).dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
     public class func delete(url:String, body: NSData = emptyBody, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
