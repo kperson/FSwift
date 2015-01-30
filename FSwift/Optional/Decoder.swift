@@ -39,7 +39,7 @@ public extension Decoder {
     
 }
 
-public struct Decoder {
+public class Decoder {
     
     let notAnArrayError = NSError(domain: "com.optionreader", code: 2, userInfo: [ "message" : "data is not array like" ])
     let notADictionaryError = NSError(domain: "com.optionreader", code: 3, userInfo: [ "message" : "data is not dictionary like" ])
@@ -61,7 +61,7 @@ public struct Decoder {
         self.depth = depth
     }
     
-    private init(value: AnyObject, parseType: Bool = false, depth: Int = 0) {
+    public init(value: AnyObject, parseType: Bool = false, depth: Int = 0) {
         self.depth = depth
         if !parseType {
             self.value = value
@@ -70,7 +70,7 @@ public struct Decoder {
             if let a = value as? [AnyObject] {
                 self.rawArray = a
             }
-            else if let d = val as? [String : AnyObject] {
+            else if let d = value as? [String : AnyObject] {
                 self.rawDictionary = d
             }
             else {

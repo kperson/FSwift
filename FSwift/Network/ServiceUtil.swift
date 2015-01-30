@@ -58,11 +58,6 @@ public extension String {
 
 
 public class ServiceUtil {
-    
-    public class func asJson(obj: AnyObject) -> NSData? {
-        var error: NSError?
-        return NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions.PrettyPrinted, error: &error)
-    }
 
     public class func asParamsStr(params: Dictionary<String, AnyObject>) -> String {
         var pairs:[String] = []
