@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7509CA4E1A7C03A1006B04B0 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7509CA4D1A7C03A1006B04B0 /* Error.swift */; };
 		75287F531A794CDC00E1C68D /* ColorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F521A794CDC00E1C68D /* ColorTest.swift */; };
 		75287F551A794DD600E1C68D /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759BE93F1A7812540042B77C /* Color.swift */; };
 		75287F591A79601700E1C68D /* RectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F581A79601700E1C68D /* RectTest.swift */; };
@@ -64,6 +65,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7509CA4D1A7C03A1006B04B0 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		75287F521A794CDC00E1C68D /* ColorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTest.swift; sourceTree = "<group>"; };
 		75287F581A79601700E1C68D /* RectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RectTest.swift; path = Try/RectTest.swift; sourceTree = "<group>"; };
 		75287F5C1A7961BF00E1C68D /* DictionaryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryTest.swift; sourceTree = "<group>"; };
@@ -118,6 +120,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7509CA4F1A7C066D006B04B0 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				7509CA4D1A7C03A1006B04B0 /* Error.swift */,
+			);
+			name = Error;
+			sourceTree = "<group>";
+		};
 		75287F541A794D6B00E1C68D /* Color */ = {
 			isa = PBXGroup;
 			children = (
@@ -286,6 +296,7 @@
 				759BE94A1A7814060042B77C /* Dictionary */,
 				759BE94D1A7816210042B77C /* Date */,
 				759BE9501A7816440042B77C /* Segue */,
+				7509CA4F1A7C066D006B04B0 /* Error */,
 			);
 			path = FSwift;
 			sourceTree = "<group>";
@@ -482,6 +493,7 @@
 			files = (
 				DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */,
 				759BE9491A7814020042B77C /* Dictionary.swift in Sources */,
+				7509CA4E1A7C03A1006B04B0 /* Error.swift in Sources */,
 				DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */,
 				DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */,
 				759BE93B1A7811810042B77C /* Logging.swift in Sources */,

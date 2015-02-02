@@ -8,9 +8,9 @@
 
 import Foundation
 
-class JSONDecoder: Decoder {
+public class JSONDecoder: Decoder {
     
-    class func decoderWithJsonData(data:NSData) -> Try<JSONDecoder> {
+    public class func decoderWithJsonData(data:NSData) -> Try<JSONDecoder> {
         var error:NSError?
         
         if let jsonObject:AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error) {

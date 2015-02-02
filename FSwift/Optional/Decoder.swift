@@ -11,7 +11,11 @@ import Foundation
 public extension Decoder {
     
     public var string: String? {
-        return self.val as? String
+        if let string = self.val as? String {
+            return (string.isEmpty) ? nil : string
+        } else {
+            return nil
+        }
     }
     
     public var int: Int? {

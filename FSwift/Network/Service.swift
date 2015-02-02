@@ -13,20 +13,36 @@ public protocol Restful {
     class func getPath() -> String
 }
 
-private var root = ""
-private var authenticationHeader:(@autoclosure() -> (Dictionary<String, AnyObject>)) = [:]
+public protocol Authentication {
+    func headerForPath(path:String) -> Dictionary<String,AnyObject>
+}
+
+private var _root = ""
+private var _authentication:Authentication?
 
 public class Service: ServiceUtil {
     
     // MARK: Global set up
     
-    public class func setRoot(newRoot:String) {
-        root = newRoot
+    public class var root:String {
+        get {
+            return _root
+        }
+        set(value) {
+            _root = value
+        }
     }
     
-    public class func setAuthenticationHeader(newAuthenticationHeader:(@autoclosure() -> (Dictionary<String, AnyObject>))) {
-       authenticationHeader = newAuthenticationHeader
+    public class var authentication:Authentication? {
+        get {
+           return _authentication
+        }
+        set(value) {
+            _authentication = value
+        }
     }
+    
+    // MARK: Authentication
     
     // MARK: Get an object
     
@@ -38,7 +54,9 @@ public class Service: ServiceUtil {
     // MARK: Get Object
     
     public class func getObject<T:Restful>(url:String, type:T.Type) -> Future<T> {
-        return getDecoder(url, headers: authenticationHeader()).map {decoder -> (Try<T>) in
+        let header = authentication?.headerForPath(url) ?? [:]
+        
+        return getDecoder(url, headers: header).map {decoder -> (Try<T>) in
             if let object = T(decoder: decoder) {
                 return Try.Success(object)
             } else {
@@ -47,18 +65,18 @@ public class Service: ServiceUtil {
         }
     }
     
-    
     // MARK: Get Decoder
     
-    private class func getDecoder(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<JSONDecoder> {
-        return getData(url, headers: authenticationHeader()).map {data -> (Try<JSONDecoder>) in
+    public class func getDecoder(url:String, var headers: Dictionary<String, AnyObject> = [:]) -> Future<JSONDecoder> {
+        headers["Accept"] = "application/json"
+        return getData(url, headers: headers).map {data -> (Try<JSONDecoder>) in
             return JSONDecoder.decoderWithJsonData(data)
         }
     }
     
     // MARK: Get data
     
-    private class func getData(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<NSData> {
+    public class func getData(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<NSData> {
         return get(url, headers: headers).map {response in
             if let error = self.isResponseCodeValid(response) {
                 return Try.Failure(error)
@@ -71,7 +89,14 @@ public class Service: ServiceUtil {
     // MARK: Response status code check
     
     private class func isResponseCodeValid(response:RequestResponse) -> NSError? {
-        return nil //TODO: create error if invalid code
+        switch response.statusCode {
+        case 0...399:
+            return nil
+        case 403:
+            return NSError(domain: "com.service", code: 1, userInfo: ["message":"Forbidden"])
+        default:
+            return NSError(domain: "com.service", code: 0, userInfo: ["message":"Status code \(response.statusCode)", "details":response.bodyAsText])
+        }
     }
     
 }

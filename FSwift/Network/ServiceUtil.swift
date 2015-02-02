@@ -8,8 +8,8 @@
 
 import Foundation
 
-let emptyBody:NSData =  "".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-
+private let emptyBody:NSData =  "".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+private var _logging:Bool = false
 
 public class RequestResponse {
     
@@ -58,6 +58,16 @@ public extension String {
 
 
 public class ServiceUtil {
+    
+    public class var logging:Bool {
+        get {
+            return _logging
+        }
+        
+        set(value) {
+            _logging = value
+        }
+    }
 
     public class func asParamsStr(params: Dictionary<String, AnyObject>) -> String {
         var pairs:[String] = []
@@ -129,7 +139,12 @@ public class ServiceUtil {
         let future = Future<RequestResponse>()
         var error: NSError
         
+        if logging {println("Sending ... \(request) with header \(request.allHTTPHeaderFields)")}
+        
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+            
+            if self.logging {println("Received ... \(response) with data \(NSString(data:data, encoding:NSUTF8StringEncoding))")}
+            
             if error != nil {
               future.bridgeFailure(error)
             }
