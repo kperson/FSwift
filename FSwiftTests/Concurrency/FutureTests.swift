@@ -97,6 +97,68 @@ class FutureTests: XCTestCase {
          NSThread.sleepForTimeInterval(2.seconds)
 
     }
+
+    func testRecover() {
+        var complete = false
+        futureOnBackground {
+            Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
+        }.recover { err in
+            Try.Success(3)
+        }.onSuccess { num in
+            complete = true
+            println(num)
+            XCTAssert(3 == num, "recover must coalesce")
+        }
+        
+        var complete2 = false
+        futureOnBackground {
+            Try.Success(4)
+        }.recover { err in
+            Try.Success(3)
+        }.onSuccess { num in
+            complete2 = true
+            XCTAssert(4 == num, "recover must coalesce")
+        }
+        
+        NSThread.sleepForTimeInterval(200.milliseconds)
+        XCTAssert(complete2, "recovering must have completed")
+        XCTAssert(complete, "recovering must have completed")
+
+    }
+    
+    func testRecoverFilter() {
+        var recoveredOne = false
+        futureOnBackground {
+            Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
+        }.recoverOn { err in
+            err.domain == "com.error"
+        }.recover { err in
+            recoveredOne = true
+            return Try.Success(3)
+        }.onSuccess { num in
+            XCTAssert(3 == num, "recover must coalesce")
+        }
+        
+        var recoveredTwo = false
+        futureOnBackground {
+            Try.Failure(NSError(domain: "com.error2", code: 100, userInfo: nil))
+        }.recoverOn { err in
+            err.domain == "com.error"
+        }.recover { err in
+            recoveredTwo = true
+            return Try.Success(3)
+        }.onSuccess { num in
+            XCTAssert(3 == num, "recover must coalesce")
+        }
+    
+
+        
+        NSThread.sleepForTimeInterval(200.milliseconds)
+        XCTAssert(recoveredOne, "recovering must have completed")
+        XCTAssert(!recoveredTwo, "recovering must have not completed")
+        
+    }
+
     
     func testAwait() {
         let x = futureOnBackground {
