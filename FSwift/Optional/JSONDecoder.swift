@@ -8,17 +8,21 @@
 
 import Foundation
 
-public class JSONDecoder: Decoder {
+extension Decoder {
     
-    public class func decoderWithJsonData(data:NSData) -> Try<JSONDecoder> {
+    public class func decoderWithJsonData(data:NSData) -> Try<Decoder> {
         var error:NSError?
         
-        if let jsonObject:AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error) {
-            return Try.Success(JSONDecoder(value:jsonObject, parseType:true, depth:0))
-        } else if let error = error {
-            return Try.Failure(error)
+        if data.length > 0 {
+            if let jsonObject:AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error) {
+                return Try.Success(Decoder(value:jsonObject, parseType:true, depth:0))
+            } else if let error = error {
+                return Try.Failure(error)
+            } else {
+                return Try.Failure(NSError(domain: "com.jsondecoder", code: 0, userInfo: ["message":"Could not parse NSData"]))
+            }
         } else {
-            return Try.Failure(NSError(domain: "com.jsondecoder", code: 0, userInfo: ["message":"Could not parse NSData"]))
+            return Try.Success(Decoder())
         }
     }
     

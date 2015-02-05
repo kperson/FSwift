@@ -8,7 +8,7 @@
 
 import Foundation
 
-private let emptyBody:NSData =  "".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+let emptyBody:NSData =  "".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
 private var _logging:Bool = false
 
 public class RequestResponse {
@@ -16,8 +16,12 @@ public class RequestResponse {
     public let statusCode: Int
     public let body: NSData
     public let headers: Dictionary<String, AnyObject>
-    
     private var bodyText: String?
+    
+    
+    var isSuccessful:Bool {
+        return statusCode == 200
+    }
 
     init(statusCode: Int, body: NSData, headers: Dictionary<String, AnyObject>) {
         self.statusCode = statusCode
@@ -120,7 +124,6 @@ public class ServiceUtil {
     
     public class func request(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<RequestResponse> {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        //let session = NSURLSession.sharedSession()
         let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         request.HTTPMethod = requestMethod.rawValue
         request.HTTPBody = body
@@ -139,7 +142,7 @@ public class ServiceUtil {
         let future = Future<RequestResponse>()
         var error: NSError
         
-        if logging {println("Sending ... \(request) with header \(request.allHTTPHeaderFields)")}
+        if logging {println("Sending ... \(request) with header \(request.allHTTPHeaderFields) with data \(NSString(data: body, encoding: NSUTF8StringEncoding))")}
         
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
             

@@ -34,6 +34,10 @@ public extension Decoder {
         return self.val as? Bool
     }
     
+    public var stringArray: [String]? {
+        return self.val as? [String]
+    }
+    
     public var errorMessage: String? {
         if let err = self.err as NSError? {
             return err.userInfo!["message"] as String?
@@ -86,6 +90,10 @@ public class Decoder {
     private init(error: NSError, depth: Int = 0) {
         self.depth = depth
         self.error = error
+    }
+    
+    public init() { //Empty
+        self.depth = 0
     }
     
     public var arr: DecoderArray? {

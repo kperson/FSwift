@@ -8,17 +8,26 @@
 
 import Foundation
 
-public protocol Restful {
+public protocol Codable {
     init?(decoder:Decoder)
-    class func getPath() -> String
 }
 
-public protocol Authentication {
-    func headerForPath(path:String) -> Dictionary<String,AnyObject>
+public protocol GETable:Codable {
+    class func getPathWithId(id:String) -> String
+}
+
+public protocol POSTable {
+    class func postPath() -> String
+    func postCoder() -> Coder
+}
+
+public struct Successful {
+    public init() {
+        
+    }
 }
 
 private var _root = ""
-private var _authentication:Authentication?
 
 public class Service: ServiceUtil {
     
@@ -33,30 +42,26 @@ public class Service: ServiceUtil {
         }
     }
     
-    public class var authentication:Authentication? {
-        get {
-           return _authentication
-        }
-        set(value) {
-            _authentication = value
+    // MARK: GET
+    
+    public class func getObjectWithId<T:GETable>(id:String, type:T.Type, var headers: Dictionary<String, AnyObject> = [:]) -> Future<T> {
+        let url = root + T.getPathWithId(id)
+        return requestObject(type, url: url, requestMethod: RequestMethod.GET, coder:nil , headers: headers)
+    }
+    
+    // MARK: POST
+    
+    public class func postObject<T:POSTable>(object:T, var headers: Dictionary<String, AnyObject> = [:]) -> Future<Successful> {
+        let url = root + T.postPath()
+        return requestDecoder(url, requestMethod: RequestMethod.POST, coder: object.postCoder(), headers: headers).map {decoder -> (Try<Successful>) in
+            return Try.Success(Successful())
         }
     }
     
-    // MARK: Authentication
+    // MARK: Objects
     
-    // MARK: Get an object
-    
-    public class func get<T:Restful>(type:T.Type, id:String) -> Future<T> {
-        let url = root + T.getPath() + "/" + id
-        return getObject(url, type:type)
-    }
-    
-    // MARK: Get Object
-    
-    public class func getObject<T:Restful>(url:String, type:T.Type) -> Future<T> {
-        let header = authentication?.headerForPath(url) ?? [:]
-        
-        return getDecoder(url, headers: header).map {decoder -> (Try<T>) in
+    public class func requestObject<T:Codable>(type:T.Type, url:String, requestMethod: RequestMethod, coder: Coder?, var headers: Dictionary<String, AnyObject>) -> Future<T> {
+        return requestDecoder(url, requestMethod: requestMethod, coder: coder, headers: headers).map {decoder -> (Try<T>) in
             if let object = T(decoder: decoder) {
                 return Try.Success(object)
             } else {
@@ -65,38 +70,43 @@ public class Service: ServiceUtil {
         }
     }
     
-    // MARK: Get Decoder
+    // MARK: JSON Decoder
     
-    public class func getDecoder(url:String, var headers: Dictionary<String, AnyObject> = [:]) -> Future<JSONDecoder> {
+    public class func requestDecoder(url:String, requestMethod: RequestMethod, coder: Coder?, var headers: Dictionary<String, AnyObject>) -> Future<Decoder> {
         headers["Accept"] = "application/json"
-        return getData(url, headers: headers).map {data -> (Try<JSONDecoder>) in
-            return JSONDecoder.decoderWithJsonData(data)
+        headers["Content-Type"] = "application/json"
+        return requestData(url, requestMethod: requestMethod, body: coder?.jsonData ?? emptyBody, headers: headers).map {data -> (Try<Decoder>) in
+            return Decoder.decoderWithJsonData(data)
         }
     }
     
-    // MARK: Get data
+    // MARK: Data
     
-    public class func getData(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<NSData> {
-        return get(url, headers: headers).map {response in
-            if let error = self.isResponseCodeValid(response) {
-                return Try.Failure(error)
-            } else {
+    public class func requestData(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<NSData> {
+        return request(url, requestMethod: requestMethod, body: body, headers: headers).map {response in
+            if response.isSuccessful {
                 return Try.Success(response.body)
+            } else {
+                return Try.Failure(NSError(response: response))
             }
         }
     }
     
-    // MARK: Response status code check
     
-    private class func isResponseCodeValid(response:RequestResponse) -> NSError? {
-        switch response.statusCode {
-        case 0...399:
-            return nil
-        case 403:
-            return NSError(domain: "com.service", code: 1, userInfo: ["message":"Forbidden"])
-        default:
-            return NSError(domain: "com.service", code: 0, userInfo: ["message":"Status code \(response.statusCode)", "details":response.bodyAsText])
-        }
+}
+
+extension NSError {
+    
+    convenience init(response:RequestResponse) {
+        self.init(domain: "com.service", code: 0, userInfo: ["message":"Response status \(response.statusCode)","requestResponce":response])
+    }
+    
+    var requestResponse:RequestResponse? {
+        return userInfo?["requestResponce"] as? RequestResponse
     }
     
 }
+
+
+
+
