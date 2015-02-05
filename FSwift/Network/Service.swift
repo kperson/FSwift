@@ -84,7 +84,7 @@ public class Service: ServiceUtil {
     
     public class func requestData(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<NSData> {
         return request(url, requestMethod: requestMethod, body: body, headers: headers).map {response in
-            if response.isSuccessful {
+            if response.isStatusCodeValid {
                 return Try.Success(response.body)
             } else {
                 return Try.Failure(NSError(response: response))

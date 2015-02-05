@@ -19,8 +19,8 @@ public class RequestResponse {
     private var bodyText: String?
     
     
-    var isSuccessful:Bool {
-        return statusCode == 200
+    public var isStatusCodeValid:Bool {
+        return statusCode < 400
     }
 
     init(statusCode: Int, body: NSData, headers: Dictionary<String, AnyObject>) {
