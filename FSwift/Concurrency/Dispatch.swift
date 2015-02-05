@@ -8,7 +8,7 @@
 
 import Foundation
 
-func delay(delay:Double, closure:()->()) {
+public func delay(delay:Double, closure:()->()) {
     dispatch_after(
         dispatch_time(
             DISPATCH_TIME_NOW,
@@ -17,13 +17,13 @@ func delay(delay:Double, closure:()->()) {
         dispatch_get_main_queue(), closure)
 }
 
-func background(block:()->()) {
+public func background(block:()->()) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
         block()
     })
 }
 
-func foreground(block:()->()) {
+public func foreground(block:()->()) {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
         block()
     })

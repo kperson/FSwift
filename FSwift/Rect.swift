@@ -18,4 +18,10 @@ extension CGRect {
         return CGPoint(x: origin.x + (size.width / 2.0), y: origin.y + (size.height / 2.0))
     }
     
+    func rectWithWidth(width:CGFloat) -> CGRect {
+        var copy = self
+        copy.size.width = width
+        return copy
+    }
+    
 }

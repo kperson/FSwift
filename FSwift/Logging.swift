@@ -14,12 +14,12 @@ postfix operator <<< {}
 
 infix operator <<< {}
 
-postfix func <<<<T>(value:T) -> T{
+public postfix func <<<<T>(value:T) -> T{
     println(value)
     return value
 }
 
-func <<<<T>(left:T,message:String) -> T{
+public func <<<<T>(left:T,message:String) -> T{
     println("\(message): \(left)")
     return left
 }

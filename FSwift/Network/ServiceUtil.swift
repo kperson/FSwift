@@ -9,15 +9,19 @@
 import Foundation
 
 let emptyBody:NSData =  "".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-
+private var _logging:Bool = false
 
 public class RequestResponse {
     
     public let statusCode: Int
     public let body: NSData
     public let headers: Dictionary<String, AnyObject>
-    
     private var bodyText: String?
+    
+    
+    var isSuccessful:Bool {
+        return statusCode == 200
+    }
 
     init(statusCode: Int, body: NSData, headers: Dictionary<String, AnyObject>) {
         self.statusCode = statusCode
@@ -59,9 +63,14 @@ public extension String {
 
 public class ServiceUtil {
     
-    public class func asJson(obj: AnyObject) -> NSData? {
-        var error: NSError?
-        return NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions.PrettyPrinted, error: &error)
+    public class var logging:Bool {
+        get {
+            return _logging
+        }
+        
+        set(value) {
+            _logging = value
+        }
     }
 
     public class func asParamsStr(params: Dictionary<String, AnyObject>) -> String {
@@ -115,7 +124,6 @@ public class ServiceUtil {
     
     public class func request(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<RequestResponse> {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        //let session = NSURLSession.sharedSession()
         let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         request.HTTPMethod = requestMethod.rawValue
         request.HTTPBody = body
@@ -134,7 +142,12 @@ public class ServiceUtil {
         let future = Future<RequestResponse>()
         var error: NSError
         
+        if logging {println("Sending ... \(request) with header \(request.allHTTPHeaderFields) with data \(NSString(data: body, encoding: NSUTF8StringEncoding))")}
+        
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+            
+            if self.logging {println("Received ... \(response) with data \(NSString(data:data, encoding:NSUTF8StringEncoding))")}
+            
             if error != nil {
               future.bridgeFailure(error)
             }
