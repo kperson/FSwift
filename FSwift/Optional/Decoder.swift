@@ -11,7 +11,11 @@ import Foundation
 public extension Decoder {
     
     public var string: String? {
-        return self.val as? String
+        if let string = self.val as? String {
+            return (string.isEmpty) ? nil : string
+        } else {
+            return nil
+        }
     }
     
     public var int: Int? {
@@ -28,6 +32,10 @@ public extension Decoder {
     
     public var bool: Bool? {
         return self.val as? Bool
+    }
+    
+    public var stringArray: [String]? {
+        return self.val as? [String]
     }
     
     public var errorMessage: String? {
@@ -82,6 +90,10 @@ public class Decoder {
     private init(error: NSError, depth: Int = 0) {
         self.depth = depth
         self.error = error
+    }
+    
+    public init() { //Empty
+        self.depth = 0
     }
     
     public var arr: DecoderArray? {
