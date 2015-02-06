@@ -23,3 +23,26 @@ public func <<<<T>(left:T,message:String) -> T{
     println("\(message): \(left)")
     return left
 }
+
+public enum LogType {
+    case General
+    case Network
+    case Bluetooth
+    
+    var isActive:Bool {
+        switch self {
+        case .Bluetooth:
+            return true
+        case .General:
+            return true
+        case .Network:
+            return true
+        }
+    }
+}
+
+public func log<T>(object:T, type:LogType) {
+    if type.isActive {
+        println(object)
+    }
+}
