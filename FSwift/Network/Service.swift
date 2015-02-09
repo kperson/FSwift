@@ -8,6 +8,14 @@
 
 import Foundation
 
+public protocol CodeDecodable:Codable, Decodable, Updatetable {
+    
+}
+
+public protocol Updatetable {
+    func updateWithDecoder(decoder:Decoder)
+}
+
 public protocol Decodable {
     init?(decoder:Decoder)
 }
