@@ -8,17 +8,20 @@
 
 import Foundation
 
-public protocol Codable {
+public protocol Decodable {
     init?(decoder:Decoder)
 }
 
-public protocol GETable:Codable {
+public protocol GETable:Decodable {
     class func getPathWithId(id:String) -> String
 }
 
-public protocol POSTable {
+public protocol Codable {
+    func codeWithCoder(coder:Coder) -> Coder
+}
+
+public protocol POSTable: Codable{
     class func postPath() -> String
-    func postCoder() -> Coder
 }
 
 public struct Successful {
@@ -35,7 +38,7 @@ public class Service: ServiceUtil {
     
     public class var root:String {
         get {
-            return _root
+        return _root
         }
         set(value) {
             _root = value
@@ -53,14 +56,14 @@ public class Service: ServiceUtil {
     
     public class func postObject<T:POSTable>(object:T, var headers: Dictionary<String, AnyObject> = [:]) -> Future<Successful> {
         let url = root + T.postPath()
-        return requestDecoder(url, requestMethod: RequestMethod.POST, coder: object.postCoder(), headers: headers).map {decoder -> (Try<Successful>) in
+        return requestDecoder(url, requestMethod: RequestMethod.POST, coder: object.codeWithCoder(Coder()), headers: headers).map {decoder -> (Try<Successful>) in
             return Try.Success(Successful())
         }
     }
     
     // MARK: Objects
     
-    public class func requestObject<T:Codable>(type:T.Type, url:String, requestMethod: RequestMethod, coder: Coder?, var headers: Dictionary<String, AnyObject>) -> Future<T> {
+    public class func requestObject<T:Decodable>(type:T.Type, url:String, requestMethod: RequestMethod, coder: Coder?, var headers: Dictionary<String, AnyObject>) -> Future<T> {
         return requestDecoder(url, requestMethod: requestMethod, coder: coder, headers: headers).map {decoder -> (Try<T>) in
             if let object = T(decoder: decoder) {
                 return Try.Success(object)
@@ -106,7 +109,3 @@ extension NSError {
     }
     
 }
-
-
-
-

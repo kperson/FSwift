@@ -31,7 +31,13 @@ public extension Decoder {
     }
     
     public var bool: Bool? {
-        return self.val as? Bool
+        if let x = self.val as? Bool {
+            return x
+        } else if let x = self.val as? String {
+            return Bool(string:x)
+        } else {
+            return nil
+        }
     }
     
     public var stringArray: [String]? {
