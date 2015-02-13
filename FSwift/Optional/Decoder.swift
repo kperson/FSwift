@@ -18,6 +18,10 @@ public extension Decoder {
         }
     }
     
+    public func hasString(key:String) -> Bool {
+        return self[key].string != nil
+    }
+    
     public var int: Int? {
         return self.val as? Int
     }
@@ -65,6 +69,8 @@ public class Decoder {
     private var error: NSError?
     let depth: Int
     
+    // MARK: Init
+    
     public init(dictionary: [String : AnyObject], depth: Int = 0) {
         self.rawDictionary = dictionary
         self.depth = depth
@@ -102,6 +108,8 @@ public class Decoder {
         self.depth = 0
     }
     
+    // MARK: Values
+    
     public var arr: DecoderArray? {
         if let a = rawArray {
             return DecoderArray(items: a)
@@ -128,14 +136,17 @@ public class Decoder {
         return self.error
     }
     
+    // MARK: Error
     
     private func indexOutRangeError(index: Int) -> NSError {
         return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "index \(index) of range of array at depth \(self.depth)" ])
     }
     
-    private func keyNotPresentError(key: String) -> NSError {
-        return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "key '\(key)' not present in dictionary at depth \(self.depth)" ])
+    private func keysNotPresentError(keys: [String]) -> NSError {
+        return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "key(s) '\(keys)' not present in dictionary at depth \(self.depth)" ])
     }
+    
+    // MARK: Index
     
     public subscript(index: Int) -> Decoder {
         if let e = error {
@@ -156,19 +167,36 @@ public class Decoder {
         }
     }
     
-    public subscript(key: String) -> Decoder {
+    // MARK: Key
+    
+    public subscript(dotpaths: String...) -> Decoder {
+        for dotpath in dotpaths {
+            if let decoder = decoderForDotpath(dotpath) {
+                return decoder
+            }
+        }
+        return Decoder(error: keysNotPresentError(dotpaths), depth : depth + 1)
+    }
+    
+    private func decoderForDotpath(dotpath:String) -> Decoder? {
+        let keys = dotpath.componentsSeparatedByString(".")
+        var decoder:Decoder? = self
+        for key in keys {
+            decoder = decoder?.decoderForKey(key)
+        }
+        return decoder
+    }
+    
+    private func decoderForKey(key:String) -> Decoder? {
         if let d = rawDictionary {
             if let val: AnyObject = d[key] {
                 return mapToData(val)
             }
-            else {
-                return Decoder(error: keyNotPresentError(key), depth : depth + 1)
-            }
         }
-        else {
-            return Decoder(error: keyNotPresentError(key), depth : depth + 1)
-        }
+        return nil
     }
+
+    // MARK: Map
     
     func mapToData(val: AnyObject) -> Decoder {
         if let a = val as? [AnyObject] {

@@ -158,6 +158,16 @@ extension Array {
 
 }
 
+public func flatMap<S : SequenceType, T>(source: S, transform: (S.Generator.Element) -> T?) -> [T] {
+    var list = [T]()
+    for x in source {
+        if let val = transform(x) {
+            list.append(val)
+        }
+    }
+    return list
+}
+
 
 public func removeDuplicates<S : Equatable>(seq: [S]) -> [S] {
     var uniqueList = [S]()

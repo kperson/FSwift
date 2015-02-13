@@ -60,6 +60,9 @@ public extension String {
     
 }
 
+func / (left:String, right:String) -> String {
+    return left + "/" + right
+}
 
 public class ServiceUtil {
     

@@ -11,9 +11,9 @@ import Foundation
 extension Bool {
     
     public init?(string:String) {
-        if string == "0" || string == "false" {
+        if string == "0" || string == "false".lowercaseString {
             self = false
-        } else if string == "1" || string == "true" {
+        } else if string == "1" || string == "true".lowercaseString {
             self = true
         } else {
             return nil
