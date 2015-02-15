@@ -77,14 +77,21 @@ public class Service: ServiceUtil {
         return requestObject(type, url: url, requestMethod: RequestMethod.GET, coder:nil , headers: headers)
     }
     
-    public class func getObjects<G:GETable, R:RESTfull>(type:G.Type, from:R, var headers: Dictionary<String, AnyObject>) -> Future<[G]> {
-        let url = root / R.resourceNamePlural / from.id / G.resourceNamePlural
-        return requestObjects(type, url: url, requestMethod: RequestMethod.GET, coder:nil , headers: headers)
-    }
-    
     public class func getObject<G:GETable, R:RESTfull>(type:G.Type, from:R, var headers: Dictionary<String, AnyObject>) -> Future<G> {
         let url = root / R.resourceNamePlural / from.id / G.resourceName
         return requestObject(type, url: url, requestMethod: RequestMethod.GET, coder:nil , headers: headers)
+    }
+    
+    // MARK: GET Multiple
+    
+    public class func getObjectsWithIds<G:GETable>(ids:[String], type:G.Type, var headers: Dictionary<String, AnyObject>) -> Future<[G]> {
+        let url = root / G.resourceNamePlural / "[" + ",".join(ids) + "]"
+        return requestObjects(type, url: url, requestMethod: RequestMethod.GET, coder:nil , headers: headers)
+    }
+    
+    public class func getObjects<G:GETable, R:RESTfull>(type:G.Type, from:R, var headers: Dictionary<String, AnyObject>) -> Future<[G]> {
+        let url = root / R.resourceNamePlural / from.id / G.resourceNamePlural
+        return requestObjects(type, url: url, requestMethod: RequestMethod.GET, coder:nil , headers: headers)
     }
     
     // MARK: POST
