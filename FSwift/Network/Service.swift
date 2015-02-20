@@ -172,13 +172,13 @@ public class Service: ServiceUtil {
     
 }
 
-extension NSError {
+public extension NSError {
     
-    convenience init(response:RequestResponse) {
+    public convenience init(response:RequestResponse) {
         self.init(domain: "com.service", code: 0, userInfo: ["message":"Response status \(response.statusCode)","requestResponce":response])
     }
     
-    var requestResponse:RequestResponse? {
+    public var requestResponse:RequestResponse? {
         return userInfo?["requestResponce"] as? RequestResponse
     }
     
