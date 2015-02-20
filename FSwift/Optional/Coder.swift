@@ -13,6 +13,7 @@ public class Coder: NSObject {
     private var _coders:[String:Coder] = [:]
     public var string:String?
     public var bool:Bool?
+    public var int:Int?
     
     public subscript(key: String) -> Coder {
         if let coder = _coders[key] {
@@ -25,7 +26,10 @@ public class Coder: NSObject {
     }
     
     public var object:AnyObject {
-        if let string = string {
+        if let int = int {
+            return int
+        }
+        else if let string = string {
             return string
         } else if let bool = bool {
             return bool
