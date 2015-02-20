@@ -115,8 +115,8 @@ public class ServiceUtil {
     
     public class func request(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<RequestResponse> {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        //let session = NSURLSession.sharedSession()
-        let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        let session = NSURLSession.sharedSession()
+        //let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         request.HTTPMethod = requestMethod.rawValue
         request.HTTPBody = body
         
