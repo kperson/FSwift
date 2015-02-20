@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Coder {
+public extension Coder {
     
     var jsonData:NSData? {
         var error:NSError?

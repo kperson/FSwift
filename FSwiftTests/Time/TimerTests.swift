@@ -12,6 +12,7 @@ import XCTest
 class TimerTests: XCTestCase {
 
     func testTimerLoop() {
+        
         var ct = 0
         var end = 0
         let start = NSDate().timeIntervalSince1970

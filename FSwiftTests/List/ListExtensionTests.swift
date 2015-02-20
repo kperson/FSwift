@@ -6,13 +6,16 @@
 //  Copyright (c) 2014 Kelton. All rights reserved.
 //
 
+import UIKit
 import XCTest
+
 class ListExtensionTests: XCTestCase {
     
     func testFlatMap() {
         let list = [4, 5, 6, 7]
         let evenOnly = list.flatMap { x in x % 2 == 0 ? x : nil }
         XCTAssertEqual(evenOnly,[4, 6], "Flat map function selects only event numbers")
+        
     }
     
     func testFlatMapWithExplicityOptionals() {
@@ -67,8 +70,9 @@ class ListExtensionTests: XCTestCase {
     
     func testFindFirst() {
         let list = [2, 3, 4, 5, 6, 7]
-                
-        XCTAssertEqual(list.findFirst { x in x > 4 }!, 5, "The first item greater than 4 is 5, findFirst should match this")
+        
+        let first = list.findFirst { x in x > 4 }!
+        XCTAssert(first == 5, "The first item greater than 4 is 5, findFirst should match this")
         XCTAssert(list.findFirst { x in  x > 100 } == nil, "There are no items greater than 100, findFirst should not match this")
     }
     

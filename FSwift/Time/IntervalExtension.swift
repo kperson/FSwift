@@ -32,6 +32,7 @@ public extension Int {
 
 public func + (date:NSDate, time: NSTimeInterval) -> NSDate {
     return date.dateByAddingTimeInterval(time)
+        
 }
 
 public func + (time: NSTimeInterval, date:NSDate) -> NSDate {

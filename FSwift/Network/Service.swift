@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol Decodable {
-    init?(decoder:Decoder)
+    init(decoder:Decoder)
 }
 
 public protocol RESTfull {
@@ -31,7 +31,7 @@ public protocol UPDATEable: GETable {
 }
 
 public protocol DELETEable: RESTfull {
-
+    
 }
 
 public let POSTableObjectId = ""
@@ -39,13 +39,8 @@ public let POSTableObjectId = ""
 public struct Pointer<T:GETable>: Decodable, Printable {
     public var id:String
     
-    public init?(decoder:Decoder) {
-        if let string = decoder.string {
-            self.id = string
-        } else {
-            self.id = ""
-            return nil
-        }
+    public init(decoder:Decoder) {
+        self.id = decoder.string!
     }
     
     public var description:String {
@@ -133,11 +128,12 @@ public class Service: ServiceUtil {
     
     public class func requestObject<T:Decodable>(type:T.Type, url:String, requestMethod: RequestMethod, coder: Coder?, var headers: Dictionary<String, AnyObject>) -> Future<T> {
         return requestDecoder(url, requestMethod: requestMethod, coder: coder, headers: headers).map {decoder -> (Try<T>) in
-            if let object = T(decoder: decoder) {
-                return Try.Success(object)
-            } else {
-                return Try.Failure(NSError(domain: "com.service", code: 0, userInfo: ["message":"Could not create object"]))
-            }
+            let object = T(decoder: decoder)
+            //if object != nil {
+            return Try.Success(object)
+            //} else {
+            //    return Try.Failure(NSError(domain: "com.service", code: 0, userInfo: ["message":"Could not create object"]))
+            // }
         }
     }
     

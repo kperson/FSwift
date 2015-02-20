@@ -11,9 +11,8 @@
 
 import Foundation
 
+
 let defaultFutureQueue = NSOperationQueue()
-
-
 
 public class Future<T> {
     
@@ -25,6 +24,10 @@ public class Future<T> {
     private var interalCompletionHandler:(() -> ())?
 
     private var successF: ((T) -> ())?
+    private var recoverF: ((NSError) -> Future<T>)?
+    private var mappedRecoverF: ((NSError) -> Try<T>)?
+    private var recoverFilter: ((NSError) -> Bool) = { err in true }
+    
     private var failureF: ((NSError) -> ())?
     private var signals: [Signal] = []
     
@@ -123,6 +126,22 @@ public class Future<T> {
         return self
     }
     
+    public func recoverWithFuture(f: (NSError) -> Future<T>) -> Future<T> {
+        self.recoverF = f
+        return self
+    }
+    
+    public func recover(f: (NSError) -> Try<T>) -> Future<T> {
+        self.mappedRecoverF = f
+        return self
+    }
+    
+    public func recoverOn(f: (NSError) -> Bool) -> Future<T> {
+        self.recoverFilter = f
+        return self
+    }
+    
+    
     /**
     * @param f - A function that a T as its only argument and returns a D
     * @return a Future<D> A future to be executed after the current Futture is completed.
@@ -172,7 +191,28 @@ public class Future<T> {
     private func generateCallback() {
         let operation = NSBlockOperation {
             self.futureValue = self.f!()
-            self.futureExecutionComplete()
+            switch (self.recoverF, self.mappedRecoverF, self.futureValue!) {
+            case (.Some(let r), _, Try.Failure(let error)):
+                if self.recoverFilter(error) {
+                    r(error).onComplete { try in
+                        self.futureValue = try
+                        self.futureExecutionComplete()
+                    }
+                }
+                else {
+                    self.futureExecutionComplete()
+                }
+            case (_, .Some(let m), Try.Failure(let error)):
+                if self.recoverFilter(error) {
+                    self.futureValue = m(error)
+                    self.futureExecutionComplete()
+                }
+                else {
+                    self.futureExecutionComplete()
+                }
+            default:
+                self.futureExecutionComplete()
+            }
         }
         self.operationQueue.addOperation(operation)
     }
