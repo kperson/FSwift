@@ -136,6 +136,14 @@ public class Decoder {
         return self.error
     }
     
+    public var initialArr: [AnyObject]? {
+        return self.rawArray
+    }
+    
+    public var initialDict: [String : AnyObject]? {
+        return self.rawDictionary
+    }
+    
     // MARK: Error
     
     private func indexOutRangeError(index: Int) -> NSError {
@@ -195,7 +203,7 @@ public class Decoder {
         }
         return nil
     }
-
+    
     // MARK: Map
     
     func mapToData(val: AnyObject) -> Decoder {
