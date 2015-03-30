@@ -48,6 +48,8 @@
 		DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD241A01A15B091004D97A8 /* Signal.swift */; };
 		DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD241A01A15B091004D97A8 /* Signal.swift */; };
 		DBFB57471A68CE9F001645C4 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* Decoder.swift */; };
+		DBFBDC5C1AC9E72800D6A145 /* DecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */; };
+		DBFBDC5D1AC9E74A00D6A145 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* Decoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -95,6 +97,7 @@
 		DBBFA1DC19DF48590090B60F /* FutureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FutureTests.swift; path = FSwiftTests/Concurrency/FutureTests.swift; sourceTree = SOURCE_ROOT; };
 		DBD241A01A15B091004D97A8 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		DBFB57461A68CE9F001645C4 /* Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
+		DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecoderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */,
+				DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */,
 			);
 			path = Optional;
 			sourceTree = "<group>";
@@ -522,6 +526,8 @@
 				DBA75AB919DDED3C009EA696 /* TryTests.swift in Sources */,
 				75287F5A1A79605E00E1C68D /* Rect.swift in Sources */,
 				DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */,
+				DBFBDC5C1AC9E72800D6A145 /* DecoderTests.swift in Sources */,
+				DBFBDC5D1AC9E74A00D6A145 /* Decoder.swift in Sources */,
 				DB95CF7A19E33EFD00448C7C /* TimerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -624,6 +630,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -641,6 +648,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

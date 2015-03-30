@@ -39,7 +39,7 @@ public extension Decoder {
     
 }
 
-public struct Decoder {
+public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
     
     let notAnArrayError = NSError(domain: "com.optionreader", code: 2, userInfo: [ "message" : "data is not array like" ])
     let notADictionaryError = NSError(domain: "com.optionreader", code: 3, userInfo: [ "message" : "data is not dictionary like" ])
@@ -51,9 +51,24 @@ public struct Decoder {
     private var error: NSError?
     let depth: Int
     
+    
+    public init(arrayLiteral elements: AnyObject...) {
+        self.rawArray = elements
+        self.depth = 0
+    }
+    
     public init(dictionary: [String : AnyObject], depth: Int = 0) {
         self.rawDictionary = dictionary
         self.depth = depth
+    }
+    
+    public init(dictionaryLiteral elements: (String, AnyObject)...) {
+        var d:[String: AnyObject] = [ : ]
+        for (k, v) in elements {
+            d[k] = v
+        }
+        self.rawDictionary = d
+        self.depth = 0
     }
     
     public init(array: [AnyObject], depth: Int = 0) {

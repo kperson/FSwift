@@ -14,6 +14,29 @@ import Foundation
 
 let defaultFutureQueue = NSOperationQueue()
 
+
+public class Promise<T> {
+    
+    public let future: Future<T>
+    
+    public init(operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
+        future = Future(operationQueue: operationQueue, callbackQueue:callbackQueue)
+    }
+    
+    public func completeWith(f: () -> Try<T>) {
+        future.completeWith(f)
+    }
+    
+    public func completeWith(val: T) {
+        future.completeWith(val)
+    }
+    
+    public func completeWith(error: NSError) {
+        future.completeWith(error)
+    }
+
+}
+
 public class Future<T> {
     
     private var f: (() -> Try<T>)? = nil
@@ -37,8 +60,7 @@ public class Future<T> {
     public init(_ f: () -> Try<T>, operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
         self.operationQueue = operationQueue
         self.callbackQueue = callbackQueue
-        self.bridgeExecution(f)
-        
+        self.completeWith(f)
     }
     
     public init(operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
@@ -64,12 +86,12 @@ public class Future<T> {
     }
     
     /**
-     * @param f - A zero argument function that returns a T.  
+     * :param f - A zero argument function that returns a T.
      *
      * This allows for execution to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
      * You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
-    public func bridgeExecution(f: () -> Try<T>) {
+    func completeWith(f: () -> Try<T>) {
         if self.f == nil {
             self.f = f
             self.generateCallback()
@@ -77,23 +99,23 @@ public class Future<T> {
     }
 
     /**
-    * @param val - a T.  
+    * :param val - a T.
     *
     * This allows for a value to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
     * You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
-    public func bridgeSuccess(val: T) {
-        self.bridgeExecution({ Try<T>(val) })
+    func completeWith(val: T) {
+        self.completeWith({ Try<T>(val) })
     }
     
     /**
-    * @param val - error NSerror.
+    * :param val - error NSerror.
     *
     * This allows for an error to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
     * You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
-    public func bridgeFailure(error: NSError) {
-        self.bridgeExecution({ Try<T>(error) })
+    func completeWith(error: NSError) {
+        self.completeWith({ Try<T>(error) })
     }
     
     /**
@@ -107,7 +129,7 @@ public class Future<T> {
     }
     
     /**
-    * @param f - A function that a T as its only argument
+    * :param f - A function that a T as its only argument
     *
     * Registers a success callback
     */
@@ -117,7 +139,7 @@ public class Future<T> {
     }
     
     /**
-    * @param f - A function that a T as its only argument
+    * :param f - A function that a T as its only argument
     *
     * Registers a failure callback
     */
@@ -143,8 +165,8 @@ public class Future<T> {
     
     
     /**
-    * @param f - A function that a T as its only argument and returns a D
-    * @return a Future<D> A future to be executed after the current Futture is completed.
+    * :param f - A function that a T as its only argument and returns a D
+    * :returns a Future<D> A future to be executed after the current Futture is completed.
     *
     * f is a function that will be executed as a Future after completion of current Future.  This method
     * handles all execution and scheduling.  The function takes the results current future as its single argument.
@@ -153,7 +175,7 @@ public class Future<T> {
     public func map<D>(f: (T) -> Try<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.mappedCompletionF = {
-            mappedFuture.bridgeExecution {
+            mappedFuture.completeWith {
                 if let successfulValue = self.futureValue!.value {
                     return f(successfulValue)
                 }
@@ -165,21 +187,21 @@ public class Future<T> {
         return mappedFuture
     }
     
-    public func mapToFuture<D>(f: (T) -> Future<D>) -> Future<D> {
+    public func flatMap<D>(f: (T) -> Future<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.mappedCompletionF = {
             if self.futureValue!.value != nil {
                 f(self.futureValue!.value!)
                 .onSuccess { x in
-                    mappedFuture.bridgeSuccess(x)
+                    mappedFuture.completeWith(x)
                     return Void()
                 }.onFailure { err in
-                    mappedFuture.bridgeFailure(err)
+                    mappedFuture.completeWith(err)
                     return Void()
                 }
             }
             else {
-                mappedFuture.bridgeFailure(self.futureValue!.error!)
+                mappedFuture.completeWith(self.futureValue!.error!)
             }
             
         }
@@ -293,10 +315,10 @@ public func combineFuturesWithOptions(signals: [Signal], operationQueue: NSOpera
             case TryStatus.Success:
                 ct = ct + 1
                 if ct == signals.count {
-                    f.bridgeSuccess(Void())
+                    f.completeWith(Void())
                 }
             case TryStatus.Failure(let error):
-                f.bridgeFailure(error)
+                f.completeWith(error)
             }
         }
     }

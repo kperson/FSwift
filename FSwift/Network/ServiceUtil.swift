@@ -116,7 +116,6 @@ public class ServiceUtil {
     public class func request(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<RequestResponse> {
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
         let session = NSURLSession.sharedSession()
-        //let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         request.HTTPMethod = requestMethod.rawValue
         request.HTTPBody = body
         
@@ -131,12 +130,12 @@ public class ServiceUtil {
             }
         }
         
-        let future = Future<RequestResponse>()
+        let promise = Promise<RequestResponse>()
         var error: NSError
         
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
             if error != nil {
-              future.bridgeFailure(error)
+              promise.completeWith(error)
             }
             else {
                 let httpResponse = response as! NSHTTPURLResponse
@@ -146,12 +145,12 @@ public class ServiceUtil {
                     responseHeaders[headerKey as! String] = headerValue
                 }
                 
-                future.bridgeSuccess(RequestResponse(statusCode: httpResponse.statusCode, body: data, headers: responseHeaders))
+                promise.completeWith(RequestResponse(statusCode: httpResponse.statusCode, body: data, headers: responseHeaders))
             }
         })
         
         task.resume()
-        return future
+        return promise.future
     }
     
 }
