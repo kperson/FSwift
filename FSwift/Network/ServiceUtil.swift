@@ -30,7 +30,7 @@ public class RequestResponse {
             return bodyT
         }
         else {
-            self.bodyText = NSString(data: body, encoding: NSUTF8StringEncoding)!
+            self.bodyText = NSString(data: body, encoding: NSUTF8StringEncoding)! as String
             return self.bodyText!
         }
     }
@@ -51,7 +51,7 @@ public extension String {
     
     func withParams(params: Dictionary<String, AnyObject>) -> String {
         let endpoint = self.hasPrefix("?") ? self :  self + "?"
-       return  endpoint + NSString(data: ServiceUtil.asParams(params), encoding: NSUTF8StringEncoding)!
+       return  endpoint + (NSString(data: ServiceUtil.asParams(params), encoding: NSUTF8StringEncoding)! as String)
     }
     
 }
@@ -139,11 +139,11 @@ public class ServiceUtil {
               future.bridgeFailure(error)
             }
             else {
-                let httpResponse = response as NSHTTPURLResponse
+                let httpResponse = response as! NSHTTPURLResponse
                 
                 var responseHeaders:Dictionary<String, AnyObject> = [:]
                 for (headerKey, headerValue) in httpResponse.allHeaderFields {
-                    responseHeaders[headerKey as String] = headerValue
+                    responseHeaders[headerKey as! String] = headerValue
                 }
                 
                 future.bridgeSuccess(RequestResponse(statusCode: httpResponse.statusCode, body: data, headers: responseHeaders))

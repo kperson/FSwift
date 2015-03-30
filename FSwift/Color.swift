@@ -38,9 +38,9 @@ extension UIColor {
         var a:CGFloat = 0
         self.getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        var rSTring:String = NSString(format:"%2X", Int(r*255))
-        var gSTring:String = NSString(format:"%2X", Int(g*255))
-        var bSTring:String = NSString(format:"%2X", Int(b*255))
+        var rSTring:String = String(format:"%2X", Int(r*255))
+        var gSTring:String = String(format:"%2X", Int(g*255))
+        var bSTring:String = String(format:"%2X", Int(b*255))
         
         return (rSTring + gSTring + bSTring)
     }

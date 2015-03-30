@@ -98,7 +98,7 @@ extension Array {
     func take(amount: Int) -> [T] {
         var i = 0
         var list:[T] = []
-        while i < countElements(self) && i < amount {
+        while i < self.count && i < amount {
             list.append(self[i])
             i++
         }
@@ -117,7 +117,7 @@ extension Array {
     func skip(amount: Int) -> [T] {
         var i = amount
         var list: [T] = []
-        while i < countElements(self) {
+        while i < self.count {
             list.append(self[i])
             i++
         }

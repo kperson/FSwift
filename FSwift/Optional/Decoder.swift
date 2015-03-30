@@ -32,7 +32,7 @@ public extension Decoder {
     
     public var errorMessage: String? {
         if let err = self.err as NSError? {
-            return err.userInfo!["message"] as String?
+            return err.userInfo!["message"] as! String?
         }
         return nil
     }
