@@ -14,6 +14,19 @@ import Foundation
 
 let defaultFutureQueue = NSOperationQueue()
 
+enum BindCheck {
+    
+    case BoolCheck(() -> Bool)
+    case AnyObjectCheck(() -> AnyObject?)
+    
+    var shouldExecute:Bool {
+        switch self {
+        case BoolCheck(let f): return f()
+        case AnyObjectCheck(let f): return f() != nil
+        }
+    }
+    
+}
 
 public class Promise<T> {
     
@@ -43,7 +56,9 @@ public class Future<T> {
     private var futureValue: Try<T>?
     private var completionF: ((Try<T>) -> ())?
     private var mappedCompletionF:(() -> ())?
-
+    
+    private var bindCheck: BindCheck = BindCheck.BoolCheck({ true })
+    
     private var interalCompletionHandler:(() -> ())?
 
     private var successF: ((T) -> ())?
@@ -163,6 +178,16 @@ public class Future<T> {
         return self
     }
     
+    public func bindToBool(b:() -> Bool) -> Future<T> {
+        self.bindCheck = BindCheck.BoolCheck(b)
+        return self
+    }
+    
+    public func bindToOptional(b: () -> AnyObject?) -> Future<T> {
+        self.bindCheck = BindCheck.AnyObjectCheck(b)
+        return self
+    }
+    
     
     /**
     * :param f - A function that a T as its only argument and returns a D
@@ -236,38 +261,41 @@ public class Future<T> {
             }
         }
         self.operationQueue.addOperation(operation)
+        
     }
     
     private func futureExecutionComplete() {
-        let operationCallback = NSBlockOperation {
-            self.completionF?(self.futureValue!)
-            switch self.futureValue!.toTuple {
-            case (.Some(let val), _):
-                self.successF?(val)
-            case (_, .Some(let error)):
-                self.failureF?(error)
-            default:
-                self.handleImpossibleMatch()
-            }
-            self.mappedCompletionF?()
-            self.interalCompletionHandler?()
-            
-            switch self.futureValue!.toTuple {
-            case (.Some(let val), _):
-                for x in self.signals {
-                    x.complete(TryStatus.Success)
+        if self.bindCheck.shouldExecute {
+            let operationCallback = NSBlockOperation {
+                self.completionF?(self.futureValue!)
+                switch self.futureValue!.toTuple {
+                case (.Some(let val), _):
+                    self.successF?(val)
+                case (_, .Some(let error)):
+                    self.failureF?(error)
+                default:
+                    self.handleImpossibleMatch()
                 }
-            case (_, .Some(let error)):
-                for x in self.signals {
-                    x.complete(TryStatus.Failure(error))
+                self.mappedCompletionF?()
+                self.interalCompletionHandler?()
+                
+                switch self.futureValue!.toTuple {
+                case (.Some(let val), _):
+                    for x in self.signals {
+                        x.complete(TryStatus.Success)
+                    }
+                case (_, .Some(let error)):
+                    for x in self.signals {
+                        x.complete(TryStatus.Failure(error))
+                    }
+                default:
+                    self.handleImpossibleMatch()
                 }
-            default:
-                self.handleImpossibleMatch()
-            }
 
-            
+                
+            }
+            self.callbackQueue.addOperation(operationCallback)
         }
-        self.callbackQueue.addOperation(operationCallback)
     }
     
     

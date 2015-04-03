@@ -51,6 +51,7 @@
 		DBFBDC741AC9ED7A00D6A145 /* Segue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC671AC9ECF500D6A145 /* Segue.swift */; };
 		DBFBDC751AC9ED8000D6A145 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC6A1AC9ECFF00D6A145 /* Storage.swift */; };
 		DBFBDC761AC9ED8400D6A145 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC6F1AC9ED1C00D6A145 /* Date.swift */; };
+		DBFE43211ACD886E00994BF9 /* NSData+Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -98,6 +99,7 @@
 		DBFBDC6A1AC9ECFF00D6A145 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		DBFBDC6D1AC9ED0B00D6A145 /* Rect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		DBFBDC6F1AC9ED1C00D6A145 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Decoder.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,8 +172,9 @@
 		DB241D4119E317A7006217BA /* Optional */ = {
 			isa = PBXGroup;
 			children = (
-				DB241D4219E317C2006217BA /* OptionalExtension.swift */,
 				DBFB57461A68CE9F001645C4 /* Decoder.swift */,
+				DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */,
+				DB241D4219E317C2006217BA /* OptionalExtension.swift */,
 			);
 			path = Optional;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */,
 				DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */,
 				DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */,
+				DBFE43211ACD886E00994BF9 /* NSData+Decoder.swift in Sources */,
 				DBFBDC651AC9ECE700D6A145 /* Color.swift in Sources */,
 				DBBFA1D919DF48140090B60F /* Future.swift in Sources */,
 				DBB1B23E19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,

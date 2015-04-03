@@ -72,6 +72,52 @@ class FutureTests: XCTestCase {
         NSThread.sleepForTimeInterval(100.milliseconds)
     }
     
+    func testBindCheckBool() {
+        var success = false
+        futureOnBackground {
+            Try<String>(success: "hello")
+        }.bindToBool({ false })
+        .onSuccess { str in
+            success = true
+        }
+        NSThread.sleepForTimeInterval(100.milliseconds)
+        XCTAssertFalse(success, "future must not complete if bind evaluation is false")
+        
+        
+        success = false
+        futureOnBackground {
+            Try<String>(success: "hello")
+        }.bindToBool({ true })
+        .onSuccess { str in
+            success = true
+        }
+        NSThread.sleepForTimeInterval(100.milliseconds)
+        XCTAssertTrue(success, "future must not complete if bind evaluation is false")
+    }
+    
+    func testBindCheckOpt() {
+        var success = false
+        futureOnBackground {
+            Try<String>(success: "hello")
+        }.bindToOptional({ nil })
+        .onSuccess { str in
+            success = true
+        }
+        NSThread.sleepForTimeInterval(100.milliseconds)
+        XCTAssertFalse(success, "future must not complete if bind evaluation is false")
+        
+        
+        success = false
+        futureOnBackground {
+            Try<String>(success: "hello")
+        }.bindToOptional({ "bob" })
+        .onSuccess { str in
+            success = true
+        }
+        NSThread.sleepForTimeInterval(100.milliseconds)
+        XCTAssertTrue(success, "future must not complete if bind evaluation is false")
+    }
+    
     func testCombine() {
         
         let x = futureOnBackground { () -> Try<String> in
