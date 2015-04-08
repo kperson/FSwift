@@ -20,6 +20,9 @@
 		DB241D4419E3183A006217BA /* OptionalExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4219E317C2006217BA /* OptionalExtension.swift */; };
 		DB241D4719E3196B006217BA /* OptionalExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */; };
 		DB2834DF1A83D55C00D1359D /* ServiceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF5931A32059200B311D9 /* ServiceUtil.swift */; };
+		DB3649741AD5AFE3003CBD81 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3649731AD5AFE3003CBD81 /* Stream.swift */; };
+		DB3649761AD5C15F003CBD81 /* StreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3649751AD5C15F003CBD81 /* StreamTests.swift */; };
+		DB3649771AD5C1F8003CBD81 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3649731AD5AFE3003CBD81 /* Stream.swift */; };
 		DB3EF5941A32059200B311D9 /* ServiceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF5931A32059200B311D9 /* ServiceUtil.swift */; };
 		DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59FF4819E07CC500B13D0E /* Timer.swift */; };
 		DB59FF4A19E07FBB00B13D0E /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59FF4819E07CC500B13D0E /* Timer.swift */; };
@@ -76,6 +79,8 @@
 		DB241D3919E2DF31006217BA /* ListExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListExtension.swift; sourceTree = "<group>"; };
 		DB241D4219E317C2006217BA /* OptionalExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExtension.swift; sourceTree = "<group>"; };
 		DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExtensionTests.swift; sourceTree = "<group>"; };
+		DB3649731AD5AFE3003CBD81 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		DB3649751AD5C15F003CBD81 /* StreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTests.swift; sourceTree = "<group>"; };
 		DB3EF5931A32059200B311D9 /* ServiceUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceUtil.swift; sourceTree = "<group>"; };
 		DB59FF4819E07CC500B13D0E /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		DB95CF7919E33EFD00448C7C /* TimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
@@ -307,6 +312,7 @@
 				759BE93D1A7812350042B77C /* Dispatch.swift */,
 				DBBFA1D819DF48140090B60F /* Future.swift */,
 				DBD241A01A15B091004D97A8 /* Signal.swift */,
+				DB3649731AD5AFE3003CBD81 /* Stream.swift */,
 			);
 			path = Concurrency;
 			sourceTree = "<group>";
@@ -315,6 +321,7 @@
 			isa = PBXGroup;
 			children = (
 				DBBFA1DC19DF48590090B60F /* FutureTests.swift */,
+				DB3649751AD5C15F003CBD81 /* StreamTests.swift */,
 			);
 			path = Concurrency;
 			sourceTree = "<group>";
@@ -470,6 +477,7 @@
 				DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */,
 				DBFE43211ACD886E00994BF9 /* NSData+Decoder.swift in Sources */,
 				DBFBDC651AC9ECE700D6A145 /* Color.swift in Sources */,
+				DB3649741AD5AFE3003CBD81 /* Stream.swift in Sources */,
 				DBBFA1D919DF48140090B60F /* Future.swift in Sources */,
 				DBB1B23E19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,
 				DBFBDC701AC9ED1C00D6A145 /* Date.swift in Sources */,
@@ -495,6 +503,7 @@
 				DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */,
 				DBFBDC741AC9ED7A00D6A145 /* Segue.swift in Sources */,
 				DB241D3B19E2E380006217BA /* ListExtension.swift in Sources */,
+				DB3649771AD5C1F8003CBD81 /* Stream.swift in Sources */,
 				DB241D4719E3196B006217BA /* OptionalExtensionTests.swift in Sources */,
 				DBB1B24119DE414B00272EE3 /* IntervalExtensionTests.swift in Sources */,
 				DBB1B23F19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,
@@ -513,6 +522,7 @@
 				DBFBDC731AC9ED7700D6A145 /* Rect.swift in Sources */,
 				DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */,
 				DBFBDC5C1AC9E72800D6A145 /* DecoderTests.swift in Sources */,
+				DB3649761AD5C15F003CBD81 /* StreamTests.swift in Sources */,
 				DBFBDC5D1AC9E74A00D6A145 /* Decoder.swift in Sources */,
 				DB95CF7A19E33EFD00448C7C /* TimerTests.swift in Sources */,
 				DBFBDC761AC9ED8400D6A145 /* Date.swift in Sources */,
@@ -618,7 +628,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -636,7 +646,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
