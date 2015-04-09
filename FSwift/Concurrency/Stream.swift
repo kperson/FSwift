@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Stream<T> {
+public final class Stream<T> {
 
     private(set) var isOpen: Bool = true
     private(set) var subscriptions:[Subscription<T>] = []

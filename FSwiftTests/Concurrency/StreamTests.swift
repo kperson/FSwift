@@ -33,8 +33,8 @@ class StreamTests : XCTestCase {
         XCTAssertFalse(stream.subscriptions.first!.shouldExecute, "streams only execute if the bind is not nil")
         
         stream.clearSubscriptions()
-        stream.subscribe({nil } ) { x in Void() }
-        XCTAssertTrue(stream.subscriptions.first!.shouldExecute, "streams only execute if the bind is not nil")
+        stream.subscribe({ nil } ) { x in Void() }
+        XCTAssertFalse(stream.subscriptions.first!.shouldExecute, "streams only execute if the bind is not nil")
         
         stream.clearSubscriptions()
         stream.subscribe(false) { x in Void() }
