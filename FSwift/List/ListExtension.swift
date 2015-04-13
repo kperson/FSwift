@@ -11,48 +11,24 @@ import Foundation
 extension Array {
     
     func foreach(f: (T) -> Void) {
-        for x in self {
-            f(x)
-        }
+        Seq.foreach(self, f: f)
     }
     
     func foreachWithIndex( f: (T, Int) -> Void) {
-        var i = 0
-        for x in self {
-            f(x, i)
-            i += 1
-        }
+        Seq.foreachWithIndex(self, f: f)
     }
     
     
     func indexOf( f: (T) -> Bool) -> Int? {
-        var i = 0
-        var final: Int?
-        for x in self {
-            if f(x)  {
-                final = i
-            }
-            i++
-        }
-        return final
+        return Seq.indexOf(self, f: f)
     }
     
-    var everythingButFirst: [T]  {
-        if self.count <= 1 {
-            return []
-        }
-        else {
-            return Array(self[1...self.count - 1])
-        }
+    var tail: [T]  {
+        return Seq.tail(self)
     }
     
     func foldRight<B>(initialValue: B, _ f: (B, T) -> B) -> B {
-        if self.isEmpty  {
-            return initialValue
-        }
-        else {
-            return f(self.everythingButFirst.foldRight(initialValue, f), self.first!)
-        }
+        return Seq.foldRight(self, initialValue, f)
     }
     
     func foldLeft<B>(initialValue: B, _ f: (B, T) -> B) -> B {
@@ -65,7 +41,7 @@ extension Array {
             return self.first!
         }
         else {
-            return f(self.first!, self.everythingButFirst.reduceRight(f))
+            return f(self.first!, self.tail.reduceRight(f))
         }
     }
     
@@ -74,54 +50,19 @@ extension Array {
     }
     
     func findFirst(f: (T) -> Bool) -> T? {
-        if self.isEmpty {
-            return nil
-        }
-        if(f(self.first!)) {
-            return self.first!
-        }
-        else {
-            return self.everythingButFirst.findFirst(f)
-        }
+        return Seq.findFirst(self, f)
     }
     
     func flatMap<S>(f: T -> S?) -> [S] {
-        var list = [S]()
-        for x in self {
-            if let val = f(x) {
-                list.append(val)
-            }
-        }
-        return list
+        return Seq.flatMap(self, f: f)
     }
     
     func take(amount: Int) -> [T] {
-        var i = 0
-        var list:[T] = []
-        while i < self.count && i < amount {
-            list.append(self[i])
-            i++
-        }
-        return list
-    }
-    
-    func shuffled() -> [T] {
-        var list = self
-        for i in 0..<(list.count - 1) {
-            let j = Int(arc4random_uniform(UInt32(list.count - i))) + i
-            swap(&list[i], &list[j])
-        }
-        return list
+        return Seq.take(self, amount)
     }
     
     func skip(amount: Int) -> [T] {
-        var i = amount
-        var list: [T] = []
-        while i < self.count {
-            list.append(self[i])
-            i++
-        }
-        return list
+        return Seq.skip(self, amount)
     }
     
     /**
@@ -137,8 +78,125 @@ extension Array {
     *
     */
     func mapReduce<B:Hashable, C>(m: (T) -> B, _ r: (B, [T]) -> C) -> [C]  {
-        var dict:Dictionary<B, [T]> = [:]
-        for x in self {
+        return Seq.mapReduce(self, m, r)
+    }
+
+
+}
+
+
+public class Seq {
+    
+    public class func foreach<T : SequenceType>(seq: T, f: (T.Generator.Element) -> Void) {
+        for x in seq {
+            f(x)
+        }
+    }
+    
+    public class func foreachWithIndex<T : SequenceType>(seq: T, f: (T.Generator.Element, Int) -> Void) {
+        var i = 0
+        for x in seq {
+            f(x, i)
+            i += 1
+        }
+    }
+    
+    public class func indexOf<T : SequenceType>(seq: T, f: (T.Generator.Element) -> Bool) -> Int? {
+        var i = 0
+        var final: Int?
+        for x in seq {
+            if f(x)  {
+                final = i
+            }
+            i++
+        }
+        return final
+    }
+    
+     public class func flatMap<T : SequenceType, S>(seq: T, f: T.Generator.Element -> S?) -> [S] {
+        var list = [S]()
+        for x in seq {
+            if let val = f(x) {
+                list.append(val)
+            }
+        }
+        return list
+    }
+    
+    public class func tail<T : SequenceType>(seq: T) -> [T.Generator.Element] {
+        var list:[T.Generator.Element] = []
+        var i = 0
+        for x in seq {
+            if i != 0 {
+                list.append(x)
+            }
+            i++
+        }
+        return list
+    }
+
+    
+    public class func foldRight<T : CollectionType, B>(seq: T, _ initialValue: B, _ f: (B, T.Generator.Element) -> B) -> B {
+        let x = []
+        if count(seq) == 0 {
+            return initialValue
+        }
+        else {
+            let t = Seq.tail(seq)
+            return f(t.foldRight(initialValue, f), first(seq)!)
+        }
+    }
+    
+    public class func findFirst<T : CollectionType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> T.Generator.Element? {
+        if count(seq) == 0 {
+            return nil
+        }
+        if f(first(seq)!)  {
+            return first(seq)!
+        }
+        else {
+            return Seq.findFirst(Seq.tail(seq), f)
+        }
+    }
+    
+    public class func removeDuplicates<S : Equatable>(seq: [S]) -> [S] {
+        var uniqueList = [S]()
+        for x in seq {
+            if !contains(uniqueList, x) {
+                uniqueList.append(x)
+            }
+        }
+        return uniqueList
+    }
+    
+    public class func skip<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
+        var i = 0
+        var list:[T.Generator.Element] = []
+        for x in seq {
+            if i >= amount {
+                list.append(x)
+            }
+            i++
+        }
+        return list
+    }
+    
+    
+    public class func take<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
+        var i = 0
+        var list:[T.Generator.Element] = []
+        for x in seq {
+            if i < amount {
+                list.append(x)
+            }
+            i++
+        }
+        return list
+    }
+    
+    public class func mapReduce<T : SequenceType, B:Hashable, C>(seq: T, _ m: (T.Generator.Element) -> B, _ r: (B, [T.Generator.Element]) -> C) -> [C]  {
+        var dict:Dictionary<B, [T.Generator.Element]> = [:]
+        for x in seq {
             let key = m(x)
             if var l = dict[key] {
                 l.append(x)
@@ -154,17 +212,5 @@ extension Array {
         }
         return rs
     }
-
-
-}
-
-
-public func removeDuplicates<S : Equatable>(seq: [S]) -> [S] {
-    var uniqueList = [S]()
-    for x in seq {
-        if !contains(uniqueList, x) {
-            uniqueList.append(x)
-        }
-    }
-    return uniqueList
+    
 }

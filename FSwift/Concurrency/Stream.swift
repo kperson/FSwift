@@ -13,6 +13,11 @@ public final class Stream<T> {
     private(set) var isOpen: Bool = true
     private(set) var subscriptions:[Subscription<T>] = []
     
+    
+    public init() {
+        
+    }
+    
     /**
     closes the stream, 
     note that all queued messages will be published, but no other messages can be published
