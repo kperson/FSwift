@@ -11,16 +11,16 @@ import Foundation
 extension Array {
     
     func foreach(f: (T) -> Void) {
-        Seq.foreach(self, f: f)
+        Seq.foreach(self, f)
     }
     
     func foreachWithIndex( f: (T, Int) -> Void) {
-        Seq.foreachWithIndex(self, f: f)
+        Seq.foreachWithIndex(self, f)
     }
     
     
     func indexOf( f: (T) -> Bool) -> Int? {
-        return Seq.indexOf(self, f: f)
+        return Seq.indexOf(self, f)
     }
     
     var tail: [T]  {
@@ -54,7 +54,7 @@ extension Array {
     }
     
     func flatMap<S>(f: T -> S?) -> [S] {
-        return Seq.flatMap(self, f: f)
+        return Seq.flatMap(self, f)
     }
     
     func take(amount: Int) -> [T] {
@@ -87,13 +87,13 @@ extension Array {
 
 public class Seq {
     
-    public class func foreach<T : SequenceType>(seq: T, f: (T.Generator.Element) -> Void) {
+    public class func foreach<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Void) {
         for x in seq {
             f(x)
         }
     }
     
-    public class func foreachWithIndex<T : SequenceType>(seq: T, f: (T.Generator.Element, Int) -> Void) {
+    public class func foreachWithIndex<T : SequenceType>(seq: T, _ f: (T.Generator.Element, Int) -> Void) {
         var i = 0
         for x in seq {
             f(x, i)
@@ -101,7 +101,7 @@ public class Seq {
         }
     }
     
-    public class func indexOf<T : SequenceType>(seq: T, f: (T.Generator.Element) -> Bool) -> Int? {
+    public class func indexOf<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> Int? {
         var i = 0
         var final: Int?
         for x in seq {
@@ -113,7 +113,7 @@ public class Seq {
         return final
     }
     
-     public class func flatMap<T : SequenceType, S>(seq: T, f: T.Generator.Element -> S?) -> [S] {
+     public class func flatMap<T : SequenceType, S>(seq: T, _ f: T.Generator.Element -> S?) -> [S] {
         var list = [S]()
         for x in seq {
             if let val = f(x) {
