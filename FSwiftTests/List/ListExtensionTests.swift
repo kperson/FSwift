@@ -11,6 +11,24 @@ import XCTest
 
 class ListExtensionTests: XCTestCase {
     
+    func testFirstIndexOf() {
+        let list = [1, 2, 3, 4, 2]
+        let index = Seq.firstIndexOf(list) { x in x == 2 }
+        let indexNil = Seq.firstIndexOf(list) { x in x == 10 }
+
+        XCTAssertEqual(index!, 1, "index of must find the correct first index")
+        XCTAssertNil(indexNil, "index must be nil if not present")
+    }
+    
+    func tesLastIndexOf() {
+        let list = [1, 2, 3, 4, 2]
+        let index = Seq.lastIndexOf(list) { x in x == 2 }
+        let indexNil = Seq.lastIndexOf(list) { x in x == 10 }
+        
+        XCTAssertEqual(index!, 4, "index of must find the correct last index")
+        XCTAssertNil(indexNil, "index must be nil if not present")
+    }
+    
     func testFlatMap() {
         let list = [4, 5, 6, 7]
         let evenOnly = list.flatMap { x in x % 2 == 0 ? x : nil }
