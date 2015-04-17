@@ -25,4 +25,12 @@ final public class Try<T> {
         return (value, error)
     }
     
+    public class func Success(val: T) -> Try<T> {
+        return Try(success: val)
+    }
+    
+    public class func Failure(error: NSError) -> Try<T> {
+        return Try<T>(failure: error)
+    }
+    
 }
