@@ -19,7 +19,7 @@ class TryTests: XCTestCase {
             return Try(success: val)
         }
         else {
-            return Try<CGFloat>(failure: NSError(domain: "com.math.dividebyzero", code: 5000, userInfo: nil))
+            return Try.Failure(NSError(domain: "com.math.dividebyzero", code: 5000, userInfo: nil))
         }
     }
     
@@ -36,8 +36,4 @@ class TryTests: XCTestCase {
         XCTAssertNil(fail.value, "Value must be nil if an error exists")
     }
     
-    
-    func testNSErrorNotValid() {
-        Try<String>(failure: NSError(domain: "domain", code: 0, userInfo: nil))
-    }
 }

@@ -143,20 +143,19 @@ class FutureTests: XCTestCase {
     func testRecover() {
         var complete = false
         futureOnBackground {
-            Try<Int>(failure: NSError(domain: "com.error", code: 100, userInfo: nil))
+            Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
         }.recover { err in
-            Try<Int>(success: 3)
+            Try.Success(3)
         }.onSuccess { num in
             complete = true
-            println(num)
             XCTAssert(3 == num, "recover must coalesce")
         }
         
         var complete2 = false
         futureOnBackground {
-            Try<Int>(success: 4)
+            Try.Success(4)
         }.recover { err in
-            Try<Int>(success: 3)
+            Try.Success(3)
         }.onSuccess { num in
             complete2 = true
             XCTAssert(4 == num, "recover must coalesce")
@@ -171,12 +170,12 @@ class FutureTests: XCTestCase {
     func testRecoverFilter() {
         var recoveredOne = false
         futureOnBackground {
-            Try<Int>(failure: NSError(domain: "com.error", code: 100, userInfo: nil))
+            Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
         }.recoverOn { err in
             err.domain == "com.error"
         }.recover { err in
             recoveredOne = true
-            return Try<Int>(success: 3)
+            return Try.Success(3)
         }.onSuccess { num in
             XCTAssert(3 == num, "recover must coalesce")
         }
@@ -188,7 +187,7 @@ class FutureTests: XCTestCase {
             err.domain == "com.error"
         }.recover { err in
             recoveredTwo = true
-            return Try<Int>(success: 3)
+            return Try.Success(3)
         }.onSuccess { num in
             XCTAssert(3 == num, "recover must coalesce")
         }
