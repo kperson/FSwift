@@ -55,6 +55,8 @@ public final class Stream<T> {
                     self.subscriptions[last].handle(v)
                     }
                     else {
+                        self.subscriptions[last].stream = nil
+                        self.subscriptions[last].isCancelled = true
                         self.subscriptions.removeAtIndex(last)
                     }
                     last = last - 1
@@ -62,6 +64,20 @@ public final class Stream<T> {
             }
         }
         return self
+    }
+    
+    func clean() {
+        synced {
+            if self.isOpen {
+                var last = self.subscriptions.count - 1
+                while last >= 0 {
+                    if !self.subscriptions[last].shouldExecute {
+                        self.subscriptions.removeAtIndex(last)
+                    }
+                    last = last - 1
+                }
+            }
+        }
     }
 
     /**
@@ -72,11 +88,12 @@ public final class Stream<T> {
     
     :returns: the stream that received the subscription request (self)
     */
-    public func subscribe(s: Subscription<T>) -> Stream<T> {
+    public func subscribe(s: Subscription<T>) -> Subscription<T> {
         synced  {
+            s.stream = self
             self.subscriptions.append(s)
         }
-        return self
+        return s
     }
     
     /**
@@ -98,9 +115,12 @@ public final class Stream<T> {
 */
 public class Subscription<T> {
     
+    internal(set) var isCancelled = false
     private let action:(T) -> Void
     private let executionCheck:() -> Bool
     private let callbackQueue: NSOperationQueue
+    
+    var stream: Stream<T>?
     
     public init(action: (T) -> Void, callbackQueue: NSOperationQueue = NSOperationQueue.mainQueue(), executionCheck: () -> Bool) {
         self.action = action
@@ -108,16 +128,27 @@ public class Subscription<T> {
         self.executionCheck = executionCheck
     }
     
-    public func handle(v: T)  {
+    func handle(v: T)  {
         let operation = NSBlockOperation {
             self.action(v)
         }
         callbackQueue.addOperation(operation)
     }
     
+    /**
+    Cancels the subscriptuon
+    */
+    public func cancel() {
+        isCancelled = true
+        
+        //break the link between the stream and the subscription
+        stream?.clean()
+        stream = nil
+    }
     
-    var shouldExecute: Bool {
-        return executionCheck()
+    /// determines if the subscription will receive a notification
+    public var shouldExecute: Bool {
+        return !isCancelled && executionCheck()
     }
     
 }
@@ -131,9 +162,9 @@ public extension Stream {
     :param: - x an object, if nil the subscription is cancelled
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription
     */
-    public func subscribe(x: AnyObject?, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: AnyObject?, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x != nil })
         return self.subscribe(subscription)
     }
@@ -146,7 +177,7 @@ public extension Stream {
     
     :returns: the stream that received the subscription request (self)
     */
-    public func subscribe(x: () -> AnyObject?, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: () -> AnyObject?, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() != nil })
         return self.subscribe(subscription)
     }
@@ -158,9 +189,9 @@ public extension Stream {
     :param: - x a boolean, if its false, the subscription is cancelled
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription
     */
-    public func subscribe(x: Bool, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: Bool, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x })
         return self.subscribe(subscription)
     }
@@ -171,9 +202,9 @@ public extension Stream {
     :param: - x a function to be evaluated at publish time, if its produces a false, the subscription is cancelled
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription request
     */
-    public func subscribe(x: () -> Bool, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: () -> Bool, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() })
         return self.subscribe(subscription)
     }
@@ -184,11 +215,38 @@ public extension Stream {
     
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription
     */
-    public func subscribe(f: T -> Void) -> Stream<T> {
+    public func subscribe(f: T -> Void) -> Subscription<T>  {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { true })
         return self.subscribe(subscription)
+    }
+    
+}
+
+public extension Future {
+    
+    public func pipeTo(stream: Stream<T>) {
+        self.signal.register { status in
+            switch status {
+            case TryStatus.Success:
+                stream.publish(self.finalVal)
+            case TryStatus.Failure(let err):
+                1 + 1 //do nothing
+            }
+        }
+    
+    }
+    
+    public func pipeTo(stream: Stream<Try<T>>) {
+        self.signal.register { status in
+            switch status {
+            case TryStatus.Success:
+                stream.publish(Try.Success(self.finalVal))
+            case TryStatus.Failure(let err):
+                stream.publish(Try.Failure(err))
+            }
+        }
     }
     
 }
