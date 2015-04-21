@@ -43,7 +43,10 @@ public enum RequestMethod : String {
     case GET = "GET"
     case DELETE = "DELETE"
     case PUT = "PUT"
-    case OPTION = "OPTION"
+    case OPTIONS = "OPTIONS"
+    case CONNECT = "CONNECT"
+    case TRACE = "TRACE"
+    case HEAD = "HEAD"
     
 }
 
@@ -109,8 +112,8 @@ public class ServiceUtil {
         return ServiceUtil.request(url, requestMethod: RequestMethod.PUT, body: body, headers: headers)
     }
     
-    public class func option(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
-        return ServiceUtil.request(url, requestMethod: RequestMethod.OPTION, body: emptyBody, headers: headers)
+    public class func options(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
+        return ServiceUtil.request(url, requestMethod: RequestMethod.OPTIONS, body: emptyBody, headers: headers)
     }
     
     public class func request(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<RequestResponse> {
