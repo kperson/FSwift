@@ -72,11 +72,11 @@ public final class Stream<T> {
     
     :returns: the stream that received the subscription request (self)
     */
-    public func subscribe(s: Subscription<T>) -> Stream<T> {
+    public func subscribe(s: Subscription<T>) -> Subscription<T> {
         synced  {
             self.subscriptions.append(s)
         }
-        return self
+        return s
     }
     
     /**
@@ -98,6 +98,7 @@ public final class Stream<T> {
 */
 public class Subscription<T> {
     
+    private(set) var isCancelled = false
     private let action:(T) -> Void
     private let executionCheck:() -> Bool
     private let callbackQueue: NSOperationQueue
@@ -115,9 +116,13 @@ public class Subscription<T> {
         callbackQueue.addOperation(operation)
     }
     
+    public func cancel() {
+        isCancelled = true
+    }
     
-    var shouldExecute: Bool {
-        return executionCheck()
+    
+    public var shouldExecute: Bool {
+        return !isCancelled && executionCheck()
     }
     
 }
@@ -131,9 +136,9 @@ public extension Stream {
     :param: - x an object, if nil the subscription is cancelled
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription
     */
-    public func subscribe(x: AnyObject?, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: AnyObject?, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x != nil })
         return self.subscribe(subscription)
     }
@@ -146,7 +151,7 @@ public extension Stream {
     
     :returns: the stream that received the subscription request (self)
     */
-    public func subscribe(x: () -> AnyObject?, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: () -> AnyObject?, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() != nil })
         return self.subscribe(subscription)
     }
@@ -158,9 +163,9 @@ public extension Stream {
     :param: - x a boolean, if its false, the subscription is cancelled
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription
     */
-    public func subscribe(x: Bool, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: Bool, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x })
         return self.subscribe(subscription)
     }
@@ -171,9 +176,9 @@ public extension Stream {
     :param: - x a function to be evaluated at publish time, if its produces a false, the subscription is cancelled
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription request
     */
-    public func subscribe(x: () -> Bool, f: T -> Void) -> Stream<T> {
+    public func subscribe(x: () -> Bool, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() })
         return self.subscribe(subscription)
     }
@@ -184,9 +189,9 @@ public extension Stream {
     
     :param: - f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    :returns: the subscription
     */
-    public func subscribe(f: T -> Void) -> Stream<T> {
+    public func subscribe(f: T -> Void) -> Subscription<T>  {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { true })
         return self.subscribe(subscription)
     }
