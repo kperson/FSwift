@@ -193,4 +193,31 @@ public extension Stream {
     
 }
 
+public extension Future {
+    
+    public func pipeTo(stream: Stream<T>) {
+        self.signal.register { status in
+            switch status {
+            case TryStatus.Success:
+                stream.publish(self.finalVal)
+            case TryStatus.Failure(let err):
+                1 + 1 //do nothing
+            }
+        }
+    
+    }
+    
+    public func pipeTo(stream: Stream<Try<T>>) {
+        self.signal.register { status in
+            switch status {
+            case TryStatus.Success:
+                stream.publish(Try.Success(self.finalVal))
+            case TryStatus.Failure(let err):
+                stream.publish(Try.Failure(err))
+            }
+        }
+    }
+    
+}
+
 
