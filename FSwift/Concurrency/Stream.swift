@@ -55,6 +55,8 @@ public final class Stream<T> {
                     self.subscriptions[last].handle(v)
                     }
                     else {
+                        self.subscriptions[last].stream = nil
+                        self.subscriptions[last].isCancelled = true
                         self.subscriptions.removeAtIndex(last)
                     }
                     last = last - 1
@@ -62,6 +64,20 @@ public final class Stream<T> {
             }
         }
         return self
+    }
+    
+    func clean() {
+        synced {
+            if self.isOpen {
+                var last = self.subscriptions.count - 1
+                while last >= 0 {
+                    if !self.subscriptions[last].shouldExecute {
+                        self.subscriptions.removeAtIndex(last)
+                    }
+                    last = last - 1
+                }
+            }
+        }
     }
 
     /**
@@ -74,6 +90,7 @@ public final class Stream<T> {
     */
     public func subscribe(s: Subscription<T>) -> Subscription<T> {
         synced  {
+            s.stream = self
             self.subscriptions.append(s)
         }
         return s
@@ -98,10 +115,12 @@ public final class Stream<T> {
 */
 public class Subscription<T> {
     
-    private(set) var isCancelled = false
+    internal(set) var isCancelled = false
     private let action:(T) -> Void
     private let executionCheck:() -> Bool
     private let callbackQueue: NSOperationQueue
+    
+    var stream: Stream<T>?
     
     public init(action: (T) -> Void, callbackQueue: NSOperationQueue = NSOperationQueue.mainQueue(), executionCheck: () -> Bool) {
         self.action = action
@@ -109,18 +128,25 @@ public class Subscription<T> {
         self.executionCheck = executionCheck
     }
     
-    public func handle(v: T)  {
+    func handle(v: T)  {
         let operation = NSBlockOperation {
             self.action(v)
         }
         callbackQueue.addOperation(operation)
     }
     
+    /**
+    Cancels the subscriptuon
+    */
     public func cancel() {
         isCancelled = true
+        
+        //break the link between the stream and the subscription
+        stream?.clean()
+        stream = nil
     }
     
-    
+    /// determines if the subscription will receive a notification
     public var shouldExecute: Bool {
         return !isCancelled && executionCheck()
     }

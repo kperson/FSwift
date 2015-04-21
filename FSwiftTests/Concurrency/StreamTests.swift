@@ -79,7 +79,13 @@ class StreamTests : XCTestCase {
         
         subscription.cancel()
         XCTAssertFalse(subscription.shouldExecute, "subscription should deactivate if cancel is called")
-
+        
+        let stream = Stream<String>()
+        let subscription2 = Subscription<String>(action: { x in Void() }, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { true })
+        stream.subscribe(subscription2)
+        subscription2.cancel()
+        
+        XCTAssertTrue(stream.subscriptions.isEmpty, "cancel should immediately remove subscription from the stream")
     }
     
     func testClosedPublishAndSubscribe() {
