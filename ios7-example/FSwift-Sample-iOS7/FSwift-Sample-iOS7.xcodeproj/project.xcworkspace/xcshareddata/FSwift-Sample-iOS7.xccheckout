@@ -5,7 +5,7 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>41ED2835-3214-40FA-A076-7A8B4FC83782</string>
+	<string>C8E63031-145B-43F0-A42C-3259127324C8</string>
 	<key>IDESourceControlProjectName</key>
 	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
@@ -14,11 +14,11 @@
 		<string>github.com:kperson/FSwift.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>FSwift.xcodeproj/project.xcworkspace</string>
+	<string>ios7-example/FSwift-Sample-iOS7/FSwift-Sample-iOS7.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>20E6156E895DAB075F03D1C7162B4CCCCAD4C40C</key>
-		<string>../..</string>
+		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:kperson/FSwift.git</string>
