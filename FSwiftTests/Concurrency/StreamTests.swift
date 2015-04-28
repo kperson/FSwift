@@ -11,7 +11,6 @@ import XCTest
 
 class StreamTests : XCTestCase {
     
-
     func testDefaultState() {
         let stream = Stream<String>()
         XCTAssertTrue(stream.isOpen, "stream should be open by default")
@@ -104,6 +103,8 @@ class StreamTests : XCTestCase {
             exp.fulfill()
         }
         stream.publish("hello")
+        
+
         waitForExpectationsWithTimeout(2.seconds, handler: nil)
 
     }
