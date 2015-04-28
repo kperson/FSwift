@@ -1,0 +1,3 @@
+use_frameworks!
+
+pod 'FSwift', '~> 1.1'

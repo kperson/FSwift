@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>F2D5AABB-B367-442F-82D1-F83D4E0C1367</string>
+	<key>IDESourceControlProjectName</key>
+	<string>FSwift-Sample</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>20E6156E895DAB075F03D1C7162B4CCCCAD4C40C</key>
+		<string>github.com:kperson/FSwift.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ios8-example/FSwift-Sample/FSwift-Sample.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>20E6156E895DAB075F03D1C7162B4CCCCAD4C40C</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:kperson/FSwift.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>20E6156E895DAB075F03D1C7162B4CCCCAD4C40C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>20E6156E895DAB075F03D1C7162B4CCCCAD4C40C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FSwift</string>
+		</dict>
+	</array>
+</dict>
+</plist>
