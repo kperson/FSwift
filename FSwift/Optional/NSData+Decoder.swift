@@ -8,9 +8,9 @@
 
 import Foundation
 
-extension NSData {
+public extension NSData {
     
-    var arrDecoderFromJSON:Try<Decoder> {
+    public var arrDecoderFromJSON:Try<Decoder> {
         var error: NSError?
         let list = NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments, error: &error) as? [AnyObject]
         if let err = error {
@@ -21,7 +21,7 @@ extension NSData {
         }
     }
     
-    var dictDecoderFromJSON:Try<Decoder> {
+    public var dictDecoderFromJSON:Try<Decoder> {
         var error: NSError?
         let dict = NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments, error: &error) as? [String : AnyObject]
         if let err = error {
@@ -32,7 +32,7 @@ extension NSData {
         }
     }
     
-    var isJSONDecodable:Bool {
+    public var isJSONDecodable:Bool {
         var error: NSError?
         let dict = NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments, error: &error) as? [String : AnyObject]
         if let err = error {
