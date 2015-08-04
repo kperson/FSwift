@@ -55,7 +55,7 @@ public class Future<T> {
     private var f: (() -> Try<T>)? = nil
     private var futureValue: Try<T>?
     private var completionF: ((Try<T>) -> ())?
-    private var mappedCompletionF:(() -> ())?
+    private var mappedCompletionF:((Try<T>) -> ())?
     
     private var bindCheck: BindCheck = BindCheck.BoolCheck({ true })
     
@@ -199,13 +199,13 @@ public class Future<T> {
     */
     public func map<D>(f: (T) -> Try<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
-        self.mappedCompletionF = {
+        self.mappedCompletionF = {futureValue in
             mappedFuture.completeWith {
-                if let successfulValue = self.futureValue!.value {
+                if let successfulValue = futureValue.value {
                     return f(successfulValue)
                 }
                 else {
-                    return Try<D>(failure: self.futureValue!.error!)
+                    return Try<D>(failure: futureValue.error!)
                 }
             }
         }
@@ -214,9 +214,9 @@ public class Future<T> {
     
     public func flatMap<D>(f: (T) -> Future<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
-        self.mappedCompletionF = {
-            if self.futureValue!.value != nil {
-                f(self.futureValue!.value!)
+        self.mappedCompletionF = {futureValue in
+            if futureValue.value != nil {
+                f(futureValue.value!)
                 .onSuccess { x in
                     mappedFuture.completeWith(x)
                     return Void()
@@ -226,7 +226,7 @@ public class Future<T> {
                 }
             }
             else {
-                mappedFuture.completeWith(self.futureValue!.error!)
+                mappedFuture.completeWith(futureValue.error!)
             }
             
         }
@@ -276,7 +276,7 @@ public class Future<T> {
                 default:
                     self.handleImpossibleMatch()
                 }
-                self.mappedCompletionF?()
+                self.mappedCompletionF?(self.futureValue!)
                 self.interalCompletionHandler?()
                 
                 switch self.futureValue!.toTuple {
