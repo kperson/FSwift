@@ -10,33 +10,33 @@ import Foundation
 
 extension Array {
     
-    func foreach(f: (T) -> Void) {
+    func foreach(f: (Element) -> Void) {
         Seq.foreach(self, f)
     }
     
-    func foreachWithIndex( f: (T, Int) -> Void) {
+    func foreachWithIndex( f: (Element, Int) -> Void) {
         Seq.foreachWithIndex(self, f)
     }
     
     
-    func firstIndexOf( f: (T) -> Bool) -> Int? {
+    func firstIndexOf( f: (Element) -> Bool) -> Int? {
         return Seq.firstIndexOf(self, f)
     }
     
-    var tail: [T]  {
+    var tail: [Element]  {
         return Seq.tail(self)
     }
     
-    func foldRight<B>(initialValue: B, _ f: (B, T) -> B) -> B {
+    func foldRight<B>(initialValue: B, _ f: (B, Element) -> B) -> B {
         return Seq.foldRight(self, initialValue, f)
     }
     
-    func foldLeft<B>(initialValue: B, _ f: (B, T) -> B) -> B {
-        return self.reverse().foldRight(initialValue, f)
+    func foldLeft<B>(initialValue: B, _ f: (B, Element) -> B) -> B {
+        return Array(self.reverse()).foldRight(initialValue, f)
     }
     
     
-    func reduceRight(f: (T, T) -> T) -> T {
+    func reduceRight(f: (Element, Element) -> Element) -> Element {
         if self.count == 1 {
             return self.first!
         }
@@ -45,23 +45,23 @@ extension Array {
         }
     }
     
-    func reduceLeft(f: (T, T) -> T) -> T {
-        return self.reverse().reduceRight(f)
+    func reduceLeft(f: (Element, Element) -> Element) -> Element {
+        return Array(self.reverse()).reduceRight(f)
     }
     
-    func findFirst(f: (T) -> Bool) -> T? {
+    func findFirst(f: (Element) -> Bool) -> Element? {
         return Seq.findFirst(self, f)
     }
     
-    func flatMap<S>(f: T -> S?) -> [S] {
+    func flatMap<S>(f: Element -> S?) -> [S] {
         return Seq.flatMap(self, f)
     }
     
-    func take(amount: Int) -> [T] {
+    func take(amount: Int) -> [Element] {
         return Seq.take(self, amount)
     }
     
-    func skip(amount: Int) -> [T] {
+    func skip(amount: Int) -> [Element] {
         return Seq.skip(self, amount)
     }
     
@@ -77,7 +77,7 @@ extension Array {
     * :returns a list of C
     *
     */
-    func mapReduce<B:Hashable, C>(m: (T) -> B, _ r: (B, [T]) -> C) -> [C]  {
+    func mapReduce<B:Hashable, C>(m: (Element) -> B, _ r: (B, [Element]) -> C) -> [C]  {
         return Seq.mapReduce(self, m, r)
     }
 

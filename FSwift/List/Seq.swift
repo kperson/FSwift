@@ -17,8 +17,8 @@ public class Seq {
     list = [1, 2, 3]
     Seq.foreach(list) { i in println(i * 2) }
     
-    :param: seq - a seq to iteratee through
-    :param: f - function to execute for each item in the sequence
+    - parameter seq: - a seq to iteratee through
+    - parameter f: - function to execute for each item in the sequence
     */
     public class func foreach<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Void) {
         for x in seq {
@@ -33,8 +33,8 @@ public class Seq {
     list = [1, 2, 3]
     Seq.foreach(list) { (num, index) in println(num * index) }
     
-    :param: seq - a seq to iteratee through
-    :param: f - a function to execute for each item in the sequence
+    - parameter seq: - a seq to iteratee through
+    - parameter f: - a function to execute for each item in the sequence
     */
     public class func foreachWithIndex<T : SequenceType>(seq: T, _ f: (T.Generator.Element, Int) -> Void) {
         var i = 0
@@ -51,21 +51,20 @@ public class Seq {
     list = [1, 2, 3]
     Seq.firstIndexOf(list) { x in x == 2 } //returns 1
     
-    :param: seq - a sequence to search
-    :param: f - search criteria
+    - parameter seq: - a sequence to search
+    - parameter f: - search criteria
     
-    :returns: the index of fullfilling the criteria, nil if not found
+    - returns: the index of fullfilling the criteria, nil if not found
     */
     public class func firstIndexOf<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> Int? {
         var i = 0
-        var final: Int?
         for x in seq {
             if f(x)  {
                 return i
             }
             i++
         }
-        return final
+        return nil;
     }
     
     /**
@@ -75,10 +74,10 @@ public class Seq {
     list = [1, 2, 3, 2]
     Seq.firstIndexOf(list) { x in x == 2 } //returns 3
     
-    :param: seq - a sequence to search
-    :param: f - search criteria
+    - parameter seq: - a sequence to search
+    - parameter f: - search criteria
     
-    :returns: the index of fullfilling the criteria, nil if not found
+    - returns: the index of fullfilling the criteria, nil if not found
     */
     public class func lastIndexOf<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> Int? {
         var i = 0
@@ -99,13 +98,13 @@ public class Seq {
     e.x.
     Seq.flatMap([1, 2, 3, 4]) { x % 2 == 0 ? x : nil } //returns [2, 4]
     
-    :param: seq - a sequence to flatMap
-    :param: f  - a transformation function
+    - parameter seq: - a sequence to flatMap
+    - parameter f:  - a transformation function
     
-    :returns: a new array with all non-nil items
+    - returns: a new array with all non-nil items
     */
     public class func flatMap<T : SequenceType, S>(seq: T, _ f: T.Generator.Element -> S?) -> [S] {
-        var list = [S]()
+        var list:[S] = []
         for x in seq {
             if let val = f(x) {
                 list.append(val)
@@ -120,9 +119,9 @@ public class Seq {
     e.x. 
     Seq.tail([1, 2, 3]) //returns [2, 3]
     
-    :param: seq - a sequence
+    - parameter seq: - a sequence
     
-    :returns: a new array representing the tail of the sequence
+    - returns: a new array representing the tail of the sequence
     */
     public class func tail<T : SequenceType>(seq: T) -> [T.Generator.Element] {
         var list:[T.Generator.Element] = []
@@ -138,7 +137,6 @@ public class Seq {
     
     
     public class func foldRight<T : CollectionType, B>(seq: T, _ initialValue: B, _ f: (B, T.Generator.Element) -> B) -> B {
-        let x = []
         if count(seq) == 0 {
             return initialValue
         }
@@ -164,9 +162,9 @@ public class Seq {
     /**
     Removes duplicates from sequence
     
-    :param: seq - a sequence to evaluate
+    - parameter seq: - a sequence to evaluate
     
-    :returns: a new array with duplicates removed
+    - returns: a new array with duplicates removed
     */
     public class func removeDuplicates<S : SequenceType where S.Generator.Element : Equatable>(seq: S) -> [S.Generator.Element] {
         var uniqueList:[S.Generator.Element] = []
@@ -184,10 +182,10 @@ public class Seq {
     e.x.
     Seq.skip([1, 2, 3], 2) //returns [3]
     
-    :param: seq - a sequence to evaluate
-    :param: amount the number of elements to skip
+    - parameter seq: - a sequence to evaluate
+    - parameter amount: the number of elements to skip
     
-    :returns: a new array with skip elements
+    - returns: a new array with skip elements
     */
     public class func skip<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
         var i = 0
@@ -209,10 +207,10 @@ public class Seq {
     e.x.
     Seq.take([1, 2, 3], 2) //returns [1, 2]
     
-    :param: seq - a sequence to evaluate
-    :param: amount the number of elements to take
+    - parameter seq: - a sequence to evaluate
+    - parameter amount: the number of elements to take
     
-    :returns: a new array with taken elements
+    - returns: a new array with taken elements
     */
     public class func take<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
         var i = 0

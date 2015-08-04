@@ -10,5 +10,5 @@ import Foundation
 
 func DocumentDirectoryPath() -> String {
     let documentDirectories = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
-    return documentDirectories[0] as! String
+    return documentDirectories[0] as! String 
 }

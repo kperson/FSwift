@@ -42,9 +42,9 @@ public final class Stream<T>  {
     /**
     publishes a message to the sream
     
-    :param: v - the value to publish
+    - parameter v: - the value to publish
     
-    :returns: the stream that received the publish request (self)
+    - returns: the stream that received the publish request (self)
     */
     public func publish(v: T) -> Stream<T> {
         //synced {
@@ -84,9 +84,9 @@ public final class Stream<T>  {
     subscribes to the stream,
     this subscription will not received queued publisheds, only new publisheds
     
-    :param: s - a stream subscription
+    - parameter s: - a stream subscription
     
-    :returns: the stream that received the subscription request (self)
+    - returns: the stream that received the subscription request (self)
     */
     public func subscribe(s: Subscription<T>) -> Subscription<T> {
         s.stream = self
@@ -97,7 +97,7 @@ public final class Stream<T>  {
     /**
     clears all subscriptions,
     note that all queued messages will be published, but no other messages can be published
-    :returns: the stream that was cleared (self)
+    - returns: the stream that was cleared (self)
     */
     public func clearSubscriptions() -> Stream<T> {
         synced {
@@ -159,10 +159,10 @@ public extension Stream {
     /**
     subscribes to the stream
     
-    :param: - x an object, if nil the subscription is cancelled
-    :param: - f the action to be executed on publish
+    - parameter -: x an object, if nil the subscription is cancelled
+    - parameter -: f the action to be executed on publish
     
-    :returns: the subscription
+    - returns: the subscription
     */
     public func subscribe(x: AnyObject?, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x != nil })
@@ -172,10 +172,10 @@ public extension Stream {
     /**
     subscribes to the stream
     
-    :param: - x function to be evaluated at publish time, if its produces a nil, the subscription is cancelled
-    :param: - f the action to be executed on publish
+    - parameter -: x function to be evaluated at publish time, if its produces a nil, the subscription is cancelled
+    - parameter -: f the action to be executed on publish
     
-    :returns: the stream that received the subscription request (self)
+    - returns: the stream that received the subscription request (self)
     */
     public func subscribe(x: () -> AnyObject?, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() != nil })
@@ -186,10 +186,10 @@ public extension Stream {
     /**
     subscribes to the stream
     
-    :param: - x a boolean, if its false, the subscription is cancelled
-    :param: - f the action to be executed on publish
+    - parameter -: x a boolean, if its false, the subscription is cancelled
+    - parameter -: f the action to be executed on publish
     
-    :returns: the subscription
+    - returns: the subscription
     */
     public func subscribe(x: Bool, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x })
@@ -199,10 +199,10 @@ public extension Stream {
     /**
     subscribes to the stream
     
-    :param: - x a function to be evaluated at publish time, if its produces a false, the subscription is cancelled
-    :param: - f the action to be executed on publish
+    - parameter -: x a function to be evaluated at publish time, if its produces a false, the subscription is cancelled
+    - parameter -: f the action to be executed on publish
     
-    :returns: the subscription request
+    - returns: the subscription request
     */
     public func subscribe(x: () -> Bool, f: T -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() })
@@ -213,9 +213,9 @@ public extension Stream {
     /**
     subscribes to the stream, it will always receive a publish callback
     
-    :param: - f the action to be executed on publish
+    - parameter -: f the action to be executed on publish
     
-    :returns: the subscription
+    - returns: the subscription
     */
     public func subscribe(f: T -> Void) -> Subscription<T>  {
         let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { true })
@@ -233,7 +233,7 @@ public extension Future {
                 if on(self.finalVal) {
                     stream.publish(self.finalVal)
                 }
-            case TryStatus.Failure(let err):
+            case TryStatus.Failure(_):
                 1 + 1 //do nothing
             }
         }
@@ -295,14 +295,14 @@ public class StreamHandler<T> {
     }
     
     func setup() {
-        let sub = s.subscribe { try in
-            if let e = try.error {
+        let sub = s.subscribe { t in
+            if let e = t.error {
                 self.failureF?(e)
             }
             else {
-                self.successF?(try.value!)
+                self.successF?(t.value!)
             }
-            self.completionF?(try)
+            self.completionF?(t)
         }
         self.subscription = sub
     }

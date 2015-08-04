@@ -38,9 +38,9 @@ extension UIColor {
         var a:CGFloat = 0
         self.getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        var rSTring:String = String(format:"%2X", Int(r*255))
-        var gSTring:String = String(format:"%2X", Int(g*255))
-        var bSTring:String = String(format:"%2X", Int(b*255))
+        let rSTring:String = String(format:"%2X", Int(r*255))
+        let gSTring:String = String(format:"%2X", Int(g*255))
+        let bSTring:String = String(format:"%2X", Int(b*255))
         
         return (rSTring + gSTring + bSTring)
     }
@@ -56,9 +56,9 @@ extension UIColor {
             cString = (cString as NSString).substringFromIndex(2)
         }
         
-        var rString = (cString as NSString).substringToIndex(2)
-        var gString = ((cString as NSString).substringFromIndex(2) as NSString).substringToIndex(2)
-        var bString = ((cString as NSString).substringFromIndex(4) as NSString).substringToIndex(2)
+        let rString = (cString as NSString).substringToIndex(2)
+        let gString = ((cString as NSString).substringFromIndex(2) as NSString).substringToIndex(2)
+        let bString = ((cString as NSString).substringFromIndex(4) as NSString).substringToIndex(2)
         
         var r:CUnsignedInt = 0, g:CUnsignedInt = 0, b:CUnsignedInt = 0;
         NSScanner(string: rString).scanHexInt(&r)

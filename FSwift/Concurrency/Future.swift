@@ -240,8 +240,8 @@ public class Future<T> {
             switch (self.recoverF, self.mappedRecoverF, self.futureValue!.toTuple.1) {
             case (.Some(let r), _, .Some(let error)):
                 if self.recoverFilter(error) {
-                    r(error).onComplete { try in
-                        self.futureValue = try
+                    r(error).onComplete { t in
+                        self.futureValue = t
                         self.futureExecutionComplete()
                     }
                 }
@@ -280,7 +280,7 @@ public class Future<T> {
                 self.interalCompletionHandler?()
                 
                 switch self.futureValue!.toTuple {
-                case (.Some(let val), _):
+                case (.Some(_), _):
                     for x in self.signals {
                         x.complete(TryStatus.Success)
                     }

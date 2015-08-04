@@ -425,6 +425,8 @@
 		DBA75A8F19DDECAF009EA696 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = Kelton;
 				TargetAttributes = {
