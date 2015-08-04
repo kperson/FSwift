@@ -18,7 +18,7 @@ class FutureTests: XCTestCase {
         }.onComplete { x in
             switch x.toTuple {
             case (.Some(let val), _):  XCTAssertEqual(val, hello, "x must equal 'Hello World'")
-            case (_, .Some(let error)): XCTAssert(false, "This line should never be executed in the this test")
+            case (_, .Some( _)): XCTAssert(false, "This line should never be executed in the this test")
             default:
                 XCTAssert(false, "This line should never be executed in the this test")
             }
@@ -29,11 +29,11 @@ class FutureTests: XCTestCase {
     func testFutureMapSuccess() {
         var complete = false
         let hello = "Hello World"
-        let numberOfCharacters = count(hello)
+        let numberOfCharacters = hello.characters.count
         futureOnBackground {
            Try<String>(success: hello)
         }.map { x in
-            Try<Int>(success: count(x))
+            Try<Int>(success: x.characters.count)
         }.onSuccess { ct in
             complete = true
             XCTAssertEqual(ct, numberOfCharacters, "ct must equal the number of characters in 'Hello World'")
@@ -43,9 +43,7 @@ class FutureTests: XCTestCase {
     }
     
     func testFailure() {
-        let hello = "Hello World"
-        let numberOfCharacters = count(hello)
-        let z = futureOnBackground {
+        futureOnBackground {
             Try<Int>(failure: NSError(domain: "com.error", code: 200, userInfo: nil))
         }
         .onFailure { error in
@@ -131,10 +129,7 @@ class FutureTests: XCTestCase {
         }
         
         combineFuturesOnBackground(x.signal, y.signal)
-        .onSuccess { a in
-            for val in 0...y.finalVal - 1 {
-            }
-        }
+        .onSuccess { a in }
         
          NSThread.sleepForTimeInterval(2.seconds)
 

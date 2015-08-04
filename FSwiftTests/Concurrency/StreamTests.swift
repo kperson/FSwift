@@ -56,7 +56,7 @@ class StreamTests : XCTestCase {
         let value =  NSUUID().UUIDString
         let exp = expectationWithDescription("testOpenPublishAndSubscribe")
         let stream = Stream<String>()
-        for s in 0...numSubscribers - 1 {
+        for _ in 0...numSubscribers - 1 {
             stream.subscribe { str in
                 XCTAssertEqual(value, str, "stream must publish the correct value")
                 ct = ct + 1
@@ -64,7 +64,7 @@ class StreamTests : XCTestCase {
                     exp.fulfill()
                 }
             }
-            for x in 0...numPublishes - 1 {
+            for _ in 0...numPublishes - 1 {
                 stream.publish(value)
             }
         }
@@ -148,7 +148,6 @@ class StreamTests : XCTestCase {
     
     func testFutureTryPipingFailure() {
         var publishCt = 0
-        let message = "hello"
         let exp = expectationWithDescription("testFuturePiping")
         let stream = Stream<Try<String>>()
         stream.subscribe { x in
@@ -158,8 +157,9 @@ class StreamTests : XCTestCase {
             exp.fulfill()
         }
         
+        let err = NSError(domain: "A", code: 0, userInfo: nil)
         future {
-            Try<String>(failure: NSError())
+            Try<String>(failure: err)
         }.pipeTo(stream)
         
         waitForExpectationsWithTimeout(2.seconds, handler:nil)

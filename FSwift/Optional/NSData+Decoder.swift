@@ -11,35 +11,33 @@ import Foundation
 public extension NSData {
     
     public var arrDecoderFromJSON:Try<Decoder> {
-        var error: NSError?
-        let list = NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments, error: &error) as? [AnyObject]
-        if let err = error {
-            return Try<Decoder>(failure: err)
-        }
-        else {
+        do {
+            let list = try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments) as? [AnyObject]
             return Try(success : Decoder(array: list!, depth: 0))
+        }
+        catch let err as NSError {
+            return Try<Decoder>(failure: err)
+        
         }
     }
     
     public var dictDecoderFromJSON:Try<Decoder> {
-        var error: NSError?
-        let dict = NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments, error: &error) as? [String : AnyObject]
-        if let err = error {
-            return Try<Decoder>(failure: err)
-        }
-        else {
+        do {
+            let dict = try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments) as? [String : AnyObject]
             return Try(success: Decoder(dictionary: dict!, depth: 0))
+        }
+        catch let err as NSError {
+            return Try<Decoder>(failure: err)
         }
     }
     
     public var isJSONDecodable:Bool {
-        var error: NSError?
-        let dict = NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments, error: &error) as? [String : AnyObject]
-        if let err = error {
-            return false
-        }
-        else {
+        do {
+            try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments) as? [String : AnyObject]
             return true
+        }
+        catch {
+            return false
         }
     }
     

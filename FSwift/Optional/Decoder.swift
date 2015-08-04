@@ -33,7 +33,7 @@ public extension Decoder {
     
     public var errorMessage: String? {
         if let err = self.err as NSError? {
-            return err.userInfo?["message"] as! String?
+            return err.userInfo["message"] as? String
         }
         return nil
     }
@@ -186,45 +186,71 @@ public struct DecoderArray : SequenceType {
     
     let items: [AnyObject]
     
-    public func generate() -> GeneratorOf<Decoder> {
-        
-        var i = -1
-        
-        return GeneratorOf<Decoder> {
-            i++
-            if( i < self.items.count) {
-                return Decoder(value: self.items[i], parseType: true)
-            }
-            else {
-                return nil
-            }
+    public func generate() -> AnyGenerator<Decoder> {
+        return DecoderArrayGenerator(items: items)
+    }
+    
+}
+
+private class DecoderArrayGenerator : AnyGenerator<Decoder> {
+
+    private let items: [AnyObject]
+    private var i = -1
+    
+    init(items: [AnyObject]) {
+        self.items = items
+    }
+    
+    override func next() -> Element? {
+        i++
+        if i < self.items.count {
+            return Decoder(value: self.items[i], parseType: true)
+        }
+        else {
+            return nil
         }
     }
     
     
 }
 
+
+
 public struct DecoderDictionary : SequenceType {
     
     let items: [String: AnyObject]
     
-    public func generate() -> GeneratorOf<(String, Decoder)> {
-        
-        var i = -1
-        let keys = items.keys.array
-        
-        return GeneratorOf<(String, Decoder)> {
-            i++
-            if( i < self.items.count) {
-                let key = keys[i]
-                let value =  Decoder(value: self.items[key]!, parseType: true)
-                return (key, value)
-            }
-            else {
-                return nil
-            }
+    public func generate() -> AnyGenerator<(String, Decoder)> {
+        return DecoderDictionaryGenerator(items: items)
+    }
+    
+}
+
+
+private class DecoderDictionaryGenerator : AnyGenerator<(String, Decoder)> {
+    
+    
+    private let items: [String: AnyObject]
+    private let keys: [String]
+    private var i = -1
+    
+    init(items: [String : AnyObject]) {
+        self.items = items
+        self.keys = items.keys.array
+    }
+    
+    override func next() -> Element? {
+        i++
+        if i < self.items.count {
+            let key = keys[i]
+            let value =  Decoder(value: self.items[key]!, parseType: true)
+            return (key, value)
+        }
+        else {
+            return nil
         }
     }
     
     
 }
+

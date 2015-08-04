@@ -63,8 +63,12 @@ public extension String {
 public class ServiceUtil {
     
     public class func asJson(obj: AnyObject) -> NSData? {
-        var error: NSError?
-        return NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions.PrettyPrinted, error: &error)
+        do  {
+            return try NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions.PrettyPrinted)
+        }
+        catch {
+            return nil
+        }
     }
 
     public class func asParamsStr(params: Dictionary<String, AnyObject>) -> String {
@@ -129,16 +133,15 @@ public class ServiceUtil {
                 }
             }
             else {
-                request.addValue(headerValue as? String, forHTTPHeaderField: headerKey)
+                request.addValue(headerValue as! String, forHTTPHeaderField: headerKey)
             }
         }
         
         let promise = Promise<RequestResponse>()
-        var error: NSError
         
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
             if error != nil {
-              promise.completeWith(error)
+              promise.completeWith(error!)
             }
             else {
                 let httpResponse = response as! NSHTTPURLResponse
@@ -148,7 +151,7 @@ public class ServiceUtil {
                     responseHeaders[headerKey as! String] = headerValue
                 }
                 
-                promise.completeWith(RequestResponse(statusCode: httpResponse.statusCode, body: data, headers: responseHeaders))
+                promise.completeWith(RequestResponse(statusCode: httpResponse.statusCode, body: data!, headers: responseHeaders))
             }
         })
         

@@ -35,7 +35,7 @@ final public class Try<T> {
     
     //maybe we use custom matching? http://austinzheng.com/2014/12/17/custom-pattern-matching/
     public var match:TryStatus {
-        if let v = value {
+        if let _ = value {
             return TryStatus.Success
         }
         else {

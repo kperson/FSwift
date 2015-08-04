@@ -31,7 +31,7 @@ extension UIColor {
         return colorWithPercentBrightnessChange(0.25)
     }
     
-    func hex() -> String {
+    public var hex:String {
         var r:CGFloat = 0
         var g:CGFloat = 0
         var b:CGFloat = 0

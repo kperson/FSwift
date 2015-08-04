@@ -29,7 +29,7 @@ class ColorTest: XCTestCase {
     }
     
     func testColorToHex() {
-        let calculatedHex = color.hex()
+        let calculatedHex = color.hex
         XCTAssertEqual(calculatedHex,hex, "Wrong hex string from UIColor")
     }
     

@@ -137,21 +137,21 @@ public class Seq {
     
     
     public class func foldRight<T : CollectionType, B>(seq: T, _ initialValue: B, _ f: (B, T.Generator.Element) -> B) -> B {
-        if count(seq) == 0 {
+        if seq.count == 0 {
             return initialValue
         }
         else {
             let t = Seq.tail(seq)
-            return f(t.foldRight(initialValue, f), first(seq)!)
+            return f(t.foldRight(initialValue, f), seq.first!)
         }
     }
     
     public class func findFirst<T : CollectionType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> T.Generator.Element? {
-        if count(seq) == 0 {
+        if seq.count == 0 {
             return nil
         }
-        if f(first(seq)!)  {
-            return first(seq)!
+        if f(seq.first!)  {
+            return seq.first!
         }
         else {
             return Seq.findFirst(Seq.tail(seq), f)
@@ -169,7 +169,7 @@ public class Seq {
     public class func removeDuplicates<S : SequenceType where S.Generator.Element : Equatable>(seq: S) -> [S.Generator.Element] {
         var uniqueList:[S.Generator.Element] = []
         for x in seq {
-            if !contains(uniqueList, x) {
+            if !uniqueList.contains(x) {
                 uniqueList.append(x)
             }
         }

@@ -14,13 +14,12 @@ class TimerTests: XCTestCase {
     func testTimerLoop() {
         
         var ct = 0
-        var end = 0
         let start = NSDate().timeIntervalSince1970
         let readyExpectation = expectationWithDescription("ready1")
         Timer(interval: 100.milliseconds, repeats: true, f: { t in
             ct += 1
             if(ct == 2) {
-                var end = NSDate().timeIntervalSince1970
+                let end = NSDate().timeIntervalSince1970
                 XCTAssert(end - start >= 200.milliseconds, "If the loop runs twice it must be in about 200.milliseconds")
                 readyExpectation.fulfill()
             }
@@ -30,7 +29,6 @@ class TimerTests: XCTestCase {
     
     func testTimerStop() {
         var ct = 0
-        let start = NSDate().timeIntervalSince1970
         let readyExpectation = expectationWithDescription("ready2")
         let timer = Timer(interval: 100.milliseconds, repeats: true, f: { t in
             ct += 1
@@ -54,7 +52,6 @@ class TimerTests: XCTestCase {
     
     func testTimerWithNoRepeat() {
         var ct = 0
-        let start = NSDate().timeIntervalSince1970
         let readyExpectation = expectationWithDescription("ready3")
         Timer(interval: 100.milliseconds, repeats: false, f: { t in
             ct += 1
