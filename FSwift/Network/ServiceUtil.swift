@@ -37,6 +37,13 @@ public class RequestResponse {
     
 }
 
+
+public enum ArrayEncodingStrategy {
+    
+    case PHP
+    case MultiParam
+}
+
 public enum RequestMethod : String {
     
     case POST = "POST"
@@ -50,11 +57,12 @@ public enum RequestMethod : String {
     
 }
 
+
 public extension String {
     
-    func withParams(params: Dictionary<String, AnyObject>) -> String {
+    func withParams(params: Dictionary<String, AnyObject>, arrayEncodingStrategy: ArrayEncodingStrategy = ArrayEncodingStrategy.MultiParam) -> String {
         let endpoint = self.hasPrefix("?") ? self :  self + "?"
-       return  endpoint + (NSString(data: ServiceUtil.asParams(params), encoding: NSUTF8StringEncoding)! as String)
+       return  endpoint + (NSString(data: ServiceUtil.asParams(params, arrayEncodingStrategy: arrayEncodingStrategy), encoding: NSUTF8StringEncoding)! as String)
     }
     
 }
@@ -71,7 +79,7 @@ public class ServiceUtil {
         }
     }
 
-    public class func asParamsStr(params: Dictionary<String, AnyObject>) -> String {
+    public class func asParamsStr(params: Dictionary<String, AnyObject>, arrayEncodingStrategy: ArrayEncodingStrategy = ArrayEncodingStrategy.MultiParam) -> String {
         var pairs:[String] = []
         for (key, value) in params {
             if let v = value as? Dictionary<String, AnyObject> {
@@ -83,7 +91,12 @@ public class ServiceUtil {
             else if let v = value as? [AnyObject] {
                 for subValue in v {
                     let escapedFormat = CFURLCreateStringByAddingPercentEscapes(nil, subValue.description, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue)
-                    pairs.append("\(key)[]=\(escapedFormat)")
+                    if arrayEncodingStrategy == ArrayEncodingStrategy.MultiParam {
+                        pairs.append( "\(key)=\(escapedFormat)")
+                    }
+                    else {
+                        pairs.append("\(key)[]=\(escapedFormat)")
+                    }
                 }
             }
             else {
@@ -96,8 +109,8 @@ public class ServiceUtil {
         return str
     }
     
-    public class func asParams(params: Dictionary<String, AnyObject>) -> NSData {
-        return asParamsStr(params).dataUsingEncoding(NSUTF8StringEncoding)!
+    public class func asParams(params: Dictionary<String, AnyObject>, arrayEncodingStrategy: ArrayEncodingStrategy = ArrayEncodingStrategy.MultiParam) -> NSData {
+        return asParamsStr(params, arrayEncodingStrategy: arrayEncodingStrategy).dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
     public class func delete(url:String, body: NSData = emptyBody, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
