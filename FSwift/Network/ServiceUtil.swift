@@ -54,6 +54,7 @@ public enum RequestMethod : String {
     case CONNECT = "CONNECT"
     case TRACE = "TRACE"
     case HEAD = "HEAD"
+    case PATCH = "PATCH"
     
 }
 

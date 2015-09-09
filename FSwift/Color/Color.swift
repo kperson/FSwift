@@ -69,3 +69,9 @@ extension UIColor {
         self.init(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0, blue: CGFloat(b) / 255.0, alpha: CGFloat(1))
     }
 }
+
+public extension Int {
+    
+    public var colorHex:CGFloat { return CGFloat(self) / 255.0 }
+    
+}
