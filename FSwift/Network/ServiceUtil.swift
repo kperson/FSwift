@@ -105,7 +105,8 @@ public class ServiceUtil {
                 pairs.append( "\(key)=\(escapedFormat)")
             }
         }
-        let str = "&".join(pairs)
+        
+        let str = pairs.joinWithSeparator("&")
         return str
     }
     

@@ -26,7 +26,7 @@ class DecoderTests: XCTestCase {
     
     func testDictionaryCreation() {
         let d: Decoder = ["hello" : "world"]
-        XCTAssertEqual("world", d.dict?.items["hello"] as! String, "dictionary indices must match")
+        XCTAssertEqual("world", (d.dict?.items["hello"] as! String), "dictionary indices must match")
     }
     
     func testNestedDictionaryCreation() {

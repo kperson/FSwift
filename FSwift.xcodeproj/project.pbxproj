@@ -14,8 +14,8 @@
 		DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
 		DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
 		DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3619E2D637006217BA /* ListExtensionTests.swift */; };
-		DB241D3A19E2DF31006217BA /* Array+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Array+Util.swift */; };
-		DB241D3B19E2E380006217BA /* Array+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Array+Util.swift */; };
+		DB241D3A19E2DF31006217BA /* Iterable+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Iterable+Util.swift */; };
+		DB241D3B19E2E380006217BA /* Iterable+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Iterable+Util.swift */; };
 		DB241D4319E317C2006217BA /* Optional+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4219E317C2006217BA /* Optional+Util.swift */; };
 		DB241D4419E3183A006217BA /* Optional+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4219E317C2006217BA /* Optional+Util.swift */; };
 		DB241D4719E3196B006217BA /* OptionalExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */; };
@@ -78,7 +78,7 @@
 		759BE93D1A7812350042B77C /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 		DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlExtension.swift; sourceTree = "<group>"; };
 		DB241D3619E2D637006217BA /* ListExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListExtensionTests.swift; sourceTree = "<group>"; };
-		DB241D3919E2DF31006217BA /* Array+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Util.swift"; sourceTree = "<group>"; };
+		DB241D3919E2DF31006217BA /* Iterable+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Iterable+Util.swift"; sourceTree = "<group>"; };
 		DB241D4219E317C2006217BA /* Optional+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+Util.swift"; sourceTree = "<group>"; };
 		DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExtensionTests.swift; sourceTree = "<group>"; };
 		DB3649731AD5AFE3003CBD81 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
@@ -172,7 +172,7 @@
 		DB241D3819E2DF26006217BA /* List */ = {
 			isa = PBXGroup;
 			children = (
-				DB241D3919E2DF31006217BA /* Array+Util.swift */,
+				DB241D3919E2DF31006217BA /* Iterable+Util.swift */,
 				DB6E32F01ADD502A0016542E /* Seq.swift */,
 			);
 			path = List;
@@ -496,7 +496,7 @@
 				DBFBDC681AC9ECF500D6A145 /* Segue.swift in Sources */,
 				DBFBDC621AC9ECD600D6A145 /* Dictionary.swift in Sources */,
 				DBFBDC6B1AC9ECFF00D6A145 /* Storage.swift in Sources */,
-				DB241D3A19E2DF31006217BA /* Array+Util.swift in Sources */,
+				DB241D3A19E2DF31006217BA /* Iterable+Util.swift in Sources */,
 				DBFBDC6E1AC9ED0B00D6A145 /* Rect.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,7 +509,7 @@
 				DB241D4419E3183A006217BA /* Optional+Util.swift in Sources */,
 				DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */,
 				DBFBDC741AC9ED7A00D6A145 /* Segue.swift in Sources */,
-				DB241D3B19E2E380006217BA /* Array+Util.swift in Sources */,
+				DB241D3B19E2E380006217BA /* Iterable+Util.swift in Sources */,
 				DB6E32F21ADD50440016542E /* Seq.swift in Sources */,
 				DB3649771AD5C1F8003CBD81 /* Stream.swift in Sources */,
 				DB241D4719E3196B006217BA /* OptionalExtensionTests.swift in Sources */,

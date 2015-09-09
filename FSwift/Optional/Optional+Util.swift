@@ -10,7 +10,7 @@ import Foundation
 
 extension Optional {
     
-    func getOrElse(defaultValue: T) -> T {
+    func getOrElse(defaultValue: Wrapped) -> Wrapped {
         if self == nil {
             return defaultValue
         }
@@ -19,7 +19,7 @@ extension Optional {
         }
     }
     
-    func flatMap<S>(f: (T) -> S) -> S? {
+    func flatMap<S>(f: (Wrapped) -> S) -> S? {
         if self == nil {
             return nil
         }

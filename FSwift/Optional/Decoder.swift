@@ -236,7 +236,7 @@ private class DecoderDictionaryGenerator : AnyGenerator<(String, Decoder)> {
     
     init(items: [String : AnyObject]) {
         self.items = items
-        self.keys = items.keys.array
+        self.keys = Array(items.keys)
     }
     
     override func next() -> Element? {

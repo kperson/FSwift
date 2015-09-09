@@ -93,30 +93,9 @@ public class Seq {
     
     
     /**
-    Transforms a sequence into a list, any item the transforms to a nil will not be inserted
-    
-    e.x.
-    Seq.flatMap([1, 2, 3, 4]) { x % 2 == 0 ? x : nil } //returns [2, 4]
-    
-    - parameter seq: - a sequence to flatMap
-    - parameter f:  - a transformation function
-    
-    - returns: a new array with all non-nil items
-    */
-    public class func flatMap<T : SequenceType, S>(seq: T, _ f: T.Generator.Element -> S?) -> [S] {
-        var list:[S] = []
-        for x in seq {
-            if let val = f(x) {
-                list.append(val)
-            }
-        }
-        return list
-    }
-    
-    /**
     Generates the tail of a list (i.e. every item except the first), if the list has no tail, an empty array is returned
     
-    e.x. 
+    e.x.
     Seq.tail([1, 2, 3]) //returns [2, 3]
     
     - parameter seq: - a sequence
