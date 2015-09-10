@@ -71,6 +71,10 @@ public extension SequenceType {
         return Seq.mapReduce(self, m, r)
     }
     
+    public func shuffled() -> [Generator.Element] {
+        return self.sort { a, b in arc4random() < arc4random() }
+    }
+    
     
 }
 
