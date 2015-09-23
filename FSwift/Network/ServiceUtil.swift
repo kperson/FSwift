@@ -116,23 +116,23 @@ public class ServiceUtil {
     }
     
     public class func delete(url:String, body: NSData = emptyBody, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
-        return ServiceUtil.request(url, requestMethod: RequestMethod.DELETE, body: body, headers: headers)
+        return request(url, requestMethod: RequestMethod.DELETE, body: body, headers: headers)
     }
 
     public class func get(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
-        return ServiceUtil.request(url, requestMethod: RequestMethod.GET, body: emptyBody, headers: headers)
+        return request(url, requestMethod: RequestMethod.GET, body: emptyBody, headers: headers)
     }
     
     public class func post(url:String, body: NSData = emptyBody, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
-        return ServiceUtil.request(url, requestMethod: RequestMethod.POST, body: body, headers: headers)
+        return request(url, requestMethod: RequestMethod.POST, body: body, headers: headers)
     }
     
     public class func put(url:String, body: NSData = emptyBody, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
-        return ServiceUtil.request(url, requestMethod: RequestMethod.PUT, body: body, headers: headers)
+        return request(url, requestMethod: RequestMethod.PUT, body: body, headers: headers)
     }
     
     public class func options(url:String, headers: Dictionary<String, AnyObject> = [:]) -> Future<RequestResponse> {
-        return ServiceUtil.request(url, requestMethod: RequestMethod.OPTIONS, body: emptyBody, headers: headers)
+        return request(url, requestMethod: RequestMethod.OPTIONS, body: emptyBody, headers: headers)
     }
     
     public class func request(url:String, requestMethod: RequestMethod, body: NSData, headers: Dictionary<String, AnyObject>) -> Future<RequestResponse> {
@@ -172,6 +172,97 @@ public class ServiceUtil {
         
         task.resume()
         return promise.future
+    }
+    
+    
+}
+
+public class ChunkedService {
+    
+    public class func request(url:String, requestMethod: RequestMethod, body: NSData, headers: [String : AnyObject]) -> Stream<ChunkedMessagePart<NSData>> {
+        
+        let req = NSMutableURLRequest(URL: NSURL(string: url)!)
+        req.HTTPMethod = requestMethod.rawValue
+        req.HTTPBody = body
+        return Chunker(request: req).stream
+    }
+    
+    public class func delete(url:String, body: NSData = emptyBody, headers: [String : AnyObject] = [:]) -> Stream<ChunkedMessagePart<NSData>>  {
+        return request(url, requestMethod: RequestMethod.DELETE, body: body, headers: headers)
+    }
+    
+    public class func get(url:String, headers: [String : AnyObject] = [:]) -> Stream<ChunkedMessagePart<NSData>>  {
+        return request(url, requestMethod: RequestMethod.GET, body: emptyBody, headers: headers)
+    }
+    
+    public class func post(url:String, body: NSData = emptyBody, headers: [String : AnyObject] = [:]) -> Stream<ChunkedMessagePart<NSData>>  {
+        return request(url, requestMethod: RequestMethod.POST, body: body, headers: headers)
+    }
+    
+    public class func put(url:String, body: NSData = emptyBody, headers: [String : AnyObject] = [:]) -> Stream<ChunkedMessagePart<NSData>>  {
+        return request(url, requestMethod: RequestMethod.PUT, body: body, headers: headers)
+    }
+    
+    public class func options(url:String, headers: [String : AnyObject] = [:]) -> Stream<ChunkedMessagePart<NSData>>  {
+        return request(url, requestMethod: RequestMethod.OPTIONS, body: emptyBody, headers: headers)
+    }
+    
+}
+
+
+public struct DataChunk<T> {
+   
+    public let data: T
+    
+}
+
+
+public enum ChunkedMessagePart<T> {
+    
+    case ChunkedStarted(NSURLResponse)
+    case ChunkedMessage(DataChunk<T>)
+    case ChunkedEnd
+    case ChunkedError(NSError)
+    
+    func map<B>(t: (T) -> B) -> ChunkedMessagePart<B> {
+        switch self {
+        case .ChunkedMessage(let chunk):
+            let newChunk = DataChunk<B>(data: t(chunk.data))
+            return ChunkedMessagePart<B>.ChunkedMessage(newChunk)
+        case .ChunkedStarted(let response):
+            return ChunkedMessagePart<B>.ChunkedStarted(response)
+        case .ChunkedEnd:
+            return ChunkedMessagePart<B>.ChunkedEnd
+        case .ChunkedError(let error):
+            return ChunkedMessagePart<B>.ChunkedError(error)
+        }
+    }
+}
+
+
+class Chunker : NSObject {
+    
+    let stream = Stream<ChunkedMessagePart<NSData>>()
+    
+    init(request: NSURLRequest) {
+        super.init()
+        let _ = NSURLConnection(request: request, delegate: self, startImmediately: true)
+    }
+    
+    func connection(didReceiveResponse: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
+        stream.publish(ChunkedMessagePart.ChunkedStarted(response))
+    }
+    
+    func connection(connection: NSURLConnection!, didReceiveData conData: NSData!) {
+        stream.publish(ChunkedMessagePart.ChunkedMessage(DataChunk(data: conData)))
+    }
+    
+    func connection(connection: NSURLConnection!, didFailWithError error: NSError) {
+        stream.publish(ChunkedMessagePart.ChunkedError(error))
+    }
+    
+    func connectionDidFinishLoading(connection: NSURLConnection!) {
+        stream.publish(ChunkedMessagePart.ChunkedEnd)
     }
     
 }
