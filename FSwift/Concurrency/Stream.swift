@@ -224,18 +224,6 @@ public extension Stream {
     
 }
 
-public extension Stream {
-    
-    public func map<B>(f: T -> B) -> Stream<B> {
-        let stream = Stream<B>()
-        subscribe { x in
-            stream.publish(f(x))
-        }
-        return stream
-    }
-    
-}
-
 public extension Future {
     
     public func pipeToOnFilter(stream: Stream<T>, _ on: T -> Bool) -> Future<T> {
@@ -392,6 +380,42 @@ public extension Stream {
     public class func continually<D>(f: (D?) -> D) -> Continually<D> {
         return Continually(generatorAction: f)
     }
+    
+    public func map<B>(f: T -> B) -> Stream<B> {
+        let stream = Stream<B>()
+        subscribe { x in
+            stream.publish(f(x))
+        }
+        return stream
+    }
+    
+    public func flatMap<B>(f: T -> B?) -> Stream<B> {
+        let s = Stream<B>()
+        subscribe { x in
+            if let v = f(x) {
+                s.publish(v)
+            }
+        }
+        return s
+    }
+    
+
+    public func filter(f: T -> Bool) -> Stream<T> {
+        let s = Stream<T>()
+        subscribe { x in
+            if f(x) {
+                s.publish(x)
+            }
+        }
+        return s
+    }
+    
+    func foreach(f: T -> Void) {
+        subscribe { x in
+            f(x)
+        }
+    }
+    
     
 }
 
