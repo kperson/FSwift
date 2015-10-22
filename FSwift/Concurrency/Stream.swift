@@ -399,7 +399,6 @@ public extension Stream {
         return s
     }
     
-
     public func filter(f: T -> Bool) -> Stream<T> {
         let s = Stream<T>()
         subscribe { x in
@@ -410,10 +409,22 @@ public extension Stream {
         return s
     }
     
-    func foreach(f: T -> Void) {
+    public func foreach(f: T -> Void) {
         subscribe { x in
             f(x)
         }
+    }
+    
+    public func skip(amount: Int) -> Stream<T> {
+        var i = 0
+        let stream = Stream<T>()
+        foreach { x in
+            if i >= amount {
+                stream.publish(x)
+            }
+            i++
+        }
+        return stream
     }
     
     
