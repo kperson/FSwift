@@ -38,21 +38,29 @@ public extension SequenceType {
         return Seq.lastIndexOf(self, f)
     }
     
-    public var tail: [Generator.Element]  {
+    public var tail: AnySequence<Generator.Element> {
         return Seq.tail(self)
     }
     
     
-    public func take(amount: Int) -> [Generator.Element] {
+    public func take(amount: Int) -> AnySequence<Generator.Element>  {
         return Seq.take(self, amount)
     }
     
-    public func skip(amount: Int) -> [Generator.Element] {
+    public func skip(amount: Int) -> AnySequence<Generator.Element> {
         return Seq.skip(self, amount)
     }
     
-    public func flatten() -> [Generator.Element]  {
-        return self.flatMap { x in x }
+    public func lazyFlatMap<B>(f:(Generator.Element) -> B?) -> AnySequence<B> {
+        let b = FlatMapGenerator<Generator.Element, B>(f: f)
+        b.setup(self)
+        let a = GeneratorSequence<FlatMapGenerator<Generator.Element, B>>(b)
+        let q = AnySequence<B>(a)
+        return q
+    }
+    
+    public func lazyFilter(f:(Generator.Element) -> Bool) -> AnySequence<Generator.Element> {
+        return Seq.lazyFilter(self, f)
     }
     
     /**
@@ -76,34 +84,28 @@ public extension SequenceType {
     }
     
     
-}
-
-public extension CollectionType {
-    
-    public func findFirst(f: (Generator.Element) -> Bool) -> Generator.Element? {
-        return Seq.findFirst(self, f)
-    }
-    
     public func reduceLeft(f: (Generator.Element, Generator.Element) -> Generator.Element) -> Generator.Element {
-        return Array(self.reverse()).reduceRight(f)
+        return Seq.reduceRight(Array(self.reverse()), f)
     }
     
     
     public func reduceRight(f: (Generator.Element, Generator.Element) -> Generator.Element) -> Generator.Element {
-        if self.count == 1 {
-            return self.first!
-        }
-        else {
-            return f(self.first!, self.tail.reduceRight(f))
-        }
+        return Seq.reduceRight(self, f)
     }
+    
     
     public func foldLeft<B>(initialValue: B, _ f: (B, Generator.Element) -> B) -> B {
         return Array(self.reverse()).foldRight(initialValue, f)
     }
     
+    
     public func foldRight<B>(initialValue: B, _ f: (B, Generator.Element) -> B) -> B {
         return Seq.foldRight(self, initialValue, f)
+    }
+    
+    
+    public func findFirst(f: (Generator.Element) -> Bool) -> Generator.Element? {
+        return Seq.findFirst(self, f)
     }
     
 }

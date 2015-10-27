@@ -102,38 +102,55 @@ public class Seq {
     
     - returns: a new array representing the tail of the sequence
     */
-    public class func tail<T : SequenceType>(seq: T) -> [T.Generator.Element] {
-        var list:[T.Generator.Element] = []
-        var i = 0
-        for x in seq {
-            if i != 0 {
-                list.append(x)
-            }
-            i++
-        }
-        return list
+    public class func tail<T : SequenceType>(seq: T) -> AnySequence<T.Generator.Element>  {
+        let b = TailGenerator<T.Generator.Element>()
+        b.setup(seq)
+        return AnySequence<T.Generator.Element>(GeneratorSequence<TailGenerator<T.Generator.Element>>(b))
+    }
+    
+    public class func headTail<T : SequenceType>(seq: T) -> (T.Generator.Element?, AnySequence<T.Generator.Element>)  {
+        let b = HeadTailGenerator<T.Generator.Element>()
+        b.setup(seq)
+        return (b.head, AnySequence<T.Generator.Element>(GeneratorSequence<HeadTailGenerator<T.Generator.Element>>(b)))
     }
     
     
-    public class func foldRight<T : CollectionType, B>(seq: T, _ initialValue: B, _ f: (B, T.Generator.Element) -> B) -> B {
-        if seq.count == 0 {
+    public class func foldRight<T : SequenceType, B>(seq: T, _ initialValue: B, _ f: (B, T.Generator.Element) -> B) -> B {
+        let (head, tail) = headTail(seq)
+        if let h = head {
+            return f(Seq.foldRight(tail, initialValue, f), h)
+        }
+        else {
             return initialValue
         }
+    }
+    
+    public class func lazyFlatMap<T : SequenceType, B>(seq: T, _ f: (T.Generator.Element) -> B?) -> AnySequence<B> {
+        let b = FlatMapGenerator<T.Generator.Element, B>(f: f)
+        b.setup(seq)
+        let a = GeneratorSequence<FlatMapGenerator<T.Generator.Element, B>>(b)
+
+        let q = AnySequence<B>(a)
+        return q
+    }
+    
+    
+    public class func reduceRight<T : SequenceType>(seq: T, _ f: (T.Generator.Element, T.Generator.Element) -> T.Generator.Element) -> T.Generator.Element {
+        let (head, tail) = headTail(seq)
+        if let h = head {
+            return Seq.foldRight(tail, h, f)
+        }
         else {
-            let t = Seq.tail(seq)
-            return f(t.foldRight(initialValue, f), seq.first!)
+            fatalError("can call reduce on an empty sequence")
         }
     }
     
-    public class func findFirst<T : CollectionType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> T.Generator.Element? {
-        if seq.count == 0 {
-            return nil
-        }
-        if f(seq.first!)  {
-            return seq.first!
-        }
-        else {
-            return Seq.findFirst(Seq.tail(seq), f)
+    public class func findFirst<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> T.Generator.Element? {
+        let (head, tail) = headTail(seq)
+        switch head {
+        case .Some(let h) where f(h) == true: return h
+        case .None: return nil
+        default: return Seq.findFirst(tail, f)
         }
     }
     
@@ -166,16 +183,16 @@ public class Seq {
     
     - returns: a new array with skip elements
     */
-    public class func skip<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
-        var i = 0
-        var list:[T.Generator.Element] = []
-        for x in seq {
-            if i >= amount {
-                list.append(x)
-            }
-            i++
-        }
-        return list
+    public class func skip<T : SequenceType>(seq: T, _ amount: Int) -> AnySequence<T.Generator.Element> {
+        let generator = SkipGenerator<T.Generator.Element>(skip: amount)
+        generator.setup(seq)
+        return AnySequence<T.Generator.Element>(GeneratorSequence<SkipGenerator<T.Generator.Element>>(generator))
+    }
+    
+    public class func lazyFilter<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> AnySequence<T.Generator.Element> {
+        let generator = LazyFilterGenerator<T.Generator.Element>(f: f)
+        generator.setup(seq)
+        return AnySequence<T.Generator.Element>(GeneratorSequence<LazyFilterGenerator<T.Generator.Element>>(generator))
     }
     
     
@@ -191,16 +208,10 @@ public class Seq {
     
     - returns: a new array with taken elements
     */
-    public class func take<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
-        var i = 0
-        var list:[T.Generator.Element] = []
-        for x in seq {
-            if i < amount {
-                list.append(x)
-            }
-            i++
-        }
-        return list
+    public class func take<T : SequenceType>(seq: T, _ amount: Int) -> AnySequence<T.Generator.Element> {
+        let generator = TakeGenerator<T.Generator.Element>(take: amount)
+        generator.setup(seq)
+        return AnySequence<T.Generator.Element>(GeneratorSequence<TakeGenerator<T.Generator.Element>>(generator))
     }
     
     
@@ -224,3 +235,211 @@ public class Seq {
     }
     
 }
+
+
+public class HeadTailGenerator<T> : GeneratorType {
+    
+    public typealias Element = T
+    
+    private var fetchNext: () -> Element? = { _ in nil }
+    internal var head: T?
+    
+    
+    func setup<B: SequenceType where B.Generator.Element == Element>(b: B) {
+        var generator = b.generate()
+        head = generator.next()
+        fetchNext = {
+            generator.next()
+        }
+    }
+    
+    
+    public func next() -> Element? {
+        return fetchNext()
+    }
+    
+}
+
+
+
+public class TakeGenerator<T> : GeneratorType {
+    
+    public typealias Element = T
+    
+    private var fetchNext: () -> Element? = { _ in nil }
+    
+    let take: Int
+    var takeCount = 0
+    
+    init(take: Int) {
+        self.take = take
+    }
+    
+    func setup<B: SequenceType where B.Generator.Element == Element>(b: B) {
+        var generator = b.generate()
+        fetchNext = {
+            generator.next()
+        }
+    }
+    
+    
+    public func next() -> Element? {
+        if takeCount < take {
+            takeCount = takeCount + 1
+            return fetchNext()
+        }
+        else {
+            return nil
+        }
+    }
+    
+}
+
+
+public class SkipGenerator<T> : GeneratorType {
+    
+    public typealias Element = T
+    
+    private var fetchNext: () -> Element? = { _ in nil }
+    
+    let skip: Int
+    
+    init(skip: Int) {
+        self.skip = skip
+    }
+    
+    func setup<B: SequenceType where B.Generator.Element == Element>(b: B) {
+        var generator = b.generate()
+        var i = 0
+        while i < self.skip && generator.next() != nil {
+            i++
+        }
+        fetchNext = {
+            generator.next()
+        }
+    }
+    
+    
+    public func next() -> Element? {
+        return fetchNext()
+    }
+    
+}
+
+
+
+public class TailGenerator<T> : GeneratorType {
+
+    public typealias Element = T
+
+    private var fetchNext: () -> Element? = { _ in nil }
+    private var hasStarted = false
+    
+    
+    func setup<B: SequenceType where B.Generator.Element == Element>(b: B) {
+        var generator = b.generate()
+        fetchNext = {
+            generator.next()
+        }
+    }
+    
+    
+    public func next() -> Element? {
+        if !hasStarted {
+            hasStarted = true
+            if let _ = fetchNext() {
+                return fetchNext()
+            }
+            else {
+                return nil
+            }
+        }
+        else {
+            return fetchNext()
+        }
+    }
+    
+}
+
+
+public class LazyFilterGenerator<T> : GeneratorType {
+    
+    public typealias Element = T
+    
+    private var fetchNext: () -> T? = { _ in nil }
+    
+    
+    let f: (T) -> Bool
+    
+    init(f: (T) -> Bool) {
+        self.f = f
+    }
+    
+    
+    func setup<B: SequenceType where B.Generator.Element == Element>(b: B) {
+        var generator = b.generate()
+        fetchNext = {
+            generator.next()
+        }
+    }
+    
+    
+    public func next() -> Element? {
+        let n = fetchNext()
+        if let x = n {
+            if f(x) {
+                return x
+            }
+            else {
+                return next()
+            }
+        }
+        else {
+            return nil
+        }
+    }
+    
+}
+
+
+
+public class FlatMapGenerator<T, B> : GeneratorType {
+    
+    public typealias Element = B
+    
+    private var fetchNext: () -> T? = { _ in nil }
+
+    
+    let f: (T) -> B?
+    
+    init(f: (T) -> B?) {
+        self.f = f
+    }
+    
+
+    func setup<B: SequenceType where B.Generator.Element == T>(b: B) {
+        var generator = b.generate()
+        fetchNext = {
+            generator.next()
+        }
+    }
+    
+    
+    public func next() -> Element? {
+        let n = fetchNext()
+        if let x = n {
+            if let s = f(x) {
+                return s
+            }
+            else {
+                return next()
+            }
+        }
+        else {
+            return nil
+        }
+    }
+    
+}
+
+
