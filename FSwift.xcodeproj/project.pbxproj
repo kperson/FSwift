@@ -11,6 +11,7 @@
 		75287F591A79601700E1C68D /* RectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F581A79601700E1C68D /* RectTest.swift */; };
 		75287F5D1A7961BF00E1C68D /* DictionaryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F5C1A7961BF00E1C68D /* DictionaryTest.swift */; };
 		759BE93E1A7812350042B77C /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759BE93D1A7812350042B77C /* Dispatch.swift */; };
+		DB1DBD331BD9E0360066924B /* NSData+Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */; };
 		DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
 		DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
 		DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3619E2D637006217BA /* ListExtensionTests.swift */; };
@@ -505,6 +506,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB1DBD331BD9E0360066924B /* NSData+Decoder.swift in Sources */,
 				DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */,
 				DB241D4419E3183A006217BA /* Optional+Util.swift in Sources */,
 				DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */,

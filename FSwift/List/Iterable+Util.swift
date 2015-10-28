@@ -108,4 +108,6 @@ public extension SequenceType {
         return Seq.findFirst(self, f)
     }
     
+
+    
 }

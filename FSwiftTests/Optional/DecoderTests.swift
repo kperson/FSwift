@@ -9,7 +9,17 @@
 import XCTest
 
 class DecoderTests: XCTestCase {
-   
+
+    func testNonExistingKey() {
+let kv = "{ \"key\" : \"value\" }".dataUsingEncoding(NSUTF8StringEncoding)!
+if let decoder = kv.dictDecoderFromJSON.value {
+let a = decoder["non-key"].string
+    let b = decoder["key"].string
+    print(a)
+    print(b)
+}
+    }
+    
     
     func testArrayCreation() {
         let d: Decoder = ["hello", "world"]
