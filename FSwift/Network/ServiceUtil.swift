@@ -292,3 +292,288 @@ public class Chunker : NSObject {
     }
     
 }
+
+enum RXOverflowStrategy {
+    
+    case DropFirst
+    case DropList
+    case Reject
+    
+}
+
+
+class RXBuffer<ItemType> : RXSubscription {
+    
+    typealias T = ItemType
+    let maxSize:Int
+    let strategy: RXOverflowStrategy
+    private var queue:[T] = []
+    private var subscriber: RXSubscriberContainer<T>
+    private (set)var totalDemand = 0
+    private (set)var isCancelled: Bool = false
+    
+    init(maxSize: Int, subscriber: RXSubscriberContainer<T>, strategy: RXOverflowStrategy) {
+        self.maxSize = maxSize
+        self.strategy = strategy
+        self.subscriber = subscriber
+    }
+    
+    func next(item: T) {
+        if isOpen {
+            if totalDemand > 0 {
+                subscriber.onNext(item)
+                totalDemand = totalDemand - 1
+            }
+            else {
+                if maxSize < queue.count {
+                    queue.append(item)
+                }
+                else {
+                    applyOverflowStrategy(item)
+                }
+            }
+        }
+    }
+    
+    
+    func error(err: ErrorType) {
+        if isOpen {
+            subscriber.onError(err)
+        }
+    }
+    
+    
+    func complete() {
+        if isOpen {
+            subscriber.onComplete()
+        }
+    }
+    
+    func requestMore(n: Int) {
+        if isOpen {
+            totalDemand = totalDemand + n
+            matchDemand()
+        }
+    }
+    
+    func cancel() {
+        isCancelled = true
+    }
+    
+    var isOpen: Bool {
+        return !isCancelled
+    }
+    
+    private func applyOverflowStrategy(item: T) {
+        switch strategy {
+        case .DropFirst:
+            queue.removeAtIndex(0)
+            queue.append(item)
+        case .DropList:
+            queue.removeLast()
+            queue.append(item)
+        case .Reject: Void()
+        }
+    }
+    
+    private func matchDemand() {
+        while totalDemand > 0 && !queue.isEmpty {
+            let item = queue.removeFirst()
+            subscriber.onNext(item)
+            totalDemand = totalDemand - 1
+        }
+    }
+}
+
+class RXSubscriberContainer<ItemType> : RXSubcriber {
+    
+    typealias T = ItemType
+    private var onNextHandler:(T -> Void)
+    private var onErrorHandler:(ErrorType -> Void)
+    private var onCompleteHandler:(() -> Void)
+    private var onSubscribeHandler:((RXSubscription) -> Void)
+
+    
+    init<A: RXSubcriber where A.T == ItemType>(sub: A) {
+        onSubscribeHandler = { s in sub.onSubscribe(s) }
+        onNextHandler = { e in sub.onNext(e) }
+        onErrorHandler = { e in sub.onError(e) }
+        onCompleteHandler = { sub.onComplete() }
+    }
+    
+    func onSubscribe(s: RXSubscription) {
+        onSubscribeHandler(s)
+    }
+    
+    func onNext(elem: T) {
+        onNextHandler(elem)
+    }
+    
+    func onError(err: ErrorType) {
+        onErrorHandler(err)
+    }
+    
+    func onComplete() {
+        onCompleteHandler()
+    }
+    
+}
+
+
+class RXSubscriberFunctionContainer<ItemType> : RXSubcriber {
+    
+    typealias T = ItemType
+    
+    var onNextHandler:(T -> Void)?
+    var onErrorHandler:(ErrorType -> Void)?
+    var onCompleteHandler:(() -> Void)?
+    var onSubscribeHandler:((RXSubscription) -> Void)?
+    
+    
+    func onSubscribe(s: RXSubscription) {
+        onSubscribeHandler?(s)
+    }
+    
+    func onNext(elem: T) {
+        onNextHandler?(elem)
+    }
+    
+    func onError(err: ErrorType) {
+        onErrorHandler?(err)
+    }
+    
+    func onComplete() {
+        onCompleteHandler?()
+    }
+    
+}
+
+class RXBufferedPublisher<ItemType> : RXPublisher {
+    
+    typealias T = ItemType
+    private var buffer:RXBuffer<T>?
+    let maxBufferSize:Int
+    let overflowStrategy:RXOverflowStrategy
+    var startCommand: () -> Void = { _ in }
+    
+    init(maxBufferSize: Int = 100, overflowStrategy: RXOverflowStrategy = RXOverflowStrategy.Reject) {
+        self.maxBufferSize = maxBufferSize
+        self.overflowStrategy = overflowStrategy
+    }
+    
+    func subscribe<A: RXSubcriber where A.T == T>(sub: A) {
+        let containerSubscriber = RXSubscriberContainer(sub: sub)
+        let b = RXBuffer(maxSize: maxBufferSize, subscriber: containerSubscriber, strategy: overflowStrategy)
+        buffer = b
+        startCommand = { b.requestMore(1) }
+        sub.onSubscribe(b)
+    }
+    
+    func next(item: ItemType) {
+        buffer?.next(item)
+    }
+    
+    func error(err: ErrorType) {
+        buffer?.error(err)
+    }
+    
+    func complete() {
+        buffer?.complete()
+    }
+    
+    func start() {
+        startCommand()
+    }
+    
+}
+
+
+class Source<T>  {
+    
+    private let p: RXBufferedPublisher<T>
+    
+    init(queue: NSOperationQueue, maxBufferSize: Int = 100, overflowStrategy: RXOverflowStrategy = RXOverflowStrategy.Reject) {
+        self.p = RXBufferedPublisher<T>(maxBufferSize: maxBufferSize, overflowStrategy: overflowStrategy)
+        let q = RXBufferedPublisher<String>()
+        q.filter { x in x.characters.count > 2 }.map { z in z.characters.count }
+    }
+    
+    var publisher:RXBufferedPublisher<T> {
+        return p
+    }
+}
+
+
+
+
+extension RXBufferedPublisher {
+    
+    func map<Q>(handler: (ItemType) -> Q) -> RXBufferedPublisher<Q> {
+        let pipe = RXBufferedPublisher<Q>(maxBufferSize: maxBufferSize, overflowStrategy: overflowStrategy)
+        
+        let connecterContainer = RXSubscriberFunctionContainer<ItemType>()
+        connecterContainer.onNextHandler = { x in
+            pipe.next(handler(x))
+            
+        }
+        connecterContainer.onErrorHandler = { err in pipe.error(err) }
+        connecterContainer.onCompleteHandler = { pipe.complete() }
+        connecterContainer.onCompleteHandler = { pipe.complete() }
+        
+        subscribe(connecterContainer)
+        return pipe
+    }
+    
+    func forEach(handler: (ItemType) -> Void) -> RXBufferedPublisher<Void> {
+        return map(handler)
+    }
+    
+    func filter(check: (ItemType) -> Bool) -> RXBufferedPublisher<ItemType> {
+        let pipe = RXBufferedPublisher<ItemType>(maxBufferSize: maxBufferSize, overflowStrategy: overflowStrategy)
+        
+        let connecterContainer = RXSubscriberFunctionContainer<ItemType>()
+        var subscription: RXSubscription?
+        connecterContainer.onNextHandler = { x in
+            if(check(x)) {
+                pipe.next(x)
+            }
+            else {
+                subscription?.requestMore(1)
+            }
+        }
+        connecterContainer.onErrorHandler = { err in pipe.error(err) }
+        connecterContainer.onCompleteHandler = { pipe.complete() }
+        connecterContainer.onSubscribeHandler = { sub in
+            subscription = sub
+        }
+        
+        subscribe(connecterContainer)
+        return pipe
+    }
+    
+}
+
+
+protocol RXSubscription {
+    
+    func requestMore(n: Int)
+    func cancel()
+    
+}
+
+protocol RXSubcriber {
+ 
+    typealias T
+    func onSubscribe(s: RXSubscription)
+    func onNext(elem: T)
+    func onError(err: ErrorType)
+    func onComplete()
+    
+}
+
+protocol RXPublisher  {
+    
+    typealias T
+    func subscribe<A: RXSubcriber where A.T == T>(sub: A)
+    
+}

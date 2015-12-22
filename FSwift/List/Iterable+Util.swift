@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension SequenceType where Generator.Element : Equatable {
+public extension SequenceType where Generator.Element : Equatable {
     
     
     public var unique:[Generator.Element]  {
@@ -20,6 +20,10 @@ extension SequenceType where Generator.Element : Equatable {
 
 public extension SequenceType {
     
+    
+    public var toArray:[Generator.Element] {
+        return Array(self)
+    }
     
     public func foreach(f: (Generator.Element) -> Void) {
         Seq.foreach(self, f)

@@ -43,11 +43,11 @@ class ListExtensionTests: XCTestCase {
     
     func testTail() {
         let list = [1, 2, 3, 4]
-        let theTail = Array(list.tail)
+        let theTail = list.tail.toArray
         XCTAssertEqual(theTail, [2, 3, 4], "tail should take everything expect for the first item")
         
         let list2:[Int] = []
-        let list2Tail = Array(list2.tail)
+        let list2Tail = list2.tail.toArray
         XCTAssertEqual(list2Tail, [], "tail should return an empty list if empty")
     }
     
@@ -109,28 +109,26 @@ class ListExtensionTests: XCTestCase {
             else {
                 return nil
             }
-        }
-        let doubleEvenList = Array(doubleEven)
-        XCTAssertEqual(doubleEvenList, [4, 4, 4, 8], "should flatmap")
+        }.toArray
+        XCTAssertEqual(doubleEven, [4, 4, 4, 8], "should flatmap")
     }
     
     func testLazyFilter() {
         let list = [2, 2, 3, 2, 4, 7]
-        let even = list.lazyFilter { x in x % 2 == 0 }
-        let evenList = Array(even)
-        XCTAssertEqual(evenList, [2, 2, 2, 4], "should filter")
+        let even = list.lazyFilter { x in x % 2 == 0 }.toArray
+        XCTAssertEqual(even, [2, 2, 2, 4], "should filter")
     }
     
     func testSkip() {
         let list = [2, 4, 4, 6, 8]
-        XCTAssertEqual(Array(list.skip(2)), [4, 6, 8], "Skip must skip elements")
-        XCTAssertEqual(Array(list.skip(20)), [], "Skip must skip elements")
+        XCTAssertEqual(list.skip(2).toArray, [4, 6, 8], "Skip must skip elements")
+        XCTAssertEqual(list.skip(20).toArray, [], "Skip must skip elements")
     }
     
     func testTake() {
         let list = [2, 4, 4, 6, 8]
-        XCTAssertEqual(Array(list.take(2)), [2, 4], "take must take the first n available elements")
-        XCTAssertEqual(Array(list.take(20)), [2, 4, 4, 6, 8], "take must take the first n available elements")
+        XCTAssertEqual(list.take(2).toArray, [2, 4], "take must take the first n available elements")
+        XCTAssertEqual(list.take(20).toArray, [2, 4, 4, 6, 8], "take must take the first n available elements")
     }
     
 }
