@@ -145,6 +145,48 @@ public class Seq {
         }
     }
     
+    /**
+     Skips the first n elements of a sequence
+     
+     e.x.
+     Seq.skip([1, 2, 3], 2) //returns [3]
+     
+     - parameter seq: - a sequence to evaluate
+     - parameter amount: the number of elements to skip
+     
+     - returns: a new array with skip elements
+     */
+    public class func skip<T : SequenceType>(seq: T, _ amount: Int) -> AnySequence<T.Generator.Element> {
+        let generator = SkipGenerator<T.Generator.Element>(skip: amount)
+        generator.setup(seq)
+        return AnySequence<T.Generator.Element>(GeneratorSequence<SkipGenerator<T.Generator.Element>>(generator))
+    }
+    
+    public class func lazyFilter<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> AnySequence<T.Generator.Element> {
+        let generator = LazyFilterGenerator<T.Generator.Element>(f: f)
+        generator.setup(seq)
+        return AnySequence<T.Generator.Element>(GeneratorSequence<LazyFilterGenerator<T.Generator.Element>>(generator))
+    }
+    
+    
+    
+    /**
+     Takes the first n elements of a sequence
+     
+     e.x.
+     Seq.take([1, 2, 3], 2) //returns [1, 2]
+     
+     - parameter seq: - a sequence to evaluate
+     - parameter amount: the number of elements to take
+     
+     - returns: a new array with taken elements
+     */
+    public class func take<T : SequenceType>(seq: T, _ amount: Int) -> AnySequence<T.Generator.Element> {
+        let generator = TakeGenerator<T.Generator.Element>(take: amount)
+        generator.setup(seq)
+        return AnySequence<T.Generator.Element>(GeneratorSequence<TakeGenerator<T.Generator.Element>>(generator))
+    }
+    
     public class func findFirst<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> T.Generator.Element? {
         let (head, tail) = headTail(seq)
         switch head {
@@ -172,48 +214,7 @@ public class Seq {
         return uniqueList
     }
     
-    /**
-    Skips the first n elements of a sequence
-    
-    e.x.
-    Seq.skip([1, 2, 3], 2) //returns [3]
-    
-    - parameter seq: - a sequence to evaluate
-    - parameter amount: the number of elements to skip
-    
-    - returns: a new array with skip elements
-    */
-    public class func skip<T : SequenceType>(seq: T, _ amount: Int) -> AnySequence<T.Generator.Element> {
-        let generator = SkipGenerator<T.Generator.Element>(skip: amount)
-        generator.setup(seq)
-        return AnySequence<T.Generator.Element>(GeneratorSequence<SkipGenerator<T.Generator.Element>>(generator))
-    }
-    
-    public class func lazyFilter<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> AnySequence<T.Generator.Element> {
-        let generator = LazyFilterGenerator<T.Generator.Element>(f: f)
-        generator.setup(seq)
-        return AnySequence<T.Generator.Element>(GeneratorSequence<LazyFilterGenerator<T.Generator.Element>>(generator))
-    }
-    
-    
-    
-    /**
-    Takes the first n elements of a sequence
-    
-    e.x.
-    Seq.take([1, 2, 3], 2) //returns [1, 2]
-    
-    - parameter seq: - a sequence to evaluate
-    - parameter amount: the number of elements to take
-    
-    - returns: a new array with taken elements
-    */
-    public class func take<T : SequenceType>(seq: T, _ amount: Int) -> AnySequence<T.Generator.Element> {
-        let generator = TakeGenerator<T.Generator.Element>(take: amount)
-        generator.setup(seq)
-        return AnySequence<T.Generator.Element>(GeneratorSequence<TakeGenerator<T.Generator.Element>>(generator))
-    }
-    
+
     
     public class func mapReduce<T : SequenceType, B:Hashable, C>(seq: T, _ m: (T.Generator.Element) -> B, _ r: (B, [T.Generator.Element]) -> C) -> [C]  {
         var dict:Dictionary<B, [T.Generator.Element]> = [:]
@@ -232,6 +233,29 @@ public class Seq {
             rs.append(r(k, v))
         }
         return rs
+    }
+    
+    public class func continually<T>(f: (T?) -> T) -> AnySequence<T> {
+        return AnySequence<T>(GeneratorSequence<InfiniteGenerator<T>>(InfiniteGenerator(f: f)))
+    }
+    
+}
+
+public class InfiniteGenerator<T> : GeneratorType {
+    
+    public typealias Element = T
+    private let f: (T?) -> T
+    private var prev: T?
+    
+    
+    public init(f: (T?) -> T) {
+        self.f = f
+    }
+    
+    public func next() -> Element? {
+        let generated = f(prev)
+        prev = generated
+        return generated
     }
     
 }
