@@ -287,7 +287,7 @@ public class StreamHandler<T> {
     private var successF: ((T) -> ())?
     private var failureF: ((NSError) -> ())?
     
-    private(set) var subscription: Subscription<Try<T>>?
+    public private(set) var subscription: Subscription<Try<T>>?
     
     public init(_ s: Stream<Try<T>>) {
         self.s = s
