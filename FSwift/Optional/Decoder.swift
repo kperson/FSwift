@@ -184,7 +184,7 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
 
 public struct DecoderArray : SequenceType {
     
-    let items: [AnyObject]
+    public let items: [AnyObject]
     
     public func generate() -> AnyGenerator<Decoder> {
         return DecoderArrayGenerator(items: items)
