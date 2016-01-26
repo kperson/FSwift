@@ -16,9 +16,6 @@
 		DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3619E2D637006217BA /* ListExtensionTests.swift */; };
 		DB241D3A19E2DF31006217BA /* Iterable+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Iterable+Util.swift */; };
 		DB241D3B19E2E380006217BA /* Iterable+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Iterable+Util.swift */; };
-		DB241D4319E317C2006217BA /* Optional+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4219E317C2006217BA /* Optional+Util.swift */; };
-		DB241D4419E3183A006217BA /* Optional+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4219E317C2006217BA /* Optional+Util.swift */; };
-		DB241D4719E3196B006217BA /* OptionalExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */; };
 		DB2834DF1A83D55C00D1359D /* ServiceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF5931A32059200B311D9 /* ServiceUtil.swift */; };
 		DB3649741AD5AFE3003CBD81 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3649731AD5AFE3003CBD81 /* Stream.swift */; };
 		DB3649761AD5C15F003CBD81 /* StreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3649751AD5C15F003CBD81 /* StreamTests.swift */; };
@@ -79,8 +76,6 @@
 		DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlExtension.swift; sourceTree = "<group>"; };
 		DB241D3619E2D637006217BA /* ListExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListExtensionTests.swift; sourceTree = "<group>"; };
 		DB241D3919E2DF31006217BA /* Iterable+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Iterable+Util.swift"; sourceTree = "<group>"; };
-		DB241D4219E317C2006217BA /* Optional+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+Util.swift"; sourceTree = "<group>"; };
-		DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExtensionTests.swift; sourceTree = "<group>"; };
 		DB3649731AD5AFE3003CBD81 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		DB3649751AD5C15F003CBD81 /* StreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTests.swift; sourceTree = "<group>"; };
 		DB3EF5931A32059200B311D9 /* ServiceUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceUtil.swift; sourceTree = "<group>"; };
@@ -183,7 +178,6 @@
 			children = (
 				DBFB57461A68CE9F001645C4 /* Decoder.swift */,
 				DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */,
-				DB241D4219E317C2006217BA /* Optional+Util.swift */,
 			);
 			path = Optional;
 			sourceTree = "<group>";
@@ -191,7 +185,6 @@
 		DB241D4519E3196B006217BA /* Optional */ = {
 			isa = PBXGroup;
 			children = (
-				DB241D4619E3196B006217BA /* OptionalExtensionTests.swift */,
 				DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */,
 			);
 			path = Optional;
@@ -488,7 +481,6 @@
 				DBBFA1D919DF48140090B60F /* Future.swift in Sources */,
 				DBB1B23E19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,
 				DBFBDC701AC9ED1C00D6A145 /* Date.swift in Sources */,
-				DB241D4319E317C2006217BA /* Optional+Util.swift in Sources */,
 				DB3EF5941A32059200B311D9 /* ServiceUtil.swift in Sources */,
 				DBA75AB519DDED09009EA696 /* Try.swift in Sources */,
 				759BE93E1A7812350042B77C /* Dispatch.swift in Sources */,
@@ -506,13 +498,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */,
-				DB241D4419E3183A006217BA /* Optional+Util.swift in Sources */,
 				DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */,
 				DBFBDC741AC9ED7A00D6A145 /* Segue.swift in Sources */,
 				DB241D3B19E2E380006217BA /* Iterable+Util.swift in Sources */,
 				DB6E32F21ADD50440016542E /* Seq.swift in Sources */,
 				DB3649771AD5C1F8003CBD81 /* Stream.swift in Sources */,
-				DB241D4719E3196B006217BA /* OptionalExtensionTests.swift in Sources */,
 				DBB1B24119DE414B00272EE3 /* IntervalExtensionTests.swift in Sources */,
 				DBB1B23F19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,
 				DB2834DF1A83D55C00D1359D /* ServiceUtil.swift in Sources */,

@@ -218,7 +218,7 @@ private class DecoderArrayGenerator : AnyGenerator<Decoder> {
 
 public struct DecoderDictionary : SequenceType {
     
-    let items: [String: AnyObject]
+    public let items: [String: AnyObject]
     
     public func generate() -> AnyGenerator<(String, Decoder)> {
         return DecoderDictionaryGenerator(items: items)

@@ -218,7 +218,6 @@ public struct DataChunk<T> {
     
 }
 
-
 public enum ChunkedMessagePart<T> {
     
     case ChunkedStarted(NSURLResponse)
@@ -241,25 +240,6 @@ public enum ChunkedMessagePart<T> {
     }
 }
 
-
-public func rtStream(s: Stream<ChunkedMessagePart<NSData>>) -> Stream<ChunkedMessagePart<NSData>> {
-    
-    let stream = Stream<ChunkedMessagePart<NSData>>()
-    var i = 0
-    s.subscribe { x in
-        switch x {
-        case ChunkedMessagePart.ChunkedMessage(_):
-            if i != 0 {
-                stream.publish(x)
-            }
-            i++
-        default:
-            stream.publish(x)
-        }
-    }
-    return stream
-    
-}
 
 public class Chunker : NSObject {
     
