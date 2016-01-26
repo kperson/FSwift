@@ -71,9 +71,9 @@ public extension String {
 
 public class ServiceUtil {
     
-    public class func asJson(obj: AnyObject) -> NSData? {
+    public class func asJson(obj: AnyObject, jsonWriteOptions: NSJSONWritingOptions = NSJSONWritingOptions()) -> NSData? {
         do  {
-            return try NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions.PrettyPrinted)
+            return try NSJSONSerialization.dataWithJSONObject(obj, options: jsonWriteOptions)
         }
         catch {
             return nil
