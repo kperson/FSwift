@@ -8,13 +8,13 @@
 
 import UIKit
 
-extension CGRect {
+public extension CGRect {
     
-    init(center:CGPoint, size:CGSize) {
+    public init(center:CGPoint, size:CGSize) {
         self.init(x: center.x - (size.width/2.0), y: center.y - (size.height/2.0), width: size.width, height: size.height)
     }
     
-    var center:CGPoint {
+    public var center:CGPoint {
         return CGPoint(x: origin.x + (size.width / 2.0), y: origin.y + (size.height / 2.0))
     }
     

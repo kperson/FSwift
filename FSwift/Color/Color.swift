@@ -45,7 +45,7 @@ extension UIColor {
         return (rSTring + gSTring + bSTring)
     }
     
-    convenience init(hex:String) {
+    public convenience init(hex:String) {
         var cString:String = hex.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).uppercaseString
         
         if (cString.hasPrefix("#")) {

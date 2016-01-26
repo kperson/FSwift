@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DatePrintComponent {
+public enum DatePrintComponent {
     case FullYear
     case MonthNumber
     case Day
@@ -16,14 +16,14 @@ enum DatePrintComponent {
     case Seconds
 }
 
-extension NSDate {
-    func stringWithFormat(format:String) -> String {
+public extension NSDate {
+    public func stringWithFormat(format:String) -> String {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = format
         return dateFormatter.stringFromDate(self)
     }
     
-    func printWithComponent(component:DatePrintComponent) -> String {
+    public func printWithComponent(component:DatePrintComponent) -> String {
         switch component {
         case .FullYear:
             return self.stringWithFormat("yyyy")
@@ -38,7 +38,7 @@ extension NSDate {
         }
     }
     
-    subscript(component: DatePrintComponent) -> String {
+    public subscript(component: DatePrintComponent) -> String {
         return printWithComponent(component)
     }
 }

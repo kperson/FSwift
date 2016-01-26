@@ -8,7 +8,9 @@
 
 import Foundation
 
-func DocumentDirectoryPath() -> String {
-    let documentDirectories = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
-    return documentDirectories.first!
+public class Storage {
+    public class var documentDirectoryPath: String {
+        let documentDirectories = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        return documentDirectories.first!
+    }
 }
