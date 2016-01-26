@@ -289,7 +289,7 @@ public class StreamHandler<T> {
     
     private(set) var subscription: Subscription<Try<T>>?
     
-    init(_ s: Stream<Try<T>>) {
+    public init(_ s: Stream<Try<T>>) {
         self.s = s
         setup()
     }
@@ -344,7 +344,7 @@ public class Continually<D> {
     
     var generatorAction: (D?) -> D
     
-    init(generatorAction: (D?) -> D) {
+    public init(generatorAction: (D?) -> D) {
         self.generatorAction = generatorAction
     }
     

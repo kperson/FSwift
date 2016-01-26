@@ -13,4 +13,8 @@ public class Storage {
         let documentDirectories = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
         return documentDirectories.first!
     }
+    
+    public class var documentDirectoryURL: NSURL {
+        return NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+    }
 }
