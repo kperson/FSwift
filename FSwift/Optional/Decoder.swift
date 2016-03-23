@@ -187,13 +187,15 @@ public struct DecoderArray : SequenceType {
     public let items: [AnyObject]
     
     public func generate() -> AnyGenerator<Decoder> {
-        return DecoderArrayGenerator(items: items)
+        return AnyGenerator(DecoderArrayGenerator(items: items))
     }
     
 }
 
-private class DecoderArrayGenerator : AnyGenerator<Decoder> {
+private class DecoderArrayGenerator : GeneratorType {
 
+    typealias Element = Decoder
+    
     private let items: [AnyObject]
     private var i = -1
     
@@ -201,8 +203,8 @@ private class DecoderArrayGenerator : AnyGenerator<Decoder> {
         self.items = items
     }
     
-    override func next() -> Element? {
-        i++
+    func next() -> Element? {
+        i = i + 1
         if i < self.items.count {
             return Decoder(value: self.items[i], parseType: true)
         }
@@ -221,14 +223,16 @@ public struct DecoderDictionary : SequenceType {
     public let items: [String: AnyObject]
     
     public func generate() -> AnyGenerator<(String, Decoder)> {
-        return DecoderDictionaryGenerator(items: items)
+        return AnyGenerator(DecoderDictionaryGenerator(items: items))
     }
     
 }
 
 
-private class DecoderDictionaryGenerator : AnyGenerator<(String, Decoder)> {
+private class DecoderDictionaryGenerator : GeneratorType {
     
+    typealias Element = (String, Decoder)
+
     
     private let items: [String: AnyObject]
     private let keys: [String]
@@ -239,8 +243,8 @@ private class DecoderDictionaryGenerator : AnyGenerator<(String, Decoder)> {
         self.keys = Array(items.keys)
     }
     
-    override func next() -> Element? {
-        i++
+    func next() -> Element? {
+        i = i + 1
         if i < self.items.count {
             let key = keys[i]
             let value =  Decoder(value: self.items[key]!, parseType: true)
