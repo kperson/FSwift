@@ -62,7 +62,7 @@ public class Seq {
             if f(x)  {
                 return i
             }
-            i++
+            i += 1
         }
         return nil;
     }
@@ -86,7 +86,7 @@ public class Seq {
             if f(x)  {
                 final = i
             }
-            i++
+            i += 1
         }
         return final
     }
@@ -109,7 +109,7 @@ public class Seq {
             if i != 0 {
                 list.append(x)
             }
-            i++
+            i += 1
         }
         return list
     }
@@ -173,7 +173,7 @@ public class Seq {
             if i >= amount {
                 list.append(x)
             }
-            i++
+            i += 1
         }
         return list
     }
@@ -198,7 +198,7 @@ public class Seq {
             if i < amount {
                 list.append(x)
             }
-            i++
+            i += 1
         }
         return list
     }

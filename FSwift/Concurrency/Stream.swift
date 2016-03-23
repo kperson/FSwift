@@ -422,7 +422,7 @@ public extension Stream {
             if i >= amount {
                 stream.publish(x)
             }
-            i++
+            i += 1
         }
         return stream
     }

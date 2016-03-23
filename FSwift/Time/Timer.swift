@@ -33,7 +33,7 @@ public class Timer {
     
     public func start() {
         if self.timer == nil {
-            self.timer = NSTimer(timeInterval: interval, target:self, selector: Selector("tick"), userInfo: nil, repeats: repeats)
+            self.timer = NSTimer(timeInterval: interval, target:self, selector: #selector(Timer.tick), userInfo: nil, repeats: repeats)
             NSRunLoop.currentRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
             self.isRunning = true
         }
