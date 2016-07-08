@@ -9,7 +9,7 @@
 import Foundation
 
 extension Dictionary {
-    mutating func addOptional(optional:Value?, forKey:Key) {
+    mutating func addOptional(_ optional:Value?, forKey:Key) {
         if let object = optional {
             self[forKey] = object
         }

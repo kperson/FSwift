@@ -127,11 +127,11 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
     }
     
     
-    private func indexOutRangeError(index: Int) -> NSError {
+    private func indexOutRangeError(_ index: Int) -> NSError {
         return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "index \(index) of range of array at depth \(self.depth)" ])
     }
     
-    private func keyNotPresentError(key: String) -> NSError {
+    private func keyNotPresentError(_ key: String) -> NSError {
         return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "key '\(key)' not present in dictionary at depth \(self.depth)" ])
     }
     
@@ -168,7 +168,7 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
         }
     }
     
-    func mapToData(val: AnyObject) -> Decoder {
+    func mapToData(_ val: AnyObject) -> Decoder {
         if let a = val as? [AnyObject] {
             return Decoder(array: a, depth : depth + 1)
         }
@@ -182,17 +182,17 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
     
 }
 
-public struct DecoderArray : SequenceType {
+public struct DecoderArray : Sequence {
     
     public let items: [AnyObject]
     
-    public func generate() -> AnyGenerator<Decoder> {
-        return AnyGenerator(DecoderArrayGenerator(items: items))
+    public func makeIterator() -> AnyIterator<Decoder> {
+        return AnyIterator(DecoderArrayGenerator(items: items))
     }
     
 }
 
-private class DecoderArrayGenerator : GeneratorType {
+private class DecoderArrayGenerator : IteratorProtocol {
 
     typealias Element = Decoder
     
@@ -218,18 +218,18 @@ private class DecoderArrayGenerator : GeneratorType {
 
 
 
-public struct DecoderDictionary : SequenceType {
+public struct DecoderDictionary : Sequence {
     
     public let items: [String: AnyObject]
     
-    public func generate() -> AnyGenerator<(String, Decoder)> {
-        return AnyGenerator(DecoderDictionaryGenerator(items: items))
+    public func makeIterator() -> AnyIterator<(String, Decoder)> {
+        return AnyIterator(DecoderDictionaryGenerator(items: items))
     }
     
 }
 
 
-private class DecoderDictionaryGenerator : GeneratorType {
+private class DecoderDictionaryGenerator : IteratorProtocol {
     
     typealias Element = (String, Decoder)
 

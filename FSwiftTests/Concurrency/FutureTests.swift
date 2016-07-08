@@ -17,13 +17,13 @@ class FutureTests: XCTestCase {
             Try<String>(success: hello)
         }.onComplete { x in
             switch x.toTuple {
-            case (.Some(let val), _):  XCTAssertEqual(val, hello, "x must equal 'Hello World'")
-            case (_, .Some( _)): XCTAssert(false, "This line should never be executed in the this test")
+            case (.some(let val), _):  XCTAssertEqual(val, hello, "x must equal 'Hello World'")
+            case (_, .some( _)): XCTAssert(false, "This line should never be executed in the this test")
             default:
                 XCTAssert(false, "This line should never be executed in the this test")
             }
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
     }
     
     func testFutureMapSuccess() {
@@ -38,7 +38,7 @@ class FutureTests: XCTestCase {
             complete = true
             XCTAssertEqual(ct, numberOfCharacters, "ct must equal the number of characters in 'Hello World'")
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssert(complete, "OnSuccess should have occured")
     }
     
@@ -53,7 +53,7 @@ class FutureTests: XCTestCase {
             XCTAssert(false, "This line should never be executed in this test")
         }
         
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
     }
     
     func testFutureMapFailure() {
@@ -67,7 +67,7 @@ class FutureTests: XCTestCase {
         .onSuccess { x in
             XCTAssert(false, "This line should never be executed in this test")
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
     }
     
     func testBindCheckBool() {
@@ -78,7 +78,7 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertFalse(success, "future must not complete if bind evaluation is false")
         
         
@@ -89,7 +89,7 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertTrue(success, "future must not complete if bind evaluation is false")
     }
     
@@ -101,7 +101,7 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertFalse(success, "future must not complete if bind evaluation is false")
         
         
@@ -112,26 +112,26 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertTrue(success, "future must not complete if bind evaluation is false")
     }
     
     func testCombine() {
         
         let x = futureOnBackground { () -> Try<String> in
-            NSThread.sleepForTimeInterval(500.milliseconds)
+            Thread.sleep(forTimeInterval: 500.milliseconds)
             return Try<String>(success: "hello")
         }
         
         let y = futureOnBackground { () -> Try<Int> in
-            NSThread.sleepForTimeInterval(100.milliseconds)
+            Thread.sleep(forTimeInterval: 100.milliseconds)
             return Try<Int>(success: 2)
         }
         
         combineFuturesOnBackground(x.signal, y.signal)
         .onSuccess { a in }
         
-         NSThread.sleepForTimeInterval(2.seconds)
+         Thread.sleep(forTimeInterval: 2.seconds)
 
     }
 
@@ -156,7 +156,7 @@ class FutureTests: XCTestCase {
             XCTAssert(4 == num, "recover must coalesce")
         }
         
-        NSThread.sleepForTimeInterval(200.milliseconds)
+        Thread.sleep(forTimeInterval: 200.milliseconds)
         XCTAssert(complete2, "recovering must have completed")
         XCTAssert(complete, "recovering must have completed")
 
@@ -189,7 +189,7 @@ class FutureTests: XCTestCase {
     
 
         
-        NSThread.sleepForTimeInterval(200.milliseconds)
+        Thread.sleep(forTimeInterval: 200.milliseconds)
         XCTAssert(recoveredOne, "recovering must have completed")
         XCTAssert(!recoveredTwo, "recovering must have not completed")
         

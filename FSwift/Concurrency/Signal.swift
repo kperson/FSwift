@@ -10,26 +10,26 @@ import Foundation
 
 public enum TryStatus {
     
-    case Success
-    case Failure(NSError)
+    case success
+    case failure(NSError)
 }
 
 public class Signal {
     
     private var f: ((TryStatus) -> ())?
     private var s: TryStatus?
-    private var operationQueue: NSOperationQueue?
+    private var operationQueue: OperationQueue?
     
     public init() {
         
     }
     
-    public func register(f: (TryStatus) -> ()) {
+    public func register(_ f: (TryStatus) -> ()) {
         self.f = f
         finish()
     }
     
-    public func complete(status: TryStatus, _ operationQueue: NSOperationQueue? = nil) {
+    public func complete(_ status: TryStatus, _ operationQueue: OperationQueue? = nil) {
         self.operationQueue = operationQueue
         self.s = status
         finish()
@@ -38,7 +38,7 @@ public class Signal {
     private func finish() {
         if(self.f != nil && self.s != nil) {
             if let queue = self.operationQueue {
-                let operationCallback = NSBlockOperation {
+                let operationCallback = BlockOperation {
                     self.f!(self.s!)
                 }
                 queue.addOperation(operationCallback)

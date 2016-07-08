@@ -10,11 +10,11 @@ import Foundation
 
 public class Storage {
     public class var documentDirectoryPath: String {
-        let documentDirectories = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let documentDirectories = NSSearchPathForDirectoriesInDomains(.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         return documentDirectories.first!
     }
     
-    public class var documentDirectoryURL: NSURL {
-        return NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+    public class var documentDirectoryURL: URL {
+        return FileManager.default.urlsForDirectory(.documentDirectory, inDomains: .userDomainMask)[0]
     }
 }

@@ -20,7 +20,7 @@ public class ControlAction: NSObject {
         self.contol = control
         self.controlEvents = controlEvents
         super.init()
-        self.contol.addTarget(self, action: #selector(ControlAction.selectionAction), forControlEvents: self.controlEvents)
+        self.contol.addTarget(self, action: #selector(ControlAction.selectionAction), for: self.controlEvents)
     }
     
     func selectionAction(){
@@ -28,14 +28,14 @@ public class ControlAction: NSObject {
     }
     
     public func removeAction() {
-        self.contol.removeTarget(self, action: #selector(ControlAction.selectionAction), forControlEvents: self.controlEvents)
+        self.contol.removeTarget(self, action: #selector(ControlAction.selectionAction), for: self.controlEvents)
     }
     
 }
 
 extension UIControl {
     
-    func addTargetAction(controlEvents: UIControlEvents,  _ f: (UIControl) -> ()) -> ControlAction {
+    func addTargetAction(_ controlEvents: UIControlEvents,  _ f: (UIControl) -> ()) -> ControlAction {
         return ControlAction(f: f, control: self, controlEvents: controlEvents)
     }
     

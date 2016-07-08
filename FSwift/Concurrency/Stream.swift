@@ -33,7 +33,7 @@ public final class Stream<T>  {
         isOpen = true
     }
     
-    private func synced(closure: () -> ()) {
+    private func synced(_ closure: () -> ()) {
         objc_sync_enter(self)
         closure()
         objc_sync_exit(self)
@@ -46,7 +46,7 @@ public final class Stream<T>  {
     
     - returns: the stream that received the publish request (self)
     */
-    public func publish(v: T) -> Stream<T> {
+    public func publish(_ v: T) -> Stream<T> {
         //synced {
         if self.isOpen {
             var last = self.subscriptions.count - 1
@@ -57,7 +57,7 @@ public final class Stream<T>  {
                 else {
                     self.subscriptions[last].stream = nil
                     self.subscriptions[last].isCancelled = true
-                    self.subscriptions.removeAtIndex(last)
+                    self.subscriptions.remove(at: last)
                 }
                 last = last - 1
             }
@@ -72,7 +72,7 @@ public final class Stream<T>  {
                 var last = self.subscriptions.count - 1
                 while last >= 0 {
                     if !self.subscriptions[last].shouldExecute {
-                        self.subscriptions.removeAtIndex(last)
+                        self.subscriptions.remove(at: last)
                     }
                     last = last - 1
                 }
@@ -88,7 +88,7 @@ public final class Stream<T>  {
     
     - returns: the stream that received the subscription request (self)
     */
-    public func subscribe(s: Subscription<T>) -> Subscription<T> {
+    public func subscribe(_ s: Subscription<T>) -> Subscription<T> {
         s.stream = self
         self.subscriptions.append(s)
         return s
@@ -118,18 +118,18 @@ public class Subscription<T> {
     internal(set) var isCancelled = false
     private let action:(T) -> Void
     private let executionCheck:() -> Bool
-    private let callbackQueue: NSOperationQueue
+    private let callbackQueue: OperationQueue
     
     var stream: Stream<T>?
     
-    public init(action: (T) -> Void, callbackQueue: NSOperationQueue = NSOperationQueue.mainQueue(), executionCheck: () -> Bool) {
+    public init(action: (T) -> Void, callbackQueue: OperationQueue = OperationQueue.main, executionCheck: () -> Bool) {
         self.action = action
         self.callbackQueue = callbackQueue
         self.executionCheck = executionCheck
     }
     
-    func handle(v: T)  {
-        let operation = NSBlockOperation {
+    func handle(_ v: T)  {
+        let operation = BlockOperation {
             self.action(v)
         }
         callbackQueue.addOperation(operation)
@@ -164,8 +164,8 @@ public extension Stream {
     
     - returns: the subscription
     */
-    public func subscribe(x: AnyObject?, f: T -> Void) -> Subscription<T> {
-        let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x != nil })
+    public func subscribe(_ x: AnyObject?, f: (T) -> Void) -> Subscription<T> {
+        let subscription = Subscription<T>(action: f, callbackQueue: OperationQueue.main, executionCheck: { x != nil })
         return self.subscribe(subscription)
     }
     
@@ -177,8 +177,8 @@ public extension Stream {
     
     - returns: the stream that received the subscription request (self)
     */
-    public func subscribe(x: () -> AnyObject?, f: T -> Void) -> Subscription<T> {
-        let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() != nil })
+    public func subscribe(_ x: () -> AnyObject?, f: (T) -> Void) -> Subscription<T> {
+        let subscription = Subscription(action: f, callbackQueue: OperationQueue.main, executionCheck: { x() != nil })
         return self.subscribe(subscription)
     }
     
@@ -191,8 +191,8 @@ public extension Stream {
     
     - returns: the subscription
     */
-    public func subscribe(x: Bool, f: T -> Void) -> Subscription<T> {
-        let subscription = Subscription<T>(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x })
+    public func subscribe(_ x: Bool, f: (T) -> Void) -> Subscription<T> {
+        let subscription = Subscription<T>(action: f, callbackQueue: OperationQueue.main, executionCheck: { x })
         return self.subscribe(subscription)
     }
     
@@ -204,8 +204,8 @@ public extension Stream {
     
     - returns: the subscription request
     */
-    public func subscribe(x: () -> Bool, f: T -> Void) -> Subscription<T> {
-        let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { x() })
+    public func subscribe(_ x: () -> Bool, f: (T) -> Void) -> Subscription<T> {
+        let subscription = Subscription(action: f, callbackQueue: OperationQueue.main, executionCheck: { x() })
         return self.subscribe(subscription)
     }
     
@@ -217,8 +217,8 @@ public extension Stream {
     
     - returns: the subscription
     */
-    public func subscribe(f: T -> Void) -> Subscription<T>  {
-        let subscription = Subscription(action: f, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { true })
+    public func subscribe(_ f: (T) -> Void) -> Subscription<T>  {
+        let subscription = Subscription(action: f, callbackQueue: OperationQueue.main, executionCheck: { true })
         return self.subscribe(subscription)
     }
     
@@ -226,14 +226,14 @@ public extension Stream {
 
 public extension Future {
     
-    public func pipeToOnFilter(stream: Stream<T>, _ on: T -> Bool) -> Future<T> {
+    public func pipeToOnFilter(_ stream: Stream<T>, _ on: (T) -> Bool) -> Future<T> {
         self.signal.register { status in
             switch status {
-            case TryStatus.Success:
+            case TryStatus.success:
                 if on(self.finalVal) {
                     stream.publish(self.finalVal)
                 }
-            case TryStatus.Failure(_):
+            case TryStatus.failure(_):
                 1 + 1 //do nothing
             }
         }
@@ -241,13 +241,13 @@ public extension Future {
         
     }
     
-    public func pipeToOn(stream: Stream<Try<T>>, _ on: Try<T> -> Bool) -> Future<T> {
+    public func pipeToOn(_ stream: Stream<Try<T>>, _ on: (Try<T>) -> Bool) -> Future<T> {
         self.signal.register { status in
             if on(self.value!) {
                 switch status {
-                case TryStatus.Success:
+                case TryStatus.success:
                     stream.publish(Try.Success(self.finalVal))
-                case TryStatus.Failure(let err):
+                case TryStatus.failure(let err):
                     stream.publish(Try.Failure(err))
                 }
             }
@@ -255,10 +255,10 @@ public extension Future {
         return self
     }
     
-    public func pipeToOn(stream: Stream<Try<T>>, _ on: T -> Bool) -> Future<T> {
+    public func pipeToOn(_ stream: Stream<Try<T>>, _ on: (T) -> Bool) -> Future<T> {
         self.signal.register { status in
             switch status {
-            case TryStatus.Success:
+            case TryStatus.success:
                 if on(self.finalVal) {
                     stream.publish(Try.Success(self.finalVal))
                 }
@@ -269,11 +269,11 @@ public extension Future {
         return self
     }
     
-    public func pipeTo(stream: Stream<T>) -> Future<T> {
+    public func pipeTo(_ stream: Stream<T>) -> Future<T> {
         return self.pipeToOnFilter(stream, { x in true })
     }
     
-    public func pipeTo(stream: Stream<Try<T>>) -> Future<T> {
+    public func pipeTo(_ stream: Stream<Try<T>>) -> Future<T> {
         return self.pipeToOn(stream, { (x:Try<T>) -> Bool in true })
     }
     
@@ -312,7 +312,7 @@ public class StreamHandler<T> {
     *
     * Registers a completion callback
     */
-    public func onComplete(f: (Try<T>) -> ()) -> StreamHandler<T> {
+    public func onComplete(_ f: (Try<T>) -> ()) -> StreamHandler<T> {
         self.completionF = f
         return self
     }
@@ -322,7 +322,7 @@ public class StreamHandler<T> {
     *
     * Registers a success callback
     */
-    public func onSuccess(f: (T) -> ()) -> StreamHandler<T> {
+    public func onSuccess(_ f: (T) -> ()) -> StreamHandler<T> {
         self.successF = f
         return self
     }
@@ -332,7 +332,7 @@ public class StreamHandler<T> {
     *
     * Registers a failure callback
     */
-    public func onFailure(f: (NSError) -> ()) -> StreamHandler<T> {
+    public func onFailure(_ f: (NSError) -> ()) -> StreamHandler<T> {
         self.failureF = f
         return self
     }
@@ -348,15 +348,15 @@ public class Continually<D> {
         self.generatorAction = generatorAction
     }
     
-    public func whileHaving(cw: (D) -> Bool) -> Stream<(D, D?)> {
+    public func whileHaving(_ cw: (D) -> Bool) -> Stream<(D, D?)> {
         let stream = Stream<(D, D?)>()
-        let asyncGeneration = NSBlockOperation {
+        let asyncGeneration = BlockOperation {
             var old: D? = nil
             while(true) {
                 let new = self.generatorAction(old)
                 if cw(new) {
                     let rs = (new, old)
-                    stream.publish(rs)
+                    let _ = stream.publish(rs)
                     old = new
                 }
                 else {
@@ -368,7 +368,7 @@ public class Continually<D> {
         return stream
     }
     
-    public func until(u: (D) -> Bool) -> Stream<(D, D?)> {
+    public func until(_ u: (D) -> Bool) -> Stream<(D, D?)> {
         return whileHaving { x in !u(x) }
     }
     
@@ -377,29 +377,29 @@ public class Continually<D> {
 
 public extension Stream {
     
-    public class func continually<D>(f: (D?) -> D) -> Continually<D> {
+    public class func continually<D>(_ f: (D?) -> D) -> Continually<D> {
         return Continually(generatorAction: f)
     }
     
-    public func map<B>(f: T -> B) -> Stream<B> {
+    public func map<B>(_ f: (T) -> B) -> Stream<B> {
         let stream = Stream<B>()
         subscribe { x in
-            stream.publish(f(x))
+            let _ = stream.publish(f(x))
         }
         return stream
     }
     
-    public func flatMap<B>(f: T -> B?) -> Stream<B> {
+    public func flatMap<B>(_ f: (T) -> B?) -> Stream<B> {
         let s = Stream<B>()
         subscribe { x in
             if let v = f(x) {
-                s.publish(v)
+                let _ = s.publish(v)
             }
         }
         return s
     }
     
-    public func filter(f: T -> Bool) -> Stream<T> {
+    public func filter(_ f: (T) -> Bool) -> Stream<T> {
         let s = Stream<T>()
         subscribe { x in
             if f(x) {
@@ -409,13 +409,13 @@ public extension Stream {
         return s
     }
     
-    public func foreach(f: T -> Void) {
+    public func foreach(_ f: (T) -> Void) {
         subscribe { x in
             f(x)
         }
     }
     
-    public func skip(amount: Int) -> Stream<T> {
+    public func skip(_ amount: Int) -> Stream<T> {
         var i = 0
         let stream = Stream<T>()
         foreach { x in

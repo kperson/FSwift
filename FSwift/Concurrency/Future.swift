@@ -12,17 +12,17 @@
 import Foundation
 
 
-let defaultFutureQueue = NSOperationQueue()
+let defaultFutureQueue = OperationQueue()
 
 enum BindCheck {
 
-    case BoolCheck(() -> Bool)
-    case AnyObjectCheck(() -> AnyObject?)
+    case boolCheck(() -> Bool)
+    case anyObjectCheck(() -> AnyObject?)
 
     var shouldExecute:Bool {
         switch self {
-        case BoolCheck(let f): return f()
-        case AnyObjectCheck(let f): return f() != nil
+        case boolCheck(let f): return f()
+        case anyObjectCheck(let f): return f() != nil
         }
     }
 
@@ -32,19 +32,19 @@ public class Promise<T> {
 
     public let future: Future<T>
 
-    public init(operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
+    public init(operationQueue: OperationQueue = defaultFutureQueue, callbackQueue:OperationQueue = OperationQueue.main) {
         future = Future(operationQueue: operationQueue, callbackQueue:callbackQueue)
     }
 
-    public func completeWith(f: () -> Try<T>) {
+    public func completeWith(_ f: () -> Try<T>) {
         future.completeWith(f)
     }
 
-    public func completeWith(val: T) {
+    public func completeWith(_ val: T) {
         future.completeWith(val)
     }
 
-    public func completeWith(error: NSError) {
+    public func completeWith(_ error: NSError) {
         future.completeWith(error)
     }
 
@@ -57,7 +57,7 @@ public class Future<T> {
     private var completionF: ((Try<T>) -> ())?
     private var mappedCompletionF:((Try<T>) -> ())?
 
-    private var bindCheck: BindCheck = BindCheck.BoolCheck({ true })
+    private var bindCheck: BindCheck = BindCheck.boolCheck({ true })
 
     private var interalCompletionHandler:(() -> ())?
 
@@ -69,16 +69,16 @@ public class Future<T> {
     private var failureF: ((NSError) -> ())?
     private var signals: [Signal] = []
 
-    let operationQueue: NSOperationQueue
-    let callbackQueue: NSOperationQueue
+    let operationQueue: OperationQueue
+    let callbackQueue: OperationQueue
 
-    public init(_ f: () -> Try<T>, operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
+    public init(_ f: () -> Try<T>, operationQueue: OperationQueue = defaultFutureQueue, callbackQueue:OperationQueue = OperationQueue.main) {
         self.operationQueue = operationQueue
         self.callbackQueue = callbackQueue
         self.completeWith(f)
     }
 
-    public init(operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) {
+    public init(operationQueue: OperationQueue = defaultFutureQueue, callbackQueue:OperationQueue = OperationQueue.main) {
         self.operationQueue = operationQueue
         self.callbackQueue = callbackQueue
     }
@@ -91,10 +91,10 @@ public class Future<T> {
         else {
             switch self.futureValue!.toTuple {
             case (let val, _) where val != nil:
-                signal.complete(TryStatus.Success, self.callbackQueue)
+                signal.complete(TryStatus.success, self.callbackQueue)
 
             case (_, let error):
-                signal.complete(TryStatus.Failure(error!), self.callbackQueue)
+                signal.complete(TryStatus.failure(error!), self.callbackQueue)
             }
         }
         return signal
@@ -106,7 +106,7 @@ public class Future<T> {
      * This allows for execution to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
      * You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
-    func completeWith(f: () -> Try<T>) {
+    func completeWith(_ f: () -> Try<T>) {
         if self.f == nil {
             self.f = f
             self.generateCallback()
@@ -119,7 +119,7 @@ public class Future<T> {
     * This allows for a value to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
     * You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
-    func completeWith(val: T) {
+    func completeWith(_ val: T) {
         self.completeWith({ Try<T>(success: val) })
     }
 
@@ -129,7 +129,7 @@ public class Future<T> {
     * This allows for an error to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
     * You can use this to bridge the Future api with other concurrency frameworks and async methods.
     */
-    func completeWith(error: NSError) {
+    func completeWith(_ error: NSError) {
         self.completeWith({ Try<T>(failure: error) })
     }
 
@@ -138,7 +138,7 @@ public class Future<T> {
     *
     * Registers a completion callback
     */
-    public func onComplete(f: (Try<T>) -> ()) -> Future<T> {
+    public func onComplete(_ f: (Try<T>) -> ()) -> Future<T> {
         self.completionF = f
         return self
     }
@@ -148,7 +148,7 @@ public class Future<T> {
     *
     * Registers a success callback
     */
-    public func onSuccess(f: (T) -> ()) -> Future<T> {
+    public func onSuccess(_ f: (T) -> ()) -> Future<T> {
         self.successF = f
         return self
     }
@@ -158,33 +158,33 @@ public class Future<T> {
     *
     * Registers a failure callback
     */
-    public func onFailure(f: (NSError) -> ()) -> Future<T> {
+    public func onFailure(_ f: (NSError) -> ()) -> Future<T> {
         self.failureF = f
         return self
     }
 
-    public func recoverWithFuture(f: (NSError) -> Future<T>) -> Future<T> {
+    public func recoverWithFuture(_ f: (NSError) -> Future<T>) -> Future<T> {
         self.recoverF = f
         return self
     }
 
-    public func recover(f: (NSError) -> Try<T>) -> Future<T> {
+    public func recover(_ f: (NSError) -> Try<T>) -> Future<T> {
         self.mappedRecoverF = f
         return self
     }
 
-    public func recoverOn(f: (NSError) -> Bool) -> Future<T> {
+    public func recoverOn(_ f: (NSError) -> Bool) -> Future<T> {
         self.recoverFilter = f
         return self
     }
 
-    public func bindToBool(b:() -> Bool) -> Future<T> {
-        self.bindCheck = BindCheck.BoolCheck(b)
+    public func bindToBool(_ b:() -> Bool) -> Future<T> {
+        self.bindCheck = BindCheck.boolCheck(b)
         return self
     }
 
-    public func bindToOptional(b: () -> AnyObject?) -> Future<T> {
-        self.bindCheck = BindCheck.AnyObjectCheck(b)
+    public func bindToOptional(_ b: () -> AnyObject?) -> Future<T> {
+        self.bindCheck = BindCheck.anyObjectCheck(b)
         return self
     }
 
@@ -197,7 +197,7 @@ public class Future<T> {
     * handles all execution and scheduling.  The function takes the results current future as its single argument.
     * That is, it maps the results of current future to a new future
     */
-    public func map<D>(f: (T) -> Try<D>) -> Future<D> {
+    public func map<D>(_ f: (T) -> Try<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.mappedCompletionF = { futureValue in
             mappedFuture.completeWith {
@@ -212,7 +212,7 @@ public class Future<T> {
         return mappedFuture
     }
 
-    public func flatMap<D>(f: (T) -> Future<D>) -> Future<D> {
+    public func flatMap<D>(_ f: (T) -> Future<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.mappedCompletionF = {futureValue in
             if futureValue.value != nil {
@@ -235,10 +235,10 @@ public class Future<T> {
 
 
     private func generateCallback() {
-        let operation = NSBlockOperation {
+        let operation = BlockOperation {
             self.futureValue = self.f!()
             switch (self.recoverF, self.mappedRecoverF, self.futureValue!.toTuple.1) {
-            case (.Some(let r), _, .Some(let error)):
+            case (.some(let r), _, .some(let error)):
                 if self.recoverFilter(error) {
                     r(error).onComplete { t in
                         self.futureValue = t
@@ -248,7 +248,7 @@ public class Future<T> {
                 else {
                     self.futureExecutionComplete()
                 }
-            case (_, .Some(let m), .Some(let error)):
+            case (_, .some(let m), .some(let error)):
                 if self.recoverFilter(error) {
                     self.futureValue = m(error)
                     self.futureExecutionComplete()
@@ -266,12 +266,12 @@ public class Future<T> {
 
     private func futureExecutionComplete() {
         if self.bindCheck.shouldExecute {
-            let operationCallback = NSBlockOperation {
+            let operationCallback = BlockOperation {
                 self.completionF?(self.futureValue!)
                 switch self.futureValue!.toTuple {
-                case (.Some(let val), _):
+                case (.some(let val), _):
                     self.successF?(val)
-                case (_, .Some(let error)):
+                case (_, .some(let error)):
                     self.failureF?(error)
                 default:
                     self.handleImpossibleMatch()
@@ -280,13 +280,13 @@ public class Future<T> {
                 self.interalCompletionHandler?()
 
                 switch self.futureValue!.toTuple {
-                case (.Some(_), _):
+                case (.some(_), _):
                     for x in self.signals {
-                        x.complete(TryStatus.Success)
+                        x.complete(TryStatus.success)
                     }
-                case (_, .Some(let error)):
+                case (_, .some(let error)):
                     for x in self.signals {
-                        x.complete(TryStatus.Failure(error))
+                        x.complete(TryStatus.failure(error))
                     }
                 default:
                     self.handleImpossibleMatch()
@@ -318,34 +318,34 @@ public class Future<T> {
 
 }
 
-public func combineFutures(signals: Signal...) -> Future<Void> {
-    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
+public func combineFutures(_ signals: Signal...) -> Future<Void> {
+    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: OperationQueue.main)
 }
 
-public func combineFuturesOnBackground(signals: Signal...) -> Future<Void> {
+public func combineFuturesOnBackground(_ signals: Signal...) -> Future<Void> {
     return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
 }
 
-public func combineFutures(signals: [Signal]) -> Future<Void> {
-    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: NSOperationQueue.mainQueue())
+public func combineFutures(_ signals: [Signal]) -> Future<Void> {
+    return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: OperationQueue.main)
 }
 
-public func combineFuturesOnBackground(signals: [Signal]) -> Future<Void> {
+public func combineFuturesOnBackground(_ signals: [Signal]) -> Future<Void> {
     return combineFuturesWithOptions(signals, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
 }
 
-public func combineFuturesWithOptions(signals: [Signal], operationQueue: NSOperationQueue = defaultFutureQueue, callbackQueue:NSOperationQueue = NSOperationQueue.mainQueue()) -> Future<Void> {
+public func combineFuturesWithOptions(_ signals: [Signal], operationQueue: OperationQueue = defaultFutureQueue, callbackQueue:OperationQueue = OperationQueue.main) -> Future<Void> {
     let f = Future<Void>(operationQueue: operationQueue, callbackQueue: callbackQueue)
     var ct = 0
     for x in signals {
         x.register { status in
             switch status {
-            case TryStatus.Success:
+            case TryStatus.success:
                 ct = ct + 1
                 if ct == signals.count {
                     f.completeWith(Void())
                 }
-            case TryStatus.Failure(let error):
+            case TryStatus.failure(let error):
                 f.completeWith(error)
             }
         }
@@ -354,10 +354,10 @@ public func combineFuturesWithOptions(signals: [Signal], operationQueue: NSOpera
 }
 
 
-public func future<T>(f: () -> Try<T>) -> Future<T> {
+public func future<T>(_ f: () -> Try<T>) -> Future<T> {
     return Future(f)
 }
 
-public func futureOnBackground<T>(f: () -> Try<T>) -> Future<T> {
+public func futureOnBackground<T>(_ f: () -> Try<T>) -> Future<T> {
     return Future(f, operationQueue: defaultFutureQueue, callbackQueue: defaultFutureQueue)
 }

@@ -25,21 +25,21 @@ final public class Try<T> {
         return (value, error)
     }
     
-    public class func Success(val: T) -> Try<T> {
+    public class func Success(_ val: T) -> Try<T> {
         return Try(success: val)
     }
     
-    public class func Failure(error: NSError) -> Try<T> {
+    public class func Failure(_ error: NSError) -> Try<T> {
         return Try<T>(failure: error)
     }
     
     //maybe we use custom matching? http://austinzheng.com/2014/12/17/custom-pattern-matching/
     public var match:TryStatus {
         if let _ = value {
-            return TryStatus.Success
+            return TryStatus.success
         }
         else {
-            return TryStatus.Failure(error!)
+            return TryStatus.failure(error!)
         }
     }
     
