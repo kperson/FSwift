@@ -8,38 +8,36 @@
 
 import Foundation
 
-final public class Try<T> {
+public enum Try<T> {
     
-    public var value: T?
-    public var error: NSError?
+    case success(T)
+    case failure(NSError)
     
-    public init(success: T) {
-        self.value = success
-    }
-    
-    public init(failure: NSError) {
-        self.error = failure
-    }
-
     public var toTuple: (T?, NSError?) {
-        return (value, error)
-    }
-    
-    public class func Success(_ val: T) -> Try<T> {
-        return Try(success: val)
-    }
-    
-    public class func Failure(_ error: NSError) -> Try<T> {
-        return Try<T>(failure: error)
-    }
-    
-    //maybe we use custom matching? http://austinzheng.com/2014/12/17/custom-pattern-matching/
-    public var match:TryStatus {
-        if let _ = value {
-            return TryStatus.success
+        switch self {
+        case Try.success(let v): return (v, nil)
+        case Try.failure(let e): return (nil, e)
         }
-        else {
-            return TryStatus.failure(error!)
+    }
+    
+    public var match:TryStatus {
+        switch self {
+        case Try.success(_): return TryStatus.success
+        case Try.failure(let e): return TryStatus.failure(e)
+        }
+    }
+    
+    public var value: T? {
+        switch self {
+        case Try.success(let v): return v
+        case Try.failure(_): return nil
+        }
+    }
+    
+    public var error: NSError? {
+        switch self {
+        case Try.success(_): return nil
+        case Try.failure(let e): return e
         }
     }
     

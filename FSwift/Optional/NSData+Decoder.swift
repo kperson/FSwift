@@ -13,10 +13,10 @@ public extension Data {
     public var arrDecoderFromJSON:Try<Decoder> {
         do {
             let list = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [Any]
-            return Try(success : Decoder(array: list!, depth: 0))
+            return Try.success(Decoder(array: list!, depth: 0))
         }
         catch let err as NSError {
-            return Try<Decoder>(failure: err)
+            return Try<Decoder>.failure(err)
         
         }
     }
@@ -24,10 +24,10 @@ public extension Data {
     public var dictDecoderFromJSON:Try<Decoder> {
         do {
             let dict = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : Any]
-            return Try(success: Decoder(dictionary: dict!, depth: 0))
+            return Try.success(Decoder(dictionary: dict!, depth: 0))
         }
         catch let err as NSError {
-            return Try<Decoder>(failure: err)
+            return Try<Decoder>.failure(err)
         }
     }
     

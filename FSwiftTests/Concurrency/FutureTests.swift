@@ -14,7 +14,7 @@ class FutureTests: XCTestCase {
     func testFutureOnComplete() {
         let hello = "Hello World"
         let _ = futureOnBackground {
-            Try<String>(success: hello)
+            Try<String>.success(hello)
         }.onComplete { x in
             switch x.toTuple {
             case (.some(let val), _):  XCTAssertEqual(val, hello, "x must equal 'Hello World'")
@@ -31,9 +31,9 @@ class FutureTests: XCTestCase {
         let hello = "Hello World"
         let numberOfCharacters = hello.characters.count
         let _ = futureOnBackground {
-           Try<String>(success: hello)
+           Try<String>.success(hello)
         }.map { x in
-            Try<Int>(success: x.characters.count)
+            Try<Int>.success(x.characters.count)
         }.onSuccess { ct in
             complete = true
             XCTAssertEqual(ct, numberOfCharacters, "ct must equal the number of characters in 'Hello World'")
@@ -44,7 +44,7 @@ class FutureTests: XCTestCase {
     
     func testFailure() {
         let _ = futureOnBackground {
-            Try<Int>(failure: NSError(domain: "com.error", code: 200, userInfo: nil))
+            Try<Int>.failure(NSError(domain: "com.error", code: 200, userInfo: nil))
         }
         .onFailure { error in
             XCTAssertEqual(error.domain, "com.error", "error domain must equal 'com.error'")
@@ -58,9 +58,9 @@ class FutureTests: XCTestCase {
     
     func testFutureMapFailure() {
         let _ = futureOnBackground {
-            Try<Int>(failure: NSError(domain: "com.error", code: 200, userInfo: nil))
+            Try<Int>.failure(NSError(domain: "com.error", code: 200, userInfo: nil))
         }.map { t in
-            Try<String>(success: "Hello")
+            Try<String>.success("Hello")
         }.onFailure { error in
             XCTAssertEqual(error.domain, "com.error", "Error domains should be equal")
         }
@@ -73,7 +73,7 @@ class FutureTests: XCTestCase {
     func testBindCheckBool() {
         var success = false
         let _ = futureOnBackground {
-            Try<String>(success: "hello")
+            Try<String>.success("hello")
         }.bindToBool({ false })
         .onSuccess { str in
             success = true
@@ -84,7 +84,7 @@ class FutureTests: XCTestCase {
         
         success = false
         let _ = futureOnBackground {
-            Try<String>(success: "hello")
+            Try<String>.success("hello")
         }.bindToBool({ true })
         .onSuccess { str in
             success = true
@@ -96,7 +96,7 @@ class FutureTests: XCTestCase {
     func testBindCheckOpt() {
         var success = false
         let _ = futureOnBackground {
-            Try<String>(success: "hello")
+            Try<String>.success("hello")
         }.bindToOptional({ nil })
         .onSuccess { str in
             success = true
@@ -107,7 +107,7 @@ class FutureTests: XCTestCase {
         
         success = false
         let _ = futureOnBackground {
-            Try<String>(success: "hello")
+            Try<String>.success("hello")
         }.bindToOptional({ "bob" })
         .onSuccess { str in
             success = true
@@ -120,12 +120,12 @@ class FutureTests: XCTestCase {
         
         let x = futureOnBackground { () -> Try<String> in
             Thread.sleep(forTimeInterval: 500.milliseconds)
-            return Try<String>(success: "hello")
+            return Try<String>.success("hello")
         }
         
         let y = futureOnBackground { () -> Try<Int> in
             Thread.sleep(forTimeInterval: 100.milliseconds)
-            return Try<Int>(success: 2)
+            return Try<Int>.success(2)
         }
         
         let _ = combineFuturesOnBackground(x.signal, y.signal)
@@ -138,9 +138,9 @@ class FutureTests: XCTestCase {
     func testRecover() {
         var complete = false
         let _ = futureOnBackground {
-            Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
+            Try.failure(NSError(domain: "com.error", code: 100, userInfo: nil))
         }.recover { err in
-            Try.Success(3)
+            Try.success(3)
         }.onSuccess { num in
             complete = true
             XCTAssert(3 == num, "recover must coalesce")
@@ -148,9 +148,9 @@ class FutureTests: XCTestCase {
         
         var complete2 = false
         let _ = futureOnBackground {
-            Try.Success(4)
+            Try.success(4)
         }.recover { err in
-            Try.Success(3)
+            Try.success(3)
         }.onSuccess { num in
             complete2 = true
             XCTAssert(4 == num, "recover must coalesce")
@@ -165,24 +165,24 @@ class FutureTests: XCTestCase {
     func testRecoverFilter() {
         var recoveredOne = false
         let _ = futureOnBackground {
-            Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
+            Try.failure(NSError(domain: "com.error", code: 100, userInfo: nil))
         }.recoverOn { err in
             err.domain == "com.error"
         }.recover { err in
             recoveredOne = true
-            return Try.Success(3)
+            return Try.success(3)
         }.onSuccess { num in
             XCTAssert(3 == num, "recover must coalesce")
         }
         
         var recoveredTwo = false
         let _ = futureOnBackground {
-            Try<Int>(failure: NSError(domain: "com.error2", code: 100, userInfo: nil))
+            Try.failure(NSError(domain: "com.error2", code: 100, userInfo: nil))
         }.recoverOn { err in
             err.domain == "com.error"
         }.recover { err in
             recoveredTwo = true
-            return Try.Success(3)
+            return Try.success(3)
         }.onSuccess { num in
             XCTAssert(3 == num, "recover must coalesce")
         }

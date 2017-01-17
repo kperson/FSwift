@@ -16,10 +16,10 @@ class TryTests: XCTestCase {
     class func divide(_ a: CGFloat, _ b: CGFloat) -> Try<CGFloat>  {
         if(b != 0) {
             let val = a / b
-            return Try(success: val)
+            return Try.success(val)
         }
         else {
-            return Try.Failure(NSError(domain: "com.math.dividebyzero", code: 5000, userInfo: nil))
+            return Try.failure(NSError(domain: "com.math.dividebyzero", code: 5000, userInfo: nil))
         }
     }
     

@@ -125,7 +125,7 @@ public class Future<T> {
      * You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
     func completeWith(_ val: T) {
-        self.completeWith({ Try<T>(success: val) })
+        self.completeWith({ Try<T>.success(val) })
     }
     
     /**
@@ -135,7 +135,7 @@ public class Future<T> {
      * You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
     func completeWith(_ error: NSError) {
-        self.completeWith({ Try<T>(failure: error) })
+        self.completeWith({ Try<T>.failure(error) })
     }
     
     /**
@@ -210,7 +210,7 @@ public class Future<T> {
                     return f(successfulValue)
                 }
                 else {
-                    return Try<D>(failure: futureValue.error!)
+                    return Try<D>.failure(futureValue.error!)
                 }
             }
         }

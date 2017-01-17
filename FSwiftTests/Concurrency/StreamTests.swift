@@ -140,7 +140,7 @@ class StreamTests : XCTestCase {
         }
         
         let _ = future {
-            Try.Success(message)
+            Try.success(message)
         }.pipeTo(stream)
         
         waitForExpectations(timeout: 2.seconds, handler:nil)
@@ -159,7 +159,7 @@ class StreamTests : XCTestCase {
         
         let err = NSError(domain: "A", code: 0, userInfo: nil)
         let _ = future {
-            Try<String>(failure: err)
+            Try<String>.failure(err)
         }.pipeTo(stream)
         
         waitForExpectations(timeout: 2.seconds, handler:nil)
@@ -178,7 +178,7 @@ class StreamTests : XCTestCase {
         }
         
         let _ = future {
-            Try<String>(success: message)
+            Try<String>.success(message)
         }.pipeTo(stream)
         
         waitForExpectations(timeout: 2.seconds, handler:nil)

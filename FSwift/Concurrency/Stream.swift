@@ -246,9 +246,9 @@ public extension Future {
             if on(self.value!) {
                 switch status {
                 case TryStatus.success:
-                    let _ = stream.publish(Try.Success(self.finalVal))
+                    let _ = stream.publish(Try.success(self.finalVal))
                 case TryStatus.failure(let err):
-                    let _ = stream.publish(Try.Failure(err))
+                    let _ = stream.publish(Try.failure(err))
                 }
             }
         }
@@ -260,7 +260,7 @@ public extension Future {
             switch status {
             case TryStatus.success:
                 if on(self.finalVal) {
-                    let _ = stream.publish(Try.Success(self.finalVal))
+                    let _ = stream.publish(Try.success(self.finalVal))
                 }
             default:
                 Void() //do bothing
