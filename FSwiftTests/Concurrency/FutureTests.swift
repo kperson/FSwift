@@ -13,24 +13,24 @@ class FutureTests: XCTestCase {
 
     func testFutureOnComplete() {
         let hello = "Hello World"
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<String>(success: hello)
         }.onComplete { x in
             switch x.toTuple {
-            case (.Some(let val), _):  XCTAssertEqual(val, hello, "x must equal 'Hello World'")
-            case (_, .Some( _)): XCTAssert(false, "This line should never be executed in the this test")
+            case (.some(let val), _):  XCTAssertEqual(val, hello, "x must equal 'Hello World'")
+            case (_, .some( _)): XCTAssert(false, "This line should never be executed in the this test")
             default:
                 XCTAssert(false, "This line should never be executed in the this test")
             }
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
     }
     
     func testFutureMapSuccess() {
         var complete = false
         let hello = "Hello World"
         let numberOfCharacters = hello.characters.count
-        futureOnBackground {
+        let _ = futureOnBackground {
            Try<String>(success: hello)
         }.map { x in
             Try<Int>(success: x.characters.count)
@@ -38,12 +38,12 @@ class FutureTests: XCTestCase {
             complete = true
             XCTAssertEqual(ct, numberOfCharacters, "ct must equal the number of characters in 'Hello World'")
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssert(complete, "OnSuccess should have occured")
     }
     
     func testFailure() {
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<Int>(failure: NSError(domain: "com.error", code: 200, userInfo: nil))
         }
         .onFailure { error in
@@ -53,11 +53,11 @@ class FutureTests: XCTestCase {
             XCTAssert(false, "This line should never be executed in this test")
         }
         
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
     }
     
     func testFutureMapFailure() {
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<Int>(failure: NSError(domain: "com.error", code: 200, userInfo: nil))
         }.map { t in
             Try<String>(success: "Hello")
@@ -67,77 +67,77 @@ class FutureTests: XCTestCase {
         .onSuccess { x in
             XCTAssert(false, "This line should never be executed in this test")
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
     }
     
     func testBindCheckBool() {
         var success = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<String>(success: "hello")
         }.bindToBool({ false })
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertFalse(success, "future must not complete if bind evaluation is false")
         
         
         success = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<String>(success: "hello")
         }.bindToBool({ true })
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertTrue(success, "future must not complete if bind evaluation is false")
     }
     
     func testBindCheckOpt() {
         var success = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<String>(success: "hello")
         }.bindToOptional({ nil })
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertFalse(success, "future must not complete if bind evaluation is false")
         
         
         success = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<String>(success: "hello")
         }.bindToOptional({ "bob" })
         .onSuccess { str in
             success = true
         }
-        NSThread.sleepForTimeInterval(100.milliseconds)
+        Thread.sleep(forTimeInterval: 100.milliseconds)
         XCTAssertTrue(success, "future must not complete if bind evaluation is false")
     }
     
     func testCombine() {
         
         let x = futureOnBackground { () -> Try<String> in
-            NSThread.sleepForTimeInterval(500.milliseconds)
+            Thread.sleep(forTimeInterval: 500.milliseconds)
             return Try<String>(success: "hello")
         }
         
         let y = futureOnBackground { () -> Try<Int> in
-            NSThread.sleepForTimeInterval(100.milliseconds)
+            Thread.sleep(forTimeInterval: 100.milliseconds)
             return Try<Int>(success: 2)
         }
         
-        combineFuturesOnBackground(x.signal, y.signal)
+        let _ = combineFuturesOnBackground(x.signal, y.signal)
         .onSuccess { a in }
         
-         NSThread.sleepForTimeInterval(2.seconds)
+         Thread.sleep(forTimeInterval: 2.seconds)
 
     }
 
     func testRecover() {
         var complete = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
         }.recover { err in
             Try.Success(3)
@@ -147,7 +147,7 @@ class FutureTests: XCTestCase {
         }
         
         var complete2 = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try.Success(4)
         }.recover { err in
             Try.Success(3)
@@ -156,7 +156,7 @@ class FutureTests: XCTestCase {
             XCTAssert(4 == num, "recover must coalesce")
         }
         
-        NSThread.sleepForTimeInterval(200.milliseconds)
+        Thread.sleep(forTimeInterval: 200.milliseconds)
         XCTAssert(complete2, "recovering must have completed")
         XCTAssert(complete, "recovering must have completed")
 
@@ -164,7 +164,7 @@ class FutureTests: XCTestCase {
     
     func testRecoverFilter() {
         var recoveredOne = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try.Failure(NSError(domain: "com.error", code: 100, userInfo: nil))
         }.recoverOn { err in
             err.domain == "com.error"
@@ -176,7 +176,7 @@ class FutureTests: XCTestCase {
         }
         
         var recoveredTwo = false
-        futureOnBackground {
+        let _ = futureOnBackground {
             Try<Int>(failure: NSError(domain: "com.error2", code: 100, userInfo: nil))
         }.recoverOn { err in
             err.domain == "com.error"
@@ -189,7 +189,7 @@ class FutureTests: XCTestCase {
     
 
         
-        NSThread.sleepForTimeInterval(200.milliseconds)
+        Thread.sleep(forTimeInterval: 200.milliseconds)
         XCTAssert(recoveredOne, "recovering must have completed")
         XCTAssert(!recoveredTwo, "recovering must have not completed")
         

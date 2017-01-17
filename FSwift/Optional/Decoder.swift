@@ -40,16 +40,16 @@ public extension Decoder {
     
 }
 
-public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
+public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
     
     let notAnArrayError = NSError(domain: "com.optionreader", code: 2, userInfo: [ "message" : "data is not array like" ])
     let notADictionaryError = NSError(domain: "com.optionreader", code: 3, userInfo: [ "message" : "data is not dictionary like" ])
     
     
-    private var rawDictionary: [String : AnyObject]?
-    private var rawArray: [AnyObject]?
-    private var value: AnyObject?
-    private var error: NSError?
+    fileprivate var rawDictionary: [String : AnyObject]?
+    fileprivate var rawArray: [AnyObject]?
+    fileprivate var value: AnyObject?
+    fileprivate var error: NSError?
     let depth: Int
     
     
@@ -77,7 +77,7 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
         self.depth = depth
     }
     
-    private init(value: AnyObject, parseType: Bool = false, depth: Int = 0) {
+    fileprivate init(value: AnyObject, parseType: Bool = false, depth: Int = 0) {
         self.depth = depth
         if !parseType {
             self.value = value
@@ -95,7 +95,7 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
         }
     }
     
-    private init(error: NSError, depth: Int = 0) {
+    fileprivate init(error: NSError, depth: Int = 0) {
         self.depth = depth
         self.error = error
     }
@@ -127,11 +127,11 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
     }
     
     
-    private func indexOutRangeError(index: Int) -> NSError {
+    fileprivate func indexOutRangeError(_ index: Int) -> NSError {
         return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "index \(index) of range of array at depth \(self.depth)" ])
     }
     
-    private func keyNotPresentError(key: String) -> NSError {
+    fileprivate func keyNotPresentError(_ key: String) -> NSError {
         return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "key '\(key)' not present in dictionary at depth \(self.depth)" ])
     }
     
@@ -168,7 +168,7 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
         }
     }
     
-    func mapToData(val: AnyObject) -> Decoder {
+    func mapToData(_ val: AnyObject) -> Decoder {
         if let a = val as? [AnyObject] {
             return Decoder(array: a, depth : depth + 1)
         }
@@ -182,22 +182,22 @@ public struct Decoder : ArrayLiteralConvertible, DictionaryLiteralConvertible {
     
 }
 
-public struct DecoderArray : SequenceType {
+public struct DecoderArray : Sequence {
     
     public let items: [AnyObject]
     
-    public func generate() -> AnyGenerator<Decoder> {
-        return AnyGenerator(DecoderArrayGenerator(items: items))
+    public func makeIterator() -> AnyIterator<Decoder> {
+        return AnyIterator(DecoderArrayGenerator(items: items))
     }
     
 }
 
-private class DecoderArrayGenerator : GeneratorType {
+private class DecoderArrayGenerator : IteratorProtocol {
 
     typealias Element = Decoder
     
-    private let items: [AnyObject]
-    private var i = -1
+    fileprivate let items: [AnyObject]
+    fileprivate var i = -1
     
     init(items: [AnyObject]) {
         self.items = items
@@ -218,25 +218,25 @@ private class DecoderArrayGenerator : GeneratorType {
 
 
 
-public struct DecoderDictionary : SequenceType {
+public struct DecoderDictionary : Sequence {
     
     public let items: [String: AnyObject]
     
-    public func generate() -> AnyGenerator<(String, Decoder)> {
-        return AnyGenerator(DecoderDictionaryGenerator(items: items))
+    public func makeIterator() -> AnyIterator<(String, Decoder)> {
+        return AnyIterator(DecoderDictionaryGenerator(items: items))
     }
     
 }
 
 
-private class DecoderDictionaryGenerator : GeneratorType {
+private class DecoderDictionaryGenerator : IteratorProtocol {
     
     typealias Element = (String, Decoder)
 
     
-    private let items: [String: AnyObject]
-    private let keys: [String]
-    private var i = -1
+    fileprivate let items: [String: AnyObject]
+    fileprivate let keys: [String]
+    fileprivate var i = -1
     
     init(items: [String : AnyObject]) {
         self.items = items

@@ -14,22 +14,22 @@ class TimerTests: XCTestCase {
     func testTimerLoop() {
         
         var ct = 0
-        let start = NSDate().timeIntervalSince1970
-        let readyExpectation = expectationWithDescription("ready1")
+        let start = Date().timeIntervalSince1970
+        let readyExpectation = expectation(description: "ready1")
         Timer(interval: 100.milliseconds, repeats: true, f: { t in
             ct += 1
             if(ct == 2) {
-                let end = NSDate().timeIntervalSince1970
+                let end = Date().timeIntervalSince1970
                 XCTAssert(end - start >= 200.milliseconds, "If the loop runs twice it must be in about 200.milliseconds")
                 readyExpectation.fulfill()
             }
         }).start()
-        waitForExpectationsWithTimeout(400.milliseconds, handler:  { error in })
+        waitForExpectations(timeout: 400.milliseconds, handler:  { error in })
     }
     
     func testTimerStop() {
         var ct = 0
-        let readyExpectation = expectationWithDescription("ready2")
+        let readyExpectation = expectation(description: "ready2")
         let timer = Timer(interval: 100.milliseconds, repeats: true, f: { t in
             ct += 1
             if(ct == 2) {
@@ -47,12 +47,12 @@ class TimerTests: XCTestCase {
             }
         })
         timer2.start()
-        waitForExpectationsWithTimeout(500.milliseconds, handler:  { error in })
+        waitForExpectations(timeout: 500.milliseconds, handler:  { error in })
     }
     
     func testTimerWithNoRepeat() {
         var ct = 0
-        let readyExpectation = expectationWithDescription("ready3")
+        let readyExpectation = expectation(description: "ready3")
         Timer(interval: 100.milliseconds, repeats: false, f: { t in
             ct += 1
             if(ct == 2) {
@@ -64,7 +64,7 @@ class TimerTests: XCTestCase {
             readyExpectation.fulfill()
         })
         cancelTimer.start()
-        waitForExpectationsWithTimeout(500.milliseconds, handler:  { error in })
+        waitForExpectations(timeout: 500.milliseconds, handler:  { error in })
     }
 
 }

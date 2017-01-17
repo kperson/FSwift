@@ -13,7 +13,7 @@ import Foundation
 class TryTests: XCTestCase {
     
     
-    class func divide(a: CGFloat, _ b: CGFloat) -> Try<CGFloat>  {
+    class func divide(_ a: CGFloat, _ b: CGFloat) -> Try<CGFloat>  {
         if(b != 0) {
             let val = a / b
             return Try(success: val)

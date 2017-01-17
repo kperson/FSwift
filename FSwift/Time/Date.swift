@@ -9,31 +9,31 @@
 import Foundation
 
 public enum DatePrintComponent {
-    case FullYear
-    case MonthNumber
-    case Day
-    case Hour24
-    case Seconds
+    case fullYear
+    case monthNumber
+    case day
+    case hour24
+    case seconds
 }
 
-public extension NSDate {
-    public func stringWithFormat(format:String) -> String {
-        let dateFormatter = NSDateFormatter()
+public extension Date {
+    public func stringWithFormat(_ format:String) -> String {
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
-        return dateFormatter.stringFromDate(self)
+        return dateFormatter.string(from: self)
     }
     
-    public func printWithComponent(component:DatePrintComponent) -> String {
+    public func printWithComponent(_ component:DatePrintComponent) -> String {
         switch component {
-        case .FullYear:
+        case .fullYear:
             return self.stringWithFormat("yyyy")
-        case .MonthNumber:
+        case .monthNumber:
             return self.stringWithFormat("MM")
-        case .Day:
+        case .day:
             return self.stringWithFormat("dd")
-        case .Hour24:
+        case .hour24:
             return self.stringWithFormat("HH")
-        case .Seconds:
+        case .seconds:
             return self.stringWithFormat("mm")
         }
     }
@@ -44,28 +44,28 @@ public extension NSDate {
 }
 
 
-public func + (date:NSDate, time: NSTimeInterval) -> NSDate {
-    return date.dateByAddingTimeInterval(time)
+public func + (date:Date, time: TimeInterval) -> Date {
+    return date.addingTimeInterval(time)
     
 }
 
-public func + (time: NSTimeInterval, date:NSDate) -> NSDate {
-    return date.dateByAddingTimeInterval(time)
+public func + (time: TimeInterval, date:Date) -> Date {
+    return date.addingTimeInterval(time)
 }
 
 
-public func - (date:NSDate, time: NSTimeInterval) -> NSDate {
-    return date.dateByAddingTimeInterval(-time)
+public func - (date:Date, time: TimeInterval) -> Date {
+    return date.addingTimeInterval(-time)
 }
 
-public func - (time: NSTimeInterval, date:NSDate) -> NSDate {
-    return date.dateByAddingTimeInterval(-time)
+public func - (time: TimeInterval, date:Date) -> Date {
+    return date.addingTimeInterval(-time)
 }
 
-public func > (left: NSDate, right: NSDate) -> Bool {
+public func > (left: Date, right: Date) -> Bool {
     let compare = left.compare(right)
     
-    if compare == NSComparisonResult.OrderedDescending {
+    if compare == ComparisonResult.orderedDescending {
         return true
     }
     else {
@@ -73,10 +73,10 @@ public func > (left: NSDate, right: NSDate) -> Bool {
     }
 }
 
-public func < (left: NSDate, right: NSDate) -> Bool {
+public func < (left: Date, right: Date) -> Bool {
     let compare = right.compare(left)
     
-    if compare == NSComparisonResult.OrderedDescending {
+    if compare == ComparisonResult.orderedDescending {
         return true
     }
     else {
@@ -85,10 +85,10 @@ public func < (left: NSDate, right: NSDate) -> Bool {
 }
 
 
-public func >= (left: NSDate, right: NSDate) -> Bool {
+public func >= (left: Date, right: Date) -> Bool {
     let compare = left.compare(right)
     
-    if compare == NSComparisonResult.OrderedDescending || compare == NSComparisonResult.OrderedSame {
+    if compare == ComparisonResult.orderedDescending || compare == ComparisonResult.orderedSame {
         return true
     }
     else {
@@ -96,10 +96,10 @@ public func >= (left: NSDate, right: NSDate) -> Bool {
     }
 }
 
-public func <= (left: NSDate, right: NSDate) -> Bool {
+public func <= (left: Date, right: Date) -> Bool {
     let compare = right.compare(left)
     
-    if compare == NSComparisonResult.OrderedDescending || compare == NSComparisonResult.OrderedSame  {
+    if compare == ComparisonResult.orderedDescending || compare == ComparisonResult.orderedSame  {
         return true
     }
     else {

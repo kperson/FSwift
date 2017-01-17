@@ -20,7 +20,7 @@ public class Seq {
     - parameter seq: - a seq to iteratee through
     - parameter f: - function to execute for each item in the sequence
     */
-    public class func foreach<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Void) {
+    public class func foreach<T : Sequence>(_ seq: T, _ f: (T.Iterator.Element) -> Void) {
         for x in seq {
             f(x)
         }
@@ -36,7 +36,7 @@ public class Seq {
     - parameter seq: - a seq to iteratee through
     - parameter f: - a function to execute for each item in the sequence
     */
-    public class func foreachWithIndex<T : SequenceType>(seq: T, _ f: (T.Generator.Element, Int) -> Void) {
+    public class func foreachWithIndex<T : Sequence>(_ seq: T, _ f: (T.Iterator.Element, Int) -> Void) {
         var i = 0
         for x in seq {
             f(x, i)
@@ -56,7 +56,7 @@ public class Seq {
     
     - returns: the index of fullfilling the criteria, nil if not found
     */
-    public class func firstIndexOf<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> Int? {
+    public class func firstIndexOf<T : Sequence>(_ seq: T, _ f: (T.Iterator.Element) -> Bool) -> Int? {
         var i = 0
         for x in seq {
             if f(x)  {
@@ -79,7 +79,7 @@ public class Seq {
     
     - returns: the index of fullfilling the criteria, nil if not found
     */
-    public class func lastIndexOf<T : SequenceType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> Int? {
+    public class func lastIndexOf<T : Sequence>(_ seq: T, _ f: (T.Iterator.Element) -> Bool) -> Int? {
         var i = 0
         var final: Int?
         for x in seq {
@@ -102,8 +102,8 @@ public class Seq {
     
     - returns: a new array representing the tail of the sequence
     */
-    public class func tail<T : SequenceType>(seq: T) -> [T.Generator.Element] {
-        var list:[T.Generator.Element] = []
+    public class func tail<T : Sequence>(_ seq: T) -> [T.Iterator.Element] {
+        var list:[T.Iterator.Element] = []
         var i = 0
         for x in seq {
             if i != 0 {
@@ -115,7 +115,7 @@ public class Seq {
     }
     
     
-    public class func foldRight<T : CollectionType, B>(seq: T, _ initialValue: B, _ f: (B, T.Generator.Element) -> B) -> B {
+    public class func foldRight<T : Collection, B>(_ seq: T, _ initialValue: B, _ f: (B, T.Iterator.Element) -> B) -> B {
         if seq.count == 0 {
             return initialValue
         }
@@ -125,7 +125,7 @@ public class Seq {
         }
     }
     
-    public class func findFirst<T : CollectionType>(seq: T, _ f: (T.Generator.Element) -> Bool) -> T.Generator.Element? {
+    public class func findFirst<T : Collection>(_ seq: T, _ f: (T.Iterator.Element) -> Bool) -> T.Iterator.Element? {
         if seq.count == 0 {
             return nil
         }
@@ -145,8 +145,8 @@ public class Seq {
     
     - returns: a new array with duplicates removed
     */
-    public class func removeDuplicates<S : SequenceType where S.Generator.Element : Equatable>(seq: S) -> [S.Generator.Element] {
-        var uniqueList:[S.Generator.Element] = []
+    public class func removeDuplicates<S : Sequence>(_ seq: S) -> [S.Iterator.Element] where S.Iterator.Element : Equatable {
+        var uniqueList:[S.Iterator.Element] = []
         for x in seq {
             if !uniqueList.contains(x) {
                 uniqueList.append(x)
@@ -166,9 +166,9 @@ public class Seq {
     
     - returns: a new array with skip elements
     */
-    public class func skip<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
+    public class func skip<T : Sequence>(_ seq: T, _ amount: Int) -> [T.Iterator.Element] {
         var i = 0
-        var list:[T.Generator.Element] = []
+        var list:[T.Iterator.Element] = []
         for x in seq {
             if i >= amount {
                 list.append(x)
@@ -191,9 +191,9 @@ public class Seq {
     
     - returns: a new array with taken elements
     */
-    public class func take<T : SequenceType>(seq: T, _ amount: Int) -> [T.Generator.Element] {
+    public class func take<T : Sequence>(_ seq: T, _ amount: Int) -> [T.Iterator.Element] {
         var i = 0
-        var list:[T.Generator.Element] = []
+        var list:[T.Iterator.Element] = []
         for x in seq {
             if i < amount {
                 list.append(x)
@@ -204,8 +204,8 @@ public class Seq {
     }
     
     
-    public class func mapReduce<T : SequenceType, B:Hashable, C>(seq: T, _ m: (T.Generator.Element) -> B, _ r: (B, [T.Generator.Element]) -> C) -> [C]  {
-        var dict:Dictionary<B, [T.Generator.Element]> = [:]
+    public class func mapReduce<T : Sequence, B:Hashable, C>(_ seq: T, _ m: (T.Iterator.Element) -> B, _ r: (B, [T.Iterator.Element]) -> C) -> [C]  {
+        var dict:Dictionary<B, [T.Iterator.Element]> = [:]
         for x in seq {
             let key = m(x)
             if var l = dict[key] {

@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class Timer {
+open class Timer {
 
-    let interval: NSTimeInterval
+    let interval: TimeInterval
     let repeats: Bool
     let f: (Timer) -> Void
     var isRunning: Bool = false
-    private var timer: NSTimer?
+    fileprivate var timer: Foundation.Timer?
     
-    public init(interval: NSTimeInterval, repeats: Bool, f: (Timer) -> Void) {
+    public init(interval: TimeInterval, repeats: Bool, f: @escaping (Timer) -> Void) {
         self.interval = interval
         self.repeats = repeats
         self.f = f
@@ -31,21 +31,21 @@ public class Timer {
         }
     }
     
-    public func start() {
+    open func start() {
         if self.timer == nil {
-            self.timer = NSTimer(timeInterval: interval, target:self, selector: #selector(Timer.tick), userInfo: nil, repeats: repeats)
-            NSRunLoop.currentRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
+            self.timer = Foundation.Timer(timeInterval: interval, target:self, selector: #selector(Timer.tick), userInfo: nil, repeats: repeats)
+            RunLoop.current.add(self.timer!, forMode: RunLoopMode.defaultRunLoopMode)
             self.isRunning = true
         }
     }
     
-    public func stop() {
+    open func stop() {
         self.timer?.invalidate()
         self.timer = nil
         self.isRunning = false
     }
     
-    public var running: Bool {
+    open var running: Bool {
         return self.isRunning
     }
     

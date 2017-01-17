@@ -10,23 +10,19 @@ import Foundation
 
 public class Dispatch {
 
-    public class func delay(delay:Double, closure:()->()) {
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue(), closure)
+    open class func delay(_ delay:Double, closure:@escaping ()->()) {
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
     }
 
-    public class func background(block:()->()) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+    open class func background(_ block:@escaping ()->()) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
             block()
-        })
+        }
     }
 
-    public class func foreground(block:()->()) {
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+    open class func foreground(_ block:@escaping ()->()) {
+        DispatchQueue.main.async(execute: { () -> Void in
             block()
         })
     }

@@ -18,34 +18,34 @@ class StreamTests : XCTestCase {
     
     func testClearSubscriptions() {
         let stream = Stream<String>()
-        stream.subscribe(nil) { x in Void() }
+        let _ = stream.subscribe(nil) { x in Void() }
         
-        stream.clearSubscriptions()
+        let _ = stream.clearSubscriptions()
         XCTAssertTrue(stream.subscriptions.isEmpty, "clearSubscriptions should empty the stream")
     }
     
     func testSubscribeBinding() {
         let stream = Stream<String>()
         
-        stream.clearSubscriptions()
-        stream.subscribe(nil) { x in Void() }
+        let _ = stream.clearSubscriptions()
+        let _ = stream.subscribe(nil) { x in Void() }
         XCTAssertFalse(stream.subscriptions.first!.shouldExecute, "streams only execute if the bind is not nil")
         
-        stream.clearSubscriptions()
-        stream.subscribe({ nil } ) { x in Void() }
+        let _ = stream.clearSubscriptions()
+        let _ = stream.subscribe({ nil } ) { x in Void() }
         XCTAssertFalse(stream.subscriptions.first!.shouldExecute, "streams only execute if the bind is not nil")
         
-        stream.clearSubscriptions()
-        stream.subscribe(false) { x in Void() }
+        let _ = stream.clearSubscriptions()
+        let _ = stream.subscribe(false) { x in Void() }
         XCTAssertFalse(stream.subscriptions.first!.shouldExecute, "streams only execute if the bind is true")
         
-        stream.clearSubscriptions()
-        stream.subscribe(true) { x in Void() }
+        let _ = stream.clearSubscriptions()
+        let _ = stream.subscribe(true) { x in Void() }
         XCTAssertTrue(stream.subscriptions.first!.shouldExecute, "streams only execute if the bind is true")
         
         
-        stream.clearSubscriptions()
-        stream.subscribe() { x in Void() }
+        let _ = stream.clearSubscriptions()
+        let _ = stream.subscribe() { x in Void() }
         XCTAssertTrue(stream.subscriptions.first!.shouldExecute, "subscribe should default to allowing execution")
     }
     
@@ -53,11 +53,11 @@ class StreamTests : XCTestCase {
         var ct = 0
         let numPublishes = 4
         let numSubscribers = 2
-        let value =  NSUUID().UUIDString
-        let exp = expectationWithDescription("testOpenPublishAndSubscribe")
+        let value =  UUID().uuidString
+        let exp = expectation(description: "testOpenPublishAndSubscribe")
         let stream = Stream<String>()
         for _ in 0...numSubscribers - 1 {
-            stream.subscribe { str in
+            let _ = stream.subscribe { str in
                 XCTAssertEqual(value, str, "stream must publish the correct value")
                 ct = ct + 1
                 if ct == numPublishes * numSubscribers {
@@ -65,62 +65,62 @@ class StreamTests : XCTestCase {
                 }
             }
             for _ in 0...numPublishes - 1 {
-                stream.publish(value)
+                let _ = stream.publish(value)
             }
         }
-        waitForExpectationsWithTimeout(2.seconds, handler: nil)
+        waitForExpectations(timeout: 2.seconds, handler: nil)
         
     }
     
     func testExplicitSubscriptionCancel() {
-        let subscription = Subscription<String>(action: { x in Void() }, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { true })
+        let subscription = Subscription<String>(action: { x in Void() }, callbackQueue: OperationQueue.main, executionCheck: { true })
         XCTAssertTrue(subscription.shouldExecute, "subscription should be active if execution check returns true and cancel has not been called")
         
         subscription.cancel()
         XCTAssertFalse(subscription.shouldExecute, "subscription should deactivate if cancel is called")
         
         let stream = Stream<String>()
-        let subscription2 = Subscription<String>(action: { x in Void() }, callbackQueue: NSOperationQueue.mainQueue(), executionCheck: { true })
-        stream.subscribe(subscription2)
+        let subscription2 = Subscription<String>(action: { x in Void() }, callbackQueue: OperationQueue.main, executionCheck: { true })
+        let _ = stream.subscribe(subscription2)
         subscription2.cancel()
         
         XCTAssertTrue(stream.subscriptions.isEmpty, "cancel should immediately remove subscription from the stream")
     }
     
     func testClosedPublishAndSubscribe() {
-        let exp = expectationWithDescription("testClosedPublishAndSubscribe")
+        let exp = expectation(description: "testClosedPublishAndSubscribe")
         let stream = Stream<String>()
-        stream.subscribe() { x in XCTAssertTrue(false, "this line should never execute since the stream is closed")
+        let _ = stream.subscribe() { x in XCTAssertTrue(false, "this line should never execute since the stream is closed")
             exp.fulfill()
         }
         stream.close()
-        stream.publish("hello")
-        stream.clearSubscriptions()
+        let _ = stream.publish("hello")
+        let _ = stream.clearSubscriptions()
         
         stream.open()
-        stream.subscribe() { x in
+        let _ = stream.subscribe() { x in
             XCTAssertTrue(true, "this line should execute since the stream in open")
             exp.fulfill()
         }
-        stream.publish("hello")
+        let _ = stream.publish("hello")
         
 
-        waitForExpectationsWithTimeout(2.seconds, handler: nil)
+        waitForExpectations(timeout: 2.seconds, handler: nil)
 
     }
     
     
     func testAutoCancel() {
-        let exp = expectationWithDescription("testAutoCancel")
+        let exp = expectation(description: "testAutoCancel")
         let stream = Stream<String>()
-        stream.subscribe(nil) { x in Void() }
+        let _ = stream.subscribe(nil) { x in Void() }
         stream.subscribe("car") { x in Void() }
         stream.subscribe("hello") { x in
             XCTAssertTrue(true, "this line should execute since the stream in open")
             exp.fulfill()
         }
-        stream.publish("bob")
-        waitForExpectationsWithTimeout(2.seconds, handler: { err in
+        let _ = stream.publish("bob")
+        waitForExpectations(timeout: 2.seconds, handler: { err in
             XCTAssertEqual(stream.subscriptions.count, 2, "cancelled subscriptions should automatically be cleared from callback list")
         })
 
@@ -130,27 +130,27 @@ class StreamTests : XCTestCase {
     func testFutureTryPiping() {
         var publishCt = 0
         let message = "hello"
-        let exp = expectationWithDescription("testFuturePiping")
+        let exp = expectation(description: "testFuturePiping")
         let stream = Stream<String>()
-        stream.subscribe { x in
+        let _ = stream.subscribe { x in
             publishCt = publishCt + 1
             XCTAssertTrue(true, "this line should execute since we are publishing via future pipe")
             XCTAssertEqual(message, x, "pipe must generate the correct message")
             exp.fulfill()
         }
         
-        future {
+        let _ = future {
             Try.Success(message)
         }.pipeTo(stream)
         
-        waitForExpectationsWithTimeout(2.seconds, handler:nil)
+        waitForExpectations(timeout: 2.seconds, handler:nil)
     }
     
     func testFutureTryPipingFailure() {
         var publishCt = 0
-        let exp = expectationWithDescription("testFuturePiping")
+        let exp = expectation(description: "testFuturePiping")
         let stream = Stream<Try<String>>()
-        stream.subscribe { x in
+        let _ = stream.subscribe { x in
             publishCt = publishCt + 1
             XCTAssertTrue(true, "this line should execute since we are publishing via future pipe")
             XCTAssertNil(x.value, "try must be passed on failure")
@@ -158,30 +158,30 @@ class StreamTests : XCTestCase {
         }
         
         let err = NSError(domain: "A", code: 0, userInfo: nil)
-        future {
+        let _ = future {
             Try<String>(failure: err)
         }.pipeTo(stream)
         
-        waitForExpectationsWithTimeout(2.seconds, handler:nil)
+        waitForExpectations(timeout: 2.seconds, handler:nil)
     }
     
     func testFutureTryPipingSuccess() {
         var publishCt = 0
         let message = "hello"
-        let exp = expectationWithDescription("testFuturePiping")
+        let exp = expectation(description: "testFuturePiping")
         let stream = Stream<Try<String>>()
-        stream.subscribe { x in
+        let _ = stream.subscribe { x in
             publishCt = publishCt + 1
             XCTAssertTrue(true, "this line should execute since we are publishing via future pipe")
             XCTAssertNil(x.error, "try must be passed on success")
             exp.fulfill()
         }
         
-        future {
+        let _ = future {
             Try<String>(success: message)
         }.pipeTo(stream)
         
-        waitForExpectationsWithTimeout(2.seconds, handler:nil)
+        waitForExpectations(timeout: 2.seconds, handler:nil)
     }
     
 
