@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		75287F531A794CDC00E1C68D /* ColorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F521A794CDC00E1C68D /* ColorTest.swift */; };
 		75287F591A79601700E1C68D /* RectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F581A79601700E1C68D /* RectTest.swift */; };
-		75287F5D1A7961BF00E1C68D /* DictionaryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F5C1A7961BF00E1C68D /* DictionaryTest.swift */; };
 		759BE93E1A7812350042B77C /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759BE93D1A7812350042B77C /* Dispatch.swift */; };
 		DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
 		DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
@@ -38,6 +36,8 @@
 		DBBFA1DD19DF48590090B60F /* FutureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBFA1DC19DF48590090B60F /* FutureTests.swift */; };
 		DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD241A01A15B091004D97A8 /* Signal.swift */; };
 		DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD241A01A15B091004D97A8 /* Signal.swift */; };
+		DBEA81DF1E2E8323000A5FC9 /* ColorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEA81DE1E2E8323000A5FC9 /* ColorTest.swift */; };
+		DBEA81E21E2E833E000A5FC9 /* DictionaryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEA81E11E2E833E000A5FC9 /* DictionaryTest.swift */; };
 		DBFB57471A68CE9F001645C4 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* Decoder.swift */; };
 		DBFBDC5C1AC9E72800D6A145 /* DecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */; };
 		DBFBDC5D1AC9E74A00D6A145 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* Decoder.swift */; };
@@ -69,9 +69,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		75287F521A794CDC00E1C68D /* ColorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTest.swift; sourceTree = "<group>"; };
 		75287F581A79601700E1C68D /* RectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RectTest.swift; path = Try/RectTest.swift; sourceTree = "<group>"; };
-		75287F5C1A7961BF00E1C68D /* DictionaryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryTest.swift; sourceTree = "<group>"; };
 		759BE93D1A7812350042B77C /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 		DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlExtension.swift; sourceTree = "<group>"; };
 		DB241D3619E2D637006217BA /* ListExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListExtensionTests.swift; sourceTree = "<group>"; };
@@ -94,6 +92,8 @@
 		DBBFA1D819DF48140090B60F /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		DBBFA1DC19DF48590090B60F /* FutureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FutureTests.swift; path = FSwiftTests/Concurrency/FutureTests.swift; sourceTree = SOURCE_ROOT; };
 		DBD241A01A15B091004D97A8 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
+		DBEA81DE1E2E8323000A5FC9 /* ColorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTest.swift; sourceTree = "<group>"; };
+		DBEA81E11E2E833E000A5FC9 /* DictionaryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryTest.swift; sourceTree = "<group>"; };
 		DBFB57461A68CE9F001645C4 /* Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
 		DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecoderTests.swift; sourceTree = "<group>"; };
 		DBFBDC611AC9ECD600D6A145 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
@@ -123,28 +123,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		75287F541A794D6B00E1C68D /* Color */ = {
-			isa = PBXGroup;
-			children = (
-				75287F521A794CDC00E1C68D /* ColorTest.swift */,
-			);
-			name = Color;
-			sourceTree = "<group>";
-		};
 		75287F5B1A7961AB00E1C68D /* Rect */ = {
 			isa = PBXGroup;
 			children = (
 				75287F581A79601700E1C68D /* RectTest.swift */,
 			);
 			name = Rect;
-			sourceTree = "<group>";
-		};
-		75287F5E1A7961C300E1C68D /* Dictionary */ = {
-			isa = PBXGroup;
-			children = (
-				75287F5C1A7961BF00E1C68D /* DictionaryTest.swift */,
-			);
-			name = Dictionary;
 			sourceTree = "<group>";
 		};
 		DB1FB6A819FB2B4000775267 /* UIView */ = {
@@ -247,15 +231,15 @@
 		DBA75AA419DDECAF009EA696 /* FSwiftTests */ = {
 			isa = PBXGroup;
 			children = (
-				75287F5B1A7961AB00E1C68D /* Rect */,
-				75287F541A794D6B00E1C68D /* Color */,
+				DBEA81DD1E2E8323000A5FC9 /* Color */,
 				DBBFA1DB19DF48460090B60F /* Concurrency */,
+				DBEA81E01E2E833E000A5FC9 /* Dictionary */,
 				DB241D3519E2D616006217BA /* List */,
 				DB241D4519E3196B006217BA /* Optional */,
+				75287F5B1A7961AB00E1C68D /* Rect */,
 				DBA75AA519DDECAF009EA696 /* Supporting Files */,
 				DBB1B23B19DE3E8300272EE3 /* Time */,
 				DBA75AB719DDED24009EA696 /* Try */,
-				75287F5E1A7961C300E1C68D /* Dictionary */,
 			);
 			path = FSwiftTests;
 			sourceTree = "<group>";
@@ -321,6 +305,22 @@
 				DB3649751AD5C15F003CBD81 /* StreamTests.swift */,
 			);
 			path = Concurrency;
+			sourceTree = "<group>";
+		};
+		DBEA81DD1E2E8323000A5FC9 /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				DBEA81DE1E2E8323000A5FC9 /* ColorTest.swift */,
+			);
+			path = Color;
+			sourceTree = "<group>";
+		};
+		DBEA81E01E2E833E000A5FC9 /* Dictionary */ = {
+			isa = PBXGroup;
+			children = (
+				DBEA81E11E2E833E000A5FC9 /* DictionaryTest.swift */,
+			);
+			path = Dictionary;
 			sourceTree = "<group>";
 		};
 		DBFBDC601AC9ECD600D6A145 /* Dictionary */ = {
@@ -509,14 +509,14 @@
 				DBB1B23F19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,
 				DB2834DF1A83D55C00D1359D /* ServiceUtil.swift in Sources */,
 				DBBFA1DD19DF48590090B60F /* FutureTests.swift in Sources */,
-				75287F5D1A7961BF00E1C68D /* DictionaryTest.swift in Sources */,
 				DB59FF4A19E07FBB00B13D0E /* Timer.swift in Sources */,
-				75287F531A794CDC00E1C68D /* ColorTest.swift in Sources */,
 				DBFBDC721AC9ED7300D6A145 /* Dictionary.swift in Sources */,
 				75287F591A79601700E1C68D /* RectTest.swift in Sources */,
 				DBFBDC711AC9ED6E00D6A145 /* Color.swift in Sources */,
 				DBA75AB619DDED09009EA696 /* Try.swift in Sources */,
 				DB97EED019E6D4F100FF9F98 /* RaceStat.swift in Sources */,
+				DBEA81DF1E2E8323000A5FC9 /* ColorTest.swift in Sources */,
+				DBEA81E21E2E833E000A5FC9 /* DictionaryTest.swift in Sources */,
 				DBBFA1DA19DF48140090B60F /* Future.swift in Sources */,
 				DBA75AB919DDED3C009EA696 /* TryTests.swift in Sources */,
 				DBFBDC731AC9ED7700D6A145 /* Rect.swift in Sources */,

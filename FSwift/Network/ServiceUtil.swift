@@ -60,7 +60,7 @@ public enum RequestMethod : String {
 
 public extension String {
     
-    func withParams(_ params: Dictionary<String, AnyObject>, arrayEncodingStrategy: ArrayEncodingStrategy = ArrayEncodingStrategy.multiParam) -> String {
+    func withParams(_ params: Dictionary<String, Any>, arrayEncodingStrategy: ArrayEncodingStrategy = ArrayEncodingStrategy.multiParam) -> String {
         let endpoint = self.hasPrefix("?") ? self :  self + "?"
         return  endpoint + (NSString(data: HttpService.asParams(params, arrayEncodingStrategy: arrayEncodingStrategy), encoding: String.Encoding.utf8.rawValue)! as String)
     }
@@ -77,7 +77,7 @@ public class HttpService {
     
     static let emptyBody:Data =  "".data(using: String.Encoding.utf8, allowLossyConversion: false)!
     
-    public class func asJson(_ obj: AnyObject, jsonWriteOptions: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
+    public class func asJson(_ obj: Any, jsonWriteOptions: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
         do  {
             return try JSONSerialization.data(withJSONObject: obj, options: jsonWriteOptions)
         }

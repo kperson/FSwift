@@ -12,7 +12,7 @@ public extension Data {
     
     public var arrDecoderFromJSON:Try<Decoder> {
         do {
-            let list = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [AnyObject]
+            let list = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [Any]
             return Try(success : Decoder(array: list!, depth: 0))
         }
         catch let err as NSError {
@@ -23,7 +23,7 @@ public extension Data {
     
     public var dictDecoderFromJSON:Try<Decoder> {
         do {
-            let dict = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : AnyObject]
+            let dict = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : Any]
             return Try(success: Decoder(dictionary: dict!, depth: 0))
         }
         catch let err as NSError {
@@ -33,7 +33,7 @@ public extension Data {
     
     public var isJSONDecodable:Bool {
         do {
-            let _ = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : AnyObject]
+            let _ = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : Any]
             return true
         }
         catch {

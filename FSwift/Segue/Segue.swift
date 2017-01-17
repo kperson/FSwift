@@ -10,7 +10,7 @@ import UIKit
 
 extension UIStoryboardSegue {
     
-    var topDestinationViewController:AnyObject {
+    public var topDestinationViewController:UIViewController? {
         return (destination as? UINavigationController)?.topViewController ?? destination
     }
     

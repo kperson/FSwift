@@ -114,8 +114,8 @@ class StreamTests : XCTestCase {
         let exp = expectation(description: "testAutoCancel")
         let stream = Stream<String>()
         let _ = stream.subscribe(nil) { x in Void() }
-        stream.subscribe("car") { x in Void() }
-        stream.subscribe("hello") { x in
+        let _ = stream.subscribe("car") { x in Void() }
+        let _ = stream.subscribe("hello") { x in
             XCTAssertTrue(true, "this line should execute since the stream in open")
             exp.fulfill()
         }

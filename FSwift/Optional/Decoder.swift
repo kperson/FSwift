@@ -46,25 +46,25 @@ public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLitera
     let notADictionaryError = NSError(domain: "com.optionreader", code: 3, userInfo: [ "message" : "data is not dictionary like" ])
     
     
-    fileprivate var rawDictionary: [String : AnyObject]?
-    fileprivate var rawArray: [AnyObject]?
-    fileprivate var value: AnyObject?
+    fileprivate var rawDictionary: [String : Any]?
+    fileprivate var rawArray: [Any]?
+    fileprivate var value: Any?
     fileprivate var error: NSError?
     let depth: Int
     
     
-    public init(arrayLiteral elements: AnyObject...) {
+    public init(arrayLiteral elements: Any...) {
         self.rawArray = elements
         self.depth = 0
     }
     
-    public init(dictionary: [String : AnyObject], depth: Int = 0) {
+    public init(dictionary: [String : Any], depth: Int = 0) {
         self.rawDictionary = dictionary
         self.depth = depth
     }
     
-    public init(dictionaryLiteral elements: (String, AnyObject)...) {
-        var d:[String: AnyObject] = [ : ]
+    public init(dictionaryLiteral elements: (String, Any)...) {
+        var d:[String: Any] = [ : ]
         for (k, v) in elements {
             d[k] = v
         }
@@ -72,21 +72,21 @@ public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLitera
         self.depth = 0
     }
     
-    public init(array: [AnyObject], depth: Int = 0) {
+    public init(array: [Any], depth: Int = 0) {
         self.rawArray = array
         self.depth = depth
     }
     
-    fileprivate init(value: AnyObject, parseType: Bool = false, depth: Int = 0) {
+    fileprivate init(value: Any, parseType: Bool = false, depth: Int = 0) {
         self.depth = depth
         if !parseType {
             self.value = value
         }
         else {
-            if let a = value as? [AnyObject] {
+            if let a = value as? [Any] {
                 self.rawArray = a
             }
-            else if let d = value as? [String : AnyObject] {
+            else if let d = value as? [String : Any] {
                 self.rawDictionary = d
             }
             else {
@@ -118,7 +118,7 @@ public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLitera
         }
     }
     
-    public var val: AnyObject? {
+    public var val: Any? {
         return self.value
     }
     
@@ -156,7 +156,7 @@ public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLitera
     
     public subscript(key: String) -> Decoder {
         if let d = rawDictionary {
-            if let val: AnyObject = d[key] {
+            if let val: Any = d[key] {
                 return mapToData(val)
             }
             else {
@@ -168,11 +168,11 @@ public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLitera
         }
     }
     
-    func mapToData(_ val: AnyObject) -> Decoder {
-        if let a = val as? [AnyObject] {
+    func mapToData(_ val: Any) -> Decoder {
+        if let a = val as? [Any] {
             return Decoder(array: a, depth : depth + 1)
         }
-        else if let d = val as? [String : AnyObject] {
+        else if let d = val as? [String : Any] {
             return Decoder(dictionary: d, depth : depth + 1)
         }
         else {
@@ -184,7 +184,7 @@ public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLitera
 
 public struct DecoderArray : Sequence {
     
-    public let items: [AnyObject]
+    public let items: [Any]
     
     public func makeIterator() -> AnyIterator<Decoder> {
         return AnyIterator(DecoderArrayGenerator(items: items))
@@ -196,10 +196,10 @@ private class DecoderArrayGenerator : IteratorProtocol {
 
     typealias Element = Decoder
     
-    fileprivate let items: [AnyObject]
+    fileprivate let items: [Any]
     fileprivate var i = -1
     
-    init(items: [AnyObject]) {
+    init(items: [Any]) {
         self.items = items
     }
     
@@ -220,7 +220,7 @@ private class DecoderArrayGenerator : IteratorProtocol {
 
 public struct DecoderDictionary : Sequence {
     
-    public let items: [String: AnyObject]
+    public let items: [String: Any]
     
     public func makeIterator() -> AnyIterator<(String, Decoder)> {
         return AnyIterator(DecoderDictionaryGenerator(items: items))
@@ -234,11 +234,11 @@ private class DecoderDictionaryGenerator : IteratorProtocol {
     typealias Element = (String, Decoder)
 
     
-    fileprivate let items: [String: AnyObject]
+    fileprivate let items: [String: Any]
     fileprivate let keys: [String]
     fileprivate var i = -1
     
-    init(items: [String : AnyObject]) {
+    init(items: [String : Any]) {
         self.items = items
         self.keys = Array(items.keys)
     }
