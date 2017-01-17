@@ -1,3 +1,3 @@
 language: objective-c
-osx_image: xcode7
+osx_image: xcode8.2
 script: xcodebuild -project FSwift.xcodeproj -scheme FSwiftTests test -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
