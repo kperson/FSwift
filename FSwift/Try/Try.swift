@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public enum Try<T> {
     
@@ -14,6 +15,7 @@ public enum Try<T> {
     case failure(NSError)
     
     public var toTuple: (T?, NSError?) {
+        UIControlState.normal
         switch self {
         case Try.success(let v): return (v, nil)
         case Try.failure(let e): return (nil, e)

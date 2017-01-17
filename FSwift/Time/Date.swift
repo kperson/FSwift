@@ -44,65 +44,11 @@ public extension Date {
 }
 
 
-public func + (date:Date, time: TimeInterval) -> Date {
-    return date.addingTimeInterval(time)
-    
-}
-
-public func + (time: TimeInterval, date:Date) -> Date {
-    return date.addingTimeInterval(time)
-}
-
-
-public func - (date:Date, time: TimeInterval) -> Date {
-    return date.addingTimeInterval(-time)
-}
-
-public func - (time: TimeInterval, date:Date) -> Date {
-    return date.addingTimeInterval(-time)
-}
-
-public func > (left: Date, right: Date) -> Bool {
-    let compare = left.compare(right)
-    
-    if compare == ComparisonResult.orderedDescending {
-        return true
-    }
-    else {
-        return false
-    }
-}
-
-public func < (left: Date, right: Date) -> Bool {
-    let compare = right.compare(left)
-    
-    if compare == ComparisonResult.orderedDescending {
-        return true
-    }
-    else {
-        return false
-    }
-}
-
 
 public func >= (left: Date, right: Date) -> Bool {
-    let compare = left.compare(right)
-    
-    if compare == ComparisonResult.orderedDescending || compare == ComparisonResult.orderedSame {
-        return true
-    }
-    else {
-        return false
-    }
+    return left > right || left == right
 }
 
 public func <= (left: Date, right: Date) -> Bool {
-    let compare = right.compare(left)
-    
-    if compare == ComparisonResult.orderedDescending || compare == ComparisonResult.orderedSame  {
-        return true
-    }
-    else {
-        return false
-    }
+    return left < right || left == right
 }
