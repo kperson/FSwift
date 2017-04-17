@@ -12,23 +12,38 @@ import Swift
 public extension Decoder {
     
     public var string: String? {
-        return self.val as? String
+        if let _val = self.val {
+            return _val as? String
+        }
+        return nil
     }
     
     public var int: Int? {
-        return self.val as? Int
+        if let _val = self.val {
+            return _val as? Int
+        }
+        return nil
     }
     
     public var double: Double? {
-        return self.val as? Double
+        if let _val = self.val {
+            return _val as? Double
+        }
+        return nil
     }
     
     public var float: Float? {
-        return self.val as? Float
+        if let _val = self.val {
+            return _val as? Float
+        }
+        return nil
     }
     
     public var bool: Bool? {
-        return self.val as? Bool
+        if let _val = self.val {
+            return _val as? Bool
+        }
+        return nil
     }
     
     public var errorMessage: String? {
