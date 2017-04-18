@@ -176,8 +176,8 @@ public class HttpService {
         
         
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if error != nil {
-                promise.completeWith(error as! NSError)
+            if let e = error {
+                promise.completeWith(e as NSError)
             }
             else {
                 let httpResponse = response as! HTTPURLResponse

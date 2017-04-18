@@ -15,7 +15,6 @@ class DecoderTests: XCTestCase {
         let d: Decoder = ["hello", "world"]
         XCTAssertEqual("hello", d[0].string!, "list indices must match")
         XCTAssertEqual("world", d[1].string!, "list indices must match")
-
     }
     
     func testNestedArrayCreation() {
