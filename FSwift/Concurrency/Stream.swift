@@ -116,11 +116,11 @@ public final class Stream<T>  {
 public class Subscription<T> {
     
     internal(set) var isCancelled = false
-    private let action:(T) -> Void
+    private var action:(T) -> Void
     private let executionCheck:() -> Bool
     private let callbackQueue: OperationQueue
     
-    var stream: Stream<T>?
+    weak var stream: Stream<T>?
     
     public init(action: @escaping (T) -> Void, callbackQueue: OperationQueue = OperationQueue.main, executionCheck: @escaping () -> Bool) {
         self.action = action
@@ -140,10 +140,9 @@ public class Subscription<T> {
      */
     public func cancel() {
         isCancelled = true
-        
         //break the link between the stream and the subscription
         stream?.clean()
-        stream = nil
+        action = { _ in }
     }
     
     /// determines if the subscription will receive a notification

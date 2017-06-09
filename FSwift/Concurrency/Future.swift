@@ -244,8 +244,9 @@ public class Future<T> {
             self.futureValue = self.f!()
             switch (self.recoverF, self.mappedRecoverF, self.futureValue!.toTuple.1) {
             case (.some(let r), _, .some(let error)):
+            
                 if self.recoverFilter(error) {
-                    let _ = r(error).onComplete { t in
+                    let _ = r(error).onComplete { [unowned self] t in
                         self.futureValue = t
                         self.futureExecutionComplete()
                     }
@@ -296,8 +297,15 @@ public class Future<T> {
                 default:
                     self.handleImpossibleMatch()
                 }
-                
-                
+                self.successF = nil
+                self.failureF = nil
+                self.mappedRecoverF = nil
+                self.mappedCompletionF = nil
+                self.completionF = nil
+                self.interalCompletionHandler = nil
+                self.recoverF = nil
+                self.recoverFilter = { err in true }
+                self.f = nil
             }
             self.callbackQueue.addOperation(operationCallback)
         }
