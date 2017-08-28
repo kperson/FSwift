@@ -9,7 +9,7 @@
 import Foundation
 import Swift
 
-public extension Decoder {
+public extension FDecoder {
     
     public var string: String? {
         return self.val as? String
@@ -40,7 +40,7 @@ public extension Decoder {
     
 }
 
-public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
+public struct FDecoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
     
     let notAnArrayError = NSError(domain: "com.optionreader", code: 2, userInfo: [ "message" : "data is not array like" ])
     let notADictionaryError = NSError(domain: "com.optionreader", code: 3, userInfo: [ "message" : "data is not dictionary like" ])
@@ -135,48 +135,48 @@ public struct Decoder : ExpressibleByArrayLiteral, ExpressibleByDictionaryLitera
         return NSError(domain: "com.optionreader", code: 1, userInfo: [ "message" : "key '\(key)' not present in dictionary at depth \(self.depth)" ])
     }
     
-    public subscript(index: Int) -> Decoder {
+    public subscript(index: Int) -> FDecoder {
         if let e = error {
-            return Decoder(error: e)
+            return FDecoder(error: e)
         }
         else {
             if let a = rawArray {
                 if index >= a.count {
-                    return Decoder(error: indexOutRangeError(index), depth : depth + 1)
+                    return FDecoder(error: indexOutRangeError(index), depth : depth + 1)
                 }
                 else {
                     return mapToData(a[index])
                 }
             }
             else {
-                return Decoder(error: notAnArrayError)
+                return FDecoder(error: notAnArrayError)
             }
         }
     }
     
-    public subscript(key: String) -> Decoder {
+    public subscript(key: String) -> FDecoder {
         if let d = rawDictionary {
             if let val: Any = d[key] {
                 return mapToData(val)
             }
             else {
-                return Decoder(error: keyNotPresentError(key), depth : depth + 1)
+                return FDecoder(error: keyNotPresentError(key), depth : depth + 1)
             }
         }
         else {
-            return Decoder(error: keyNotPresentError(key), depth : depth + 1)
+            return FDecoder(error: keyNotPresentError(key), depth : depth + 1)
         }
     }
     
-    func mapToData(_ val: Any) -> Decoder {
+    func mapToData(_ val: Any) -> FDecoder {
         if let a = val as? [Any] {
-            return Decoder(array: a, depth : depth + 1)
+            return FDecoder(array: a, depth : depth + 1)
         }
         else if let d = val as? [String : Any] {
-            return Decoder(dictionary: d, depth : depth + 1)
+            return FDecoder(dictionary: d, depth : depth + 1)
         }
         else {
-            return Decoder(value: val, depth : depth + 1)
+            return FDecoder(value: val, depth : depth + 1)
         }
     }
     
@@ -186,7 +186,7 @@ public struct DecoderArray : Sequence {
     
     public let items: [Any]
     
-    public func makeIterator() -> AnyIterator<Decoder> {
+    public func makeIterator() -> AnyIterator<FDecoder> {
         return AnyIterator(DecoderArrayGenerator(items: items))
     }
     
@@ -194,7 +194,7 @@ public struct DecoderArray : Sequence {
 
 private class DecoderArrayGenerator : IteratorProtocol {
 
-    typealias Element = Decoder
+    typealias Element = FDecoder
     
     fileprivate let items: [Any]
     fileprivate var i = -1
@@ -206,7 +206,7 @@ private class DecoderArrayGenerator : IteratorProtocol {
     func next() -> Element? {
         i = i + 1
         if i < self.items.count {
-            return Decoder(value: self.items[i], parseType: true)
+            return FDecoder(value: self.items[i], parseType: true)
         }
         else {
             return nil
@@ -222,7 +222,7 @@ public struct DecoderDictionary : Sequence {
     
     public let items: [String: Any]
     
-    public func makeIterator() -> AnyIterator<(String, Decoder)> {
+    public func makeIterator() -> AnyIterator<(String, FDecoder)> {
         return AnyIterator(DecoderDictionaryGenerator(items: items))
     }
     
@@ -231,7 +231,7 @@ public struct DecoderDictionary : Sequence {
 
 private class DecoderDictionaryGenerator : IteratorProtocol {
     
-    typealias Element = (String, Decoder)
+    typealias Element = (String, FDecoder)
 
     
     fileprivate let items: [String: Any]
@@ -247,7 +247,7 @@ private class DecoderDictionaryGenerator : IteratorProtocol {
         i = i + 1
         if i < self.items.count {
             let key = keys[i]
-            let value =  Decoder(value: self.items[key]!, parseType: true)
+            let value =  FDecoder(value: self.items[key]!, parseType: true)
             return (key, value)
         }
         else {

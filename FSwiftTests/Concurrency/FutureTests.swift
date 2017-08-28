@@ -23,7 +23,7 @@ class FutureTests: XCTestCase {
                 XCTAssert(false, "This line should never be executed in the this test")
             }
         }
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
     }
     
     func testFutureMapSuccess() {
@@ -38,7 +38,7 @@ class FutureTests: XCTestCase {
             complete = true
             XCTAssertEqual(ct, numberOfCharacters, "ct must equal the number of characters in 'Hello World'")
         }
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
         XCTAssert(complete, "OnSuccess should have occured")
     }
     
@@ -53,7 +53,7 @@ class FutureTests: XCTestCase {
             XCTAssert(false, "This line should never be executed in this test")
         }
         
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
     }
     
     func testFutureMapFailure() {
@@ -67,7 +67,7 @@ class FutureTests: XCTestCase {
         .onSuccess { x in
             XCTAssert(false, "This line should never be executed in this test")
         }
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
     }
     
     func testBindCheckBool() {
@@ -78,7 +78,7 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
         XCTAssertFalse(success, "future must not complete if bind evaluation is false")
         
         
@@ -89,7 +89,7 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
         XCTAssertTrue(success, "future must not complete if bind evaluation is false")
     }
     
@@ -101,7 +101,7 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
         XCTAssertFalse(success, "future must not complete if bind evaluation is false")
         
         
@@ -112,7 +112,7 @@ class FutureTests: XCTestCase {
         .onSuccess { str in
             success = true
         }
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
         XCTAssertTrue(success, "future must not complete if bind evaluation is false")
     }
     
@@ -156,7 +156,7 @@ class FutureTests: XCTestCase {
             XCTAssert(4 == num, "recover must coalesce")
         }
         
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
         XCTAssert(complete2, "recovering must have completed")
         XCTAssert(complete, "recovering must have completed")
 
@@ -189,7 +189,7 @@ class FutureTests: XCTestCase {
     
 
         
-        Thread.sleep(forTimeInterval: 200.milliseconds)
+        Thread.sleep(forTimeInterval: 500.milliseconds)
         XCTAssert(recoveredOne, "recovering must have completed")
         XCTAssert(!recoveredTwo, "recovering must have not completed")
         

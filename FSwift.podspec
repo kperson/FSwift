@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'FSwift'
-  spec.version      = '2.1.1'
+  spec.version      = '2.1.2'
   spec.license      =  { :type => 'BSD' }
   spec.homepage     = 'https://github.com/kperson/FSwift'
   spec.authors      = 'Kelton Person'

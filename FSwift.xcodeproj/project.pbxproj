@@ -39,9 +39,9 @@
 		DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD241A01A15B091004D97A8 /* Signal.swift */; };
 		DBEA81DF1E2E8323000A5FC9 /* ColorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEA81DE1E2E8323000A5FC9 /* ColorTest.swift */; };
 		DBEA81E21E2E833E000A5FC9 /* DictionaryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEA81E11E2E833E000A5FC9 /* DictionaryTest.swift */; };
-		DBFB57471A68CE9F001645C4 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* Decoder.swift */; };
-		DBFBDC5C1AC9E72800D6A145 /* DecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */; };
-		DBFBDC5D1AC9E74A00D6A145 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* Decoder.swift */; };
+		DBFB57471A68CE9F001645C4 /* FDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* FDecoder.swift */; };
+		DBFBDC5C1AC9E72800D6A145 /* FDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC5B1AC9E72800D6A145 /* FDecoderTests.swift */; };
+		DBFBDC5D1AC9E74A00D6A145 /* FDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFB57461A68CE9F001645C4 /* FDecoder.swift */; };
 		DBFBDC621AC9ECD600D6A145 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC611AC9ECD600D6A145 /* Dictionary.swift */; };
 		DBFBDC651AC9ECE700D6A145 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC641AC9ECE700D6A145 /* Color.swift */; };
 		DBFBDC681AC9ECF500D6A145 /* Segue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC671AC9ECF500D6A145 /* Segue.swift */; };
@@ -54,7 +54,7 @@
 		DBFBDC741AC9ED7A00D6A145 /* Segue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC671AC9ECF500D6A145 /* Segue.swift */; };
 		DBFBDC751AC9ED8000D6A145 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC6A1AC9ECFF00D6A145 /* Storage.swift */; };
 		DBFBDC761AC9ED8400D6A145 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFBDC6F1AC9ED1C00D6A145 /* Date.swift */; };
-		DBFE43211ACD886E00994BF9 /* NSData+Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */; };
+		DBFE43211ACD886E00994BF9 /* NSData+FDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFE43201ACD886E00994BF9 /* NSData+FDecoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -96,15 +96,15 @@
 		DBD241A01A15B091004D97A8 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		DBEA81DE1E2E8323000A5FC9 /* ColorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTest.swift; sourceTree = "<group>"; };
 		DBEA81E11E2E833E000A5FC9 /* DictionaryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryTest.swift; sourceTree = "<group>"; };
-		DBFB57461A68CE9F001645C4 /* Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
-		DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecoderTests.swift; sourceTree = "<group>"; };
+		DBFB57461A68CE9F001645C4 /* FDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FDecoder.swift; sourceTree = "<group>"; };
+		DBFBDC5B1AC9E72800D6A145 /* FDecoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FDecoderTests.swift; sourceTree = "<group>"; };
 		DBFBDC611AC9ECD600D6A145 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		DBFBDC641AC9ECE700D6A145 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		DBFBDC671AC9ECF500D6A145 /* Segue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segue.swift; sourceTree = "<group>"; };
 		DBFBDC6A1AC9ECFF00D6A145 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		DBFBDC6D1AC9ED0B00D6A145 /* Rect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		DBFBDC6F1AC9ED1C00D6A145 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
-		DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Decoder.swift"; sourceTree = "<group>"; };
+		DBFE43201ACD886E00994BF9 /* NSData+FDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+FDecoder.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,8 +162,8 @@
 		DB241D4119E317A7006217BA /* Optional */ = {
 			isa = PBXGroup;
 			children = (
-				DBFB57461A68CE9F001645C4 /* Decoder.swift */,
-				DBFE43201ACD886E00994BF9 /* NSData+Decoder.swift */,
+				DBFB57461A68CE9F001645C4 /* FDecoder.swift */,
+				DBFE43201ACD886E00994BF9 /* NSData+FDecoder.swift */,
 			);
 			path = Optional;
 			sourceTree = "<group>";
@@ -171,7 +171,7 @@
 		DB241D4519E3196B006217BA /* Optional */ = {
 			isa = PBXGroup;
 			children = (
-				DBFBDC5B1AC9E72800D6A145 /* DecoderTests.swift */,
+				DBFBDC5B1AC9E72800D6A145 /* FDecoderTests.swift */,
 			);
 			path = Optional;
 			sourceTree = "<group>";
@@ -479,7 +479,7 @@
 				DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */,
 				DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */,
 				DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */,
-				DBFE43211ACD886E00994BF9 /* NSData+Decoder.swift in Sources */,
+				DBFE43211ACD886E00994BF9 /* NSData+FDecoder.swift in Sources */,
 				DBFBDC651AC9ECE700D6A145 /* Color.swift in Sources */,
 				DB6E32F11ADD502A0016542E /* Seq.swift in Sources */,
 				DB3649741AD5AFE3003CBD81 /* Stream.swift in Sources */,
@@ -489,7 +489,7 @@
 				DB3EF5941A32059200B311D9 /* ServiceUtil.swift in Sources */,
 				DBA75AB519DDED09009EA696 /* Try.swift in Sources */,
 				759BE93E1A7812350042B77C /* Dispatch.swift in Sources */,
-				DBFB57471A68CE9F001645C4 /* Decoder.swift in Sources */,
+				DBFB57471A68CE9F001645C4 /* FDecoder.swift in Sources */,
 				DBFBDC681AC9ECF500D6A145 /* Segue.swift in Sources */,
 				DBFBDC621AC9ECD600D6A145 /* Dictionary.swift in Sources */,
 				DBFBDC6B1AC9ECFF00D6A145 /* Storage.swift in Sources */,
@@ -525,9 +525,9 @@
 				DBA75AB919DDED3C009EA696 /* TryTests.swift in Sources */,
 				DBFBDC731AC9ED7700D6A145 /* Rect.swift in Sources */,
 				DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */,
-				DBFBDC5C1AC9E72800D6A145 /* DecoderTests.swift in Sources */,
+				DBFBDC5C1AC9E72800D6A145 /* FDecoderTests.swift in Sources */,
 				DB3649761AD5C15F003CBD81 /* StreamTests.swift in Sources */,
-				DBFBDC5D1AC9E74A00D6A145 /* Decoder.swift in Sources */,
+				DBFBDC5D1AC9E74A00D6A145 /* FDecoder.swift in Sources */,
 				DB95CF7A19E33EFD00448C7C /* TimerTests.swift in Sources */,
 				DBFBDC761AC9ED8400D6A145 /* Date.swift in Sources */,
 				DBFBDC751AC9ED8000D6A145 /* Storage.swift in Sources */,

@@ -10,24 +10,24 @@ import Foundation
 
 public extension Data {
     
-    public var arrDecoderFromJSON:Try<Decoder> {
+    public var arrDecoderFromJSON:Try<FDecoder> {
         do {
             let list = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [Any]
-            return Try.success(Decoder(array: list!, depth: 0))
+            return Try.success(FDecoder(array: list!, depth: 0))
         }
         catch let err as NSError {
-            return Try<Decoder>.failure(err)
+            return Try<FDecoder>.failure(err)
         
         }
     }
     
-    public var dictDecoderFromJSON:Try<Decoder> {
+    public var dictDecoderFromJSON:Try<FDecoder> {
         do {
             let dict = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : Any]
-            return Try.success(Decoder(dictionary: dict!, depth: 0))
+            return Try.success(FDecoder(dictionary: dict!, depth: 0))
         }
         catch let err as NSError {
-            return Try<Decoder>.failure(err)
+            return Try<FDecoder>.failure(err)
         }
     }
     
