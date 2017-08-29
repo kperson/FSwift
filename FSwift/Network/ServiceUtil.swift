@@ -75,7 +75,7 @@ public enum RequestBodyInput {
 
 public class HttpService {
     
-    static let emptyBody:Data =  "".data(using: String.Encoding.utf8, allowLossyConversion: false)!
+    public static let emptyBody:Data =  "".data(using: String.Encoding.utf8, allowLossyConversion: false)!
     
     public class func asJson(_ obj: Any, jsonWriteOptions: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
         do  {

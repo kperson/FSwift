@@ -23,7 +23,7 @@ open class ControlAction: NSObject {
         self.contol.addTarget(self, action: #selector(ControlAction.selectionAction), for: self.controlEvents)
     }
     
-    func selectionAction(){
+    @objc func selectionAction(){
         self.f(self.contol)
     }
     
