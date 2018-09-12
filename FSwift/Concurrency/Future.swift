@@ -51,7 +51,7 @@ public class Promise<T> {
 
 public class FutureQueues {
     
-    static let defaultFutureQueue = OperationQueue()
+    public static let defaultFutureQueue = OperationQueue()
     
 }
 

@@ -75,7 +75,7 @@ public enum RequestBodyInput {
 
 public class HttpService {
     
-    static let emptyBody:Data =  "".data(using: String.Encoding.utf8, allowLossyConversion: false)!
+    public static let emptyBody:Data =  "".data(using: String.Encoding.utf8, allowLossyConversion: false)!
     
     public class func asJson(_ obj: Any, jsonWriteOptions: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
         do  {
@@ -176,8 +176,8 @@ public class HttpService {
         
         
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if error != nil {
-                promise.completeWith(error as NSError!)
+            if let e = error {
+                promise.completeWith(e as NSError)
             }
             else {
                 let httpResponse = response as! HTTPURLResponse

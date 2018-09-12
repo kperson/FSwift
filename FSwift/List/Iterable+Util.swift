@@ -52,7 +52,7 @@ public extension Sequence {
     }
     
     public func flatten() -> [Iterator.Element]  {
-        return self.flatMap { x in x }
+        return self.compactMap { x in x }
     }
     
     /**
@@ -71,7 +71,7 @@ public extension Sequence {
         return Seq.mapReduce(self, m, r)
     }
     
-    public func shuffled() -> [Iterator.Element] {
+    public func shuffledArr() -> [Iterator.Element] {
         return self.sorted { a, b in arc4random() < arc4random() }
     }
     

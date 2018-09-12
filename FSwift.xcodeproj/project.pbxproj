@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		75287F591A79601700E1C68D /* RectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75287F581A79601700E1C68D /* RectTest.swift */; };
 		759BE93E1A7812350042B77C /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759BE93D1A7812350042B77C /* Dispatch.swift */; };
-		DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
-		DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */; };
 		DB241D3719E2D637006217BA /* ListExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3619E2D637006217BA /* ListExtensionTests.swift */; };
 		DB241D3A19E2DF31006217BA /* Iterable+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Iterable+Util.swift */; };
 		DB241D3B19E2E380006217BA /* Iterable+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB241D3919E2DF31006217BA /* Iterable+Util.swift */; };
@@ -20,11 +18,8 @@
 		DB3649771AD5C1F8003CBD81 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3649731AD5AFE3003CBD81 /* Stream.swift */; };
 		DB3A5EB41E2EAEDE00309B4C /* DateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3A5EB31E2EAEDE00309B4C /* DateTests.swift */; };
 		DB3EF5941A32059200B311D9 /* ServiceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF5931A32059200B311D9 /* ServiceUtil.swift */; };
-		DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59FF4819E07CC500B13D0E /* Timer.swift */; };
-		DB59FF4A19E07FBB00B13D0E /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59FF4819E07CC500B13D0E /* Timer.swift */; };
 		DB6E32F11ADD502A0016542E /* Seq.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E32F01ADD502A0016542E /* Seq.swift */; };
 		DB6E32F21ADD50440016542E /* Seq.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E32F01ADD502A0016542E /* Seq.swift */; };
-		DB95CF7A19E33EFD00448C7C /* TimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB95CF7919E33EFD00448C7C /* TimerTests.swift */; };
 		DB97EED019E6D4F100FF9F98 /* RaceStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97EECF19E6D4F100FF9F98 /* RaceStat.swift */; };
 		DBA75AB519DDED09009EA696 /* Try.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA75AB419DDED09009EA696 /* Try.swift */; };
 		DBA75AB619DDED09009EA696 /* Try.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA75AB419DDED09009EA696 /* Try.swift */; };
@@ -72,16 +67,13 @@
 /* Begin PBXFileReference section */
 		75287F581A79601700E1C68D /* RectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RectTest.swift; path = Try/RectTest.swift; sourceTree = "<group>"; };
 		759BE93D1A7812350042B77C /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
-		DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlExtension.swift; sourceTree = "<group>"; };
 		DB241D3619E2D637006217BA /* ListExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListExtensionTests.swift; sourceTree = "<group>"; };
 		DB241D3919E2DF31006217BA /* Iterable+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Iterable+Util.swift"; sourceTree = "<group>"; };
 		DB3649731AD5AFE3003CBD81 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		DB3649751AD5C15F003CBD81 /* StreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTests.swift; sourceTree = "<group>"; };
 		DB3A5EB31E2EAEDE00309B4C /* DateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateTests.swift; sourceTree = "<group>"; };
 		DB3EF5931A32059200B311D9 /* ServiceUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceUtil.swift; sourceTree = "<group>"; };
-		DB59FF4819E07CC500B13D0E /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		DB6E32F01ADD502A0016542E /* Seq.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Seq.swift; sourceTree = "<group>"; };
-		DB95CF7919E33EFD00448C7C /* TimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
 		DB97EECF19E6D4F100FF9F98 /* RaceStat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RaceStat.swift; sourceTree = "<group>"; };
 		DBA75A9819DDECAF009EA696 /* FSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBA75A9C19DDECAF009EA696 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -131,14 +123,6 @@
 				75287F581A79601700E1C68D /* RectTest.swift */,
 			);
 			name = Rect;
-			sourceTree = "<group>";
-		};
-		DB1FB6A819FB2B4000775267 /* UIView */ = {
-			isa = PBXGroup;
-			children = (
-				DB1FB6A919FB2B7200775267 /* UIControlExtension.swift */,
-			);
-			path = UIView;
 			sourceTree = "<group>";
 		};
 		DB241D3519E2D616006217BA /* List */ = {
@@ -217,7 +201,6 @@
 				DBA75A9B19DDECAF009EA696 /* Supporting Files */,
 				DBB1B23C19DE3EC800272EE3 /* Time */,
 				DBA75AB319DDECF4009EA696 /* Try */,
-				DB1FB6A819FB2B4000775267 /* UIView */,
 			);
 			path = FSwift;
 			sourceTree = "<group>";
@@ -275,7 +258,6 @@
 			children = (
 				DB3A5EB31E2EAEDE00309B4C /* DateTests.swift */,
 				DBB1B24019DE414B00272EE3 /* IntervalExtensionTests.swift */,
-				DB95CF7919E33EFD00448C7C /* TimerTests.swift */,
 			);
 			path = Time;
 			sourceTree = "<group>";
@@ -285,7 +267,6 @@
 			children = (
 				DBFBDC6F1AC9ED1C00D6A145 /* Date.swift */,
 				DBB1B23D19DE3F2100272EE3 /* IntervalExtension.swift */,
-				DB59FF4819E07CC500B13D0E /* Timer.swift */,
 			);
 			path = Time;
 			sourceTree = "<group>";
@@ -477,8 +458,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBD241A31A15B4CE004D97A8 /* Signal.swift in Sources */,
-				DB59FF4919E07CC500B13D0E /* Timer.swift in Sources */,
-				DB1FB6AA19FB2B7200775267 /* UIControlExtension.swift in Sources */,
 				DBFE43211ACD886E00994BF9 /* NSData+FDecoder.swift in Sources */,
 				DBFBDC651AC9ECE700D6A145 /* Color.swift in Sources */,
 				DB6E32F11ADD502A0016542E /* Seq.swift in Sources */,
@@ -503,7 +482,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBD241A41A15B4F3004D97A8 /* Signal.swift in Sources */,
-				DB1FB6AB19FB2F6800775267 /* UIControlExtension.swift in Sources */,
 				DB3A5EB41E2EAEDE00309B4C /* DateTests.swift in Sources */,
 				DBFBDC741AC9ED7A00D6A145 /* Segue.swift in Sources */,
 				DB241D3B19E2E380006217BA /* Iterable+Util.swift in Sources */,
@@ -513,7 +491,6 @@
 				DBB1B23F19DE3F2100272EE3 /* IntervalExtension.swift in Sources */,
 				DB2834DF1A83D55C00D1359D /* ServiceUtil.swift in Sources */,
 				DBBFA1DD19DF48590090B60F /* FutureTests.swift in Sources */,
-				DB59FF4A19E07FBB00B13D0E /* Timer.swift in Sources */,
 				DBFBDC721AC9ED7300D6A145 /* Dictionary.swift in Sources */,
 				75287F591A79601700E1C68D /* RectTest.swift in Sources */,
 				DBFBDC711AC9ED6E00D6A145 /* Color.swift in Sources */,
@@ -528,7 +505,6 @@
 				DBFBDC5C1AC9E72800D6A145 /* FDecoderTests.swift in Sources */,
 				DB3649761AD5C15F003CBD81 /* StreamTests.swift in Sources */,
 				DBFBDC5D1AC9E74A00D6A145 /* FDecoder.swift in Sources */,
-				DB95CF7A19E33EFD00448C7C /* TimerTests.swift in Sources */,
 				DBFBDC761AC9ED8400D6A145 /* Date.swift in Sources */,
 				DBFBDC751AC9ED8000D6A145 /* Storage.swift in Sources */,
 			);
@@ -576,12 +552,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -620,11 +596,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -643,13 +619,13 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kelt.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -664,12 +640,12 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kelt.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -688,7 +664,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kelt.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -703,7 +679,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kelt.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

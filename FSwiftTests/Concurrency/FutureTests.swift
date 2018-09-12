@@ -29,11 +29,11 @@ class FutureTests: XCTestCase {
     func testFutureMapSuccess() {
         var complete = false
         let hello = "Hello World"
-        let numberOfCharacters = hello.characters.count
+        let numberOfCharacters = hello.count
         let _ = futureOnBackground {
            Try<String>.success(hello)
         }.map { x in
-            Try<Int>.success(x.characters.count)
+            Try<Int>.success(x.count)
         }.onSuccess { ct in
             complete = true
             XCTAssertEqual(ct, numberOfCharacters, "ct must equal the number of characters in 'Hello World'")
