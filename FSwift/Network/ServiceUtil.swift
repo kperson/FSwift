@@ -75,6 +75,8 @@ public enum RequestBodyInput {
 
 public class HttpService {
     
+    public static var defaultCachePolicy: URLRequest.CachePolicy? = nil
+    
     public static let emptyBody:Data =  "".data(using: String.Encoding.utf8, allowLossyConversion: false)!
     
     public class func asJson(_ obj: Any, jsonWriteOptions: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
@@ -154,6 +156,9 @@ public class HttpService {
     
     public class func request(_ url:String, requestMethod: RequestMethod, bodyInput: RequestBodyInput, headers: Dictionary<String, Any>) -> Future<RequestResponse> {
         var request = URLRequest(url: URL(string: url)!)
+        if let c = HttpService.defaultCachePolicy {
+            request.cachePolicy = c
+        }
         let session = URLSession.shared
         request.httpMethod = requestMethod.rawValue
         switch bodyInput {
