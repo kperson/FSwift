@@ -1,4 +1,5 @@
 Pod::Spec.new do |spec|
+  spec.swift_versions = ['5.0']
   spec.name         = 'FSwift'
   spec.version      = '3.0.0'
   spec.license      =  { :type => 'BSD' }
