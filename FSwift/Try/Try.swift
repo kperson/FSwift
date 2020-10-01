@@ -12,9 +12,9 @@ import UIKit
 public enum Try<T> {
     
     case success(T)
-    case failure(NSError)
+    case failure(Error)
     
-    public var toTuple: (T?, NSError?) {
+    public var toTuple: (T?, Error?) {
         switch self {
         case Try.success(let v): return (v, nil)
         case Try.failure(let e): return (nil, e)
@@ -35,7 +35,7 @@ public enum Try<T> {
         }
     }
     
-    public var error: NSError? {
+    public var error: Error? {
         switch self {
         case Try.success(_): return nil
         case Try.failure(let e): return e

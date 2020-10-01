@@ -11,27 +11,27 @@ import Swift
 
 public extension FDecoder {
     
-    public var string: String? {
+    var string: String? {
         return self.val as? String
     }
     
-    public var int: Int? {
+    var int: Int? {
         return self.val as? Int
     }
     
-    public var double: Double? {
+    var double: Double? {
         return self.val as? Double
     }
     
-    public var float: Float? {
+    var float: Float? {
         return self.val as? Float
     }
     
-    public var bool: Bool? {
+    var bool: Bool? {
         return self.val as? Bool
     }
     
-    public var errorMessage: String? {
+    var errorMessage: String? {
         if let err = self.err as NSError? {
             return err.userInfo["message"] as? String
         }

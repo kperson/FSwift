@@ -47,7 +47,7 @@ class FutureTests: XCTestCase {
             Try<Int>.failure(NSError(domain: "com.error", code: 200, userInfo: nil))
         }
         .onFailure { error in
-            XCTAssertEqual(error.domain, "com.error", "error domain must equal 'com.error'")
+            XCTAssertEqual((error as NSError).domain, "com.error", "error domain must equal 'com.error'")
         }
         .onSuccess { x in
             XCTAssert(false, "This line should never be executed in this test")
@@ -62,7 +62,7 @@ class FutureTests: XCTestCase {
         }.map { t in
             Try<String>.success("Hello")
         }.onFailure { error in
-            XCTAssertEqual(error.domain, "com.error", "Error domains should be equal")
+            XCTAssertEqual((error as NSError).domain, "com.error", "Error domains should be equal")
         }
         .onSuccess { x in
             XCTAssert(false, "This line should never be executed in this test")
@@ -167,7 +167,7 @@ class FutureTests: XCTestCase {
         let _ = futureOnBackground {
             Try.failure(NSError(domain: "com.error", code: 100, userInfo: nil))
         }.recoverOn { err in
-            err.domain == "com.error"
+            (err as NSError).domain == "com.error"
         }.recover { err in
             recoveredOne = true
             return Try.success(3)
@@ -179,7 +179,7 @@ class FutureTests: XCTestCase {
         let _ = futureOnBackground {
             Try.failure(NSError(domain: "com.error2", code: 100, userInfo: nil))
         }.recoverOn { err in
-            err.domain == "com.error"
+            (err as NSError).domain == "com.error"
         }.recover { err in
             recoveredTwo = true
             return Try.success(3)

@@ -32,7 +32,7 @@ class TryTests: XCTestCase {
     
     func testTryFail() {
         let fail = TryTests.divide(CGFloat(3.0), CGFloat(0.0))
-        XCTAssertEqual(fail.error!.code, 5000, "Error must exists when dividing by zero")
+        XCTAssertEqual((fail.error! as NSError).code, 5000, "Error must exists when dividing by zero")
         XCTAssertNil(fail.value, "Value must be nil if an error exists")
     }
     

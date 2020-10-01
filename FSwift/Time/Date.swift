@@ -17,13 +17,14 @@ public enum DatePrintComponent {
 }
 
 public extension Date {
-    public func stringWithFormat(_ format:String) -> String {
+    
+    func stringWithFormat(_ format:String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
     }
     
-    public func printWithComponent(_ component:DatePrintComponent) -> String {
+    func printWithComponent(_ component:DatePrintComponent) -> String {
         switch component {
         case .fullYear:
             return self.stringWithFormat("yyyy")
@@ -38,7 +39,7 @@ public extension Date {
         }
     }
     
-    public subscript(component: DatePrintComponent) -> String {
+    subscript(component: DatePrintComponent) -> String {
         return printWithComponent(component)
     }
 }

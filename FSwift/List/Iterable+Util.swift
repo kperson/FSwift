@@ -8,10 +8,9 @@
 
 import Foundation
 
-extension Sequence where Iterator.Element : Equatable {
+public extension Sequence where Iterator.Element : Equatable {
     
-    
-    public var unique:[Iterator.Element]  {
+    var unique:[Iterator.Element]  {
         return Seq.removeDuplicates(self)
     }
     
@@ -21,37 +20,37 @@ extension Sequence where Iterator.Element : Equatable {
 public extension Sequence {
     
     
-    public func foreach(_ f: (Iterator.Element) -> Void) {
+    func foreach(_ f: (Iterator.Element) -> Void) {
         Seq.foreach(self, f)
     }
     
-    public func foreachWithIndex( _ f: (Iterator.Element, Int) -> Void) {
+    func foreachWithIndex( _ f: (Iterator.Element, Int) -> Void) {
         Seq.foreachWithIndex(self, f)
     }
     
     
-    public func firstIndexOf( _ f: (Iterator.Element) -> Bool) -> Int? {
+    func firstIndexOf( _ f: (Iterator.Element) -> Bool) -> Int? {
         return Seq.firstIndexOf(self, f)
     }
     
-    public func lastIndexOf( _ f: (Iterator.Element) -> Bool) -> Int? {
+    func lastIndexOf( _ f: (Iterator.Element) -> Bool) -> Int? {
         return Seq.lastIndexOf(self, f)
     }
     
-    public var tail: [Iterator.Element]  {
+    var tail: [Iterator.Element]  {
         return Seq.tail(self)
     }
     
     
-    public func take(_ amount: Int) -> [Iterator.Element] {
+    func take(_ amount: Int) -> [Iterator.Element] {
         return Seq.take(self, amount)
     }
     
-    public func skip(_ amount: Int) -> [Iterator.Element] {
+    func skip(_ amount: Int) -> [Iterator.Element] {
         return Seq.skip(self, amount)
     }
     
-    public func flatten() -> [Iterator.Element]  {
+    func flatten() -> [Iterator.Element]  {
         return self.compactMap { x in x }
     }
     
@@ -67,11 +66,11 @@ public extension Sequence {
     * :returns a list of C
     *
     */
-    public func mapReduce<B:Hashable, C>(_ m: (Iterator.Element) -> B, _ r: (B, [Iterator.Element]) -> C) -> [C]  {
+    func mapReduce<B:Hashable, C>(_ m: (Iterator.Element) -> B, _ r: (B, [Iterator.Element]) -> C) -> [C]  {
         return Seq.mapReduce(self, m, r)
     }
     
-    public func shuffledArr() -> [Iterator.Element] {
+    func shuffledArr() -> [Iterator.Element] {
         return self.sorted { a, b in arc4random() < arc4random() }
     }
     
@@ -80,16 +79,16 @@ public extension Sequence {
 
 public extension Collection {
     
-    public func findFirst(_ f: (Iterator.Element) -> Bool) -> Iterator.Element? {
+    func findFirst(_ f: (Iterator.Element) -> Bool) -> Iterator.Element? {
         return Seq.findFirst(self, f)
     }
     
-    public func reduceLeft(_ f: (Iterator.Element, Iterator.Element) -> Iterator.Element) -> Iterator.Element {
+    func reduceLeft(_ f: (Iterator.Element, Iterator.Element) -> Iterator.Element) -> Iterator.Element {
         return Array(self.reversed()).reduceRight(f)
     }
     
     
-    public func reduceRight(_ f: (Iterator.Element, Iterator.Element) -> Iterator.Element) -> Iterator.Element {
+    func reduceRight(_ f: (Iterator.Element, Iterator.Element) -> Iterator.Element) -> Iterator.Element {
         if self.count == 1 {
             return self.first!
         }
@@ -98,11 +97,11 @@ public extension Collection {
         }
     }
     
-    public func foldLeft<B>(_ initialValue: B, _ f: (B, Iterator.Element) -> B) -> B {
+    func foldLeft<B>(_ initialValue: B, _ f: (B, Iterator.Element) -> B) -> B {
         return Array(self.reversed()).foldRight(initialValue, f)
     }
     
-    public func foldRight<B>(_ initialValue: B, _ f: (B, Iterator.Element) -> B) -> B {
+    func foldRight<B>(_ initialValue: B, _ f: (B, Iterator.Element) -> B) -> B {
         return Seq.foldRight(self, initialValue, f)
     }
     

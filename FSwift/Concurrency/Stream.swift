@@ -115,7 +115,7 @@ public final class Stream<T>  {
  */
 public class Subscription<T> {
     
-    internal(set) var isCancelled = false
+    var isCancelled = false
     private var action:(T) -> Void
     private let executionCheck:() -> Bool
     private let callbackQueue: OperationQueue
@@ -163,7 +163,7 @@ public extension Stream {
      
      - returns: the subscription
      */
-    public func subscribe(_ x: Any?, f: @escaping (T) -> Void) -> Subscription<T> {
+    func subscribe(_ x: Any?, f: @escaping (T) -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: OperationQueue.main, executionCheck: { x != nil })
         return self.subscribe(subscription)
     }
@@ -176,7 +176,7 @@ public extension Stream {
      
      - returns: the stream that received the subscription request (self)
      */
-    public func subscribe(_ x: @escaping () -> Any?, f: @escaping (T) -> Void) -> Subscription<T> {
+    func subscribe(_ x: @escaping () -> Any?, f: @escaping (T) -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: OperationQueue.main, executionCheck: { x() != nil })
         return self.subscribe(subscription)
     }
@@ -190,7 +190,7 @@ public extension Stream {
      
      - returns: the subscription
      */
-    public func subscribe(_ x: Bool, f: @escaping (T) -> Void) -> Subscription<T> {
+    func subscribe(_ x: Bool, f: @escaping (T) -> Void) -> Subscription<T> {
         let subscription = Subscription<T>(action: f, callbackQueue: OperationQueue.main, executionCheck: { x })
         return self.subscribe(subscription)
     }
@@ -203,7 +203,7 @@ public extension Stream {
      
      - returns: the subscription request
      */
-    public func subscribe(_ x: @escaping () -> Bool, f: @escaping (T) -> Void) -> Subscription<T> {
+    func subscribe(_ x: @escaping () -> Bool, f: @escaping (T) -> Void) -> Subscription<T> {
         let subscription = Subscription(action: f, callbackQueue: OperationQueue.main, executionCheck: { x() })
         return self.subscribe(subscription)
     }
@@ -216,7 +216,7 @@ public extension Stream {
      
      - returns: the subscription
      */
-    public func subscribe(_ f: @escaping (T) -> Void) -> Subscription<T>  {
+    func subscribe(_ f: @escaping (T) -> Void) -> Subscription<T>  {
         let subscription = Subscription(action: f, callbackQueue: OperationQueue.main, executionCheck: { true })
         return self.subscribe(subscription)
     }
@@ -225,7 +225,7 @@ public extension Stream {
 
 public extension Future {
     
-    public func pipeToOnFilter(_ stream: Stream<T>, _ on: @escaping (T) -> Bool) -> Future<T> {
+    func pipeToOnFilter(_ stream: Stream<T>, _ on: @escaping (T) -> Bool) -> Future<T> {
         self.signal.register { status in
             switch status {
             case TryStatus.success:
@@ -240,7 +240,7 @@ public extension Future {
         
     }
     
-    public func pipeToOn(_ stream: Stream<Try<T>>, _ on: @escaping (Try<T>) -> Bool) -> Future<T> {
+    func pipeToOn(_ stream: Stream<Try<T>>, _ on: @escaping (Try<T>) -> Bool) -> Future<T> {
         self.signal.register { status in
             if on(self.value!) {
                 switch status {
@@ -254,7 +254,7 @@ public extension Future {
         return self
     }
     
-    public func pipeToOn(_ stream: Stream<Try<T>>, _ on: @escaping (T) -> Bool) -> Future<T> {
+    func pipeToOn(_ stream: Stream<Try<T>>, _ on: @escaping (T) -> Bool) -> Future<T> {
         self.signal.register { status in
             switch status {
             case TryStatus.success:
@@ -268,11 +268,11 @@ public extension Future {
         return self
     }
     
-    public func pipeTo(_ stream: Stream<T>) -> Future<T> {
+    func pipeTo(_ stream: Stream<T>) -> Future<T> {
         return self.pipeToOnFilter(stream, { x in true })
     }
     
-    public func pipeTo(_ stream: Stream<Try<T>>) -> Future<T> {
+    func pipeTo(_ stream: Stream<Try<T>>) -> Future<T> {
         return self.pipeToOn(stream, { (x:Try<T>) -> Bool in true })
     }
     
@@ -284,7 +284,7 @@ public class StreamHandler<T> {
     
     private var completionF: ((Try<T>) -> ())?
     private var successF: ((T) -> ())?
-    private var failureF: ((NSError) -> ())?
+    private var failureF: ((Error) -> ())?
     
     public private(set) var subscription: Subscription<Try<T>>?
     
@@ -331,7 +331,7 @@ public class StreamHandler<T> {
      *
      * Registers a failure callback
      */
-    public func onFailure(_ f: @escaping (NSError) -> ()) -> StreamHandler<T> {
+    public func onFailure(_ f: @escaping (Error) -> ()) -> StreamHandler<T> {
         self.failureF = f
         return self
     }
@@ -376,11 +376,11 @@ public class Continually<D> {
 
 public extension Stream {
     
-    public class func continually<D>(_ f: @escaping (D?) -> D) -> Continually<D> {
+    class func continually<D>(_ f: @escaping (D?) -> D) -> Continually<D> {
         return Continually(generatorAction: f)
     }
     
-    public func map<B>(_ f: @escaping (T) -> B) -> Stream<B> {
+    func map<B>(_ f: @escaping (T) -> B) -> Stream<B> {
         let stream = Stream<B>()
         let _ = subscribe { x in
             let _ = stream.publish(f(x))
@@ -388,7 +388,7 @@ public extension Stream {
         return stream
     }
     
-    public func flatMap<B>(_ f: @escaping (T) -> B?) -> Stream<B> {
+    func flatMap<B>(_ f: @escaping (T) -> B?) -> Stream<B> {
         let s = Stream<B>()
         let _ = subscribe { x in
             if let v = f(x) {
@@ -398,7 +398,7 @@ public extension Stream {
         return s
     }
     
-    public func filter(_ f: @escaping (T) -> Bool) -> Stream<T> {
+    func filter(_ f: @escaping (T) -> Bool) -> Stream<T> {
         let s = Stream<T>()
         let _ = subscribe { x in
             if f(x) {
@@ -408,13 +408,13 @@ public extension Stream {
         return s
     }
     
-    public func foreach(_ f: @escaping (T) -> Void) {
+    func foreach(_ f: @escaping (T) -> Void) {
         let _ = subscribe { x in
             let _ = f(x)
         }
     }
     
-    public func skip(_ amount: Int) -> Stream<T> {
+    func skip(_ amount: Int) -> Stream<T> {
         var i = 0
         let stream = Stream<T>()
         foreach { x in

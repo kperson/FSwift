@@ -72,6 +72,6 @@ extension UIColor {
 
 public extension Int {
     
-    public var colorHex:CGFloat { return CGFloat(self) / 255.0 }
+    var colorHex:CGFloat { return CGFloat(self) / 255.0 }
     
 }

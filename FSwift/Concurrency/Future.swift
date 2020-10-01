@@ -43,7 +43,7 @@ public class Promise<T> {
         future.completeWith(val)
     }
     
-    public func completeWith(_ error: NSError) {
+    public func completeWith(_ error: Error) {
         future.completeWith(error)
     }
     
@@ -67,11 +67,11 @@ public class Future<T> {
     private var interalCompletionHandler:(() -> ())?
     
     private var successF: ((T) -> ())?
-    private var recoverF: ((NSError) -> Future<T>)?
-    private var mappedRecoverF: ((NSError) -> Try<T>)?
-    private var recoverFilter: ((NSError) -> Bool) = { err in true }
+    private var recoverF: ((Error) -> Future<T>)?
+    private var mappedRecoverF: ((Error) -> Try<T>)?
+    private var recoverFilter: ((Error) -> Bool) = { err in true }
     
-    private var failureF: ((NSError) -> ())?
+    private var failureF: ((Error) -> ())?
     private var signals: [Signal] = []
     
     let operationQueue: OperationQueue
@@ -134,7 +134,7 @@ public class Future<T> {
      * This allows for an error to complete the future.  If you are just using futures, then this is not required.  This is something like fulfilling a promise.
      * You can use this to bridge the Future api with other concurrency frameworks and async methods.
      */
-    func completeWith(_ error: NSError) {
+    func completeWith(_ error: Error) {
         self.completeWith({ Try<T>.failure(error) })
     }
     
@@ -143,7 +143,7 @@ public class Future<T> {
      *
      * Registers a completion callback
      */
-    public func onComplete(_ f:@escaping (Try<T>) -> ()) -> Future<T> {
+    @discardableResult public func onComplete(_ f:@escaping (Try<T>) -> ()) -> Future<T> {
         self.completionF = f
         return self
     }
@@ -153,7 +153,7 @@ public class Future<T> {
      *
      * Registers a success callback
      */
-    public func onSuccess(_ f:@escaping (T) -> ()) -> Future<T> {
+    @discardableResult public func onSuccess(_ f:@escaping (T) -> ()) -> Future<T> {
         self.successF = f
         return self
     }
@@ -163,32 +163,32 @@ public class Future<T> {
      *
      * Registers a failure callback
      */
-    public func onFailure(_ f:@escaping (NSError) -> ()) -> Future<T> {
+    @discardableResult public func onFailure(_ f:@escaping (Error) -> ()) -> Future<T> {
         self.failureF = f
         return self
     }
     
-    public func recoverWithFuture(_ f:@escaping (NSError) -> Future<T>) -> Future<T> {
+    @discardableResult public func recoverWithFuture(_ f:@escaping (Error) -> Future<T>) -> Future<T> {
         self.recoverF = f
         return self
     }
     
-    public func recover(_ f:@escaping (NSError) -> Try<T>) -> Future<T> {
+    @discardableResult public func recover(_ f:@escaping (Error) -> Try<T>) -> Future<T> {
         self.mappedRecoverF = f
         return self
     }
     
-    public func recoverOn(_ f: @escaping (NSError) -> Bool) -> Future<T> {
+    @discardableResult public func recoverOn(_ f: @escaping (Error) -> Bool) -> Future<T> {
         self.recoverFilter = f
         return self
     }
     
-    public func bindToBool(_ b:@escaping () -> Bool) -> Future<T> {
+    @discardableResult public func bindToBool(_ b:@escaping () -> Bool) -> Future<T> {
         self.bindCheck = BindCheck.boolCheck(b)
         return self
     }
     
-    public func bindToOptional(_ b: @escaping () -> Any?) -> Future<T> {
+    @discardableResult public func bindToOptional(_ b: @escaping () -> Any?) -> Future<T> {
         self.bindCheck = BindCheck.anyObjectCheck(b)
         return self
     }
@@ -202,7 +202,7 @@ public class Future<T> {
      * handles all execution and scheduling.  The function takes the results current future as its single argument.
      * That is, it maps the results of current future to a new future
      */
-    public func map<D>(_ f: @escaping (T) -> Try<D>) -> Future<D> {
+    @discardableResult public func map<D>(_ f: @escaping (T) -> Try<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.mappedCompletionF = { futureValue in
             mappedFuture.completeWith {
@@ -217,7 +217,7 @@ public class Future<T> {
         return mappedFuture
     }
     
-    public func flatMap<D>(_ f: @escaping (T) -> Future<D>) -> Future<D> {
+    @discardableResult public func flatMap<D>(_ f: @escaping (T) -> Future<D>) -> Future<D> {
         let mappedFuture = Future<D>(operationQueue: self.operationQueue, callbackQueue: self.callbackQueue)
         self.mappedCompletionF = {futureValue in
             if futureValue.value != nil {

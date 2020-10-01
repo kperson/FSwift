@@ -11,7 +11,7 @@ import Foundation
 public enum TryStatus {
     
     case success
-    case failure(NSError)
+    case failure(Error)
 }
 
 open class Signal {

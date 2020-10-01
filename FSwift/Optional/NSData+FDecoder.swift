@@ -10,7 +10,7 @@ import Foundation
 
 public extension Data {
     
-    public var arrDecoderFromJSON:Try<FDecoder> {
+    var arrDecoderFromJSON:Try<FDecoder> {
         do {
             let list = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [Any]
             return Try.success(FDecoder(array: list!, depth: 0))
@@ -21,7 +21,7 @@ public extension Data {
         }
     }
     
-    public var dictDecoderFromJSON:Try<FDecoder> {
+    var dictDecoderFromJSON:Try<FDecoder> {
         do {
             let dict = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : Any]
             return Try.success(FDecoder(dictionary: dict!, depth: 0))
@@ -31,7 +31,7 @@ public extension Data {
         }
     }
     
-    public var isJSONDecodable:Bool {
+    var isJSONDecodable:Bool {
         do {
             let _ = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.allowFragments) as? [String : Any]
             return true
